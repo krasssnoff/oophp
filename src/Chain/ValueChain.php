@@ -23,6 +23,11 @@ final readonly class ValueChain implements Chain
         return $this->value;
     }
 
+    public function __invoke(): mixed
+    {
+        return $this->get();
+    }
+
     public function values(): self
     {
         return new self(array_values($this->value));

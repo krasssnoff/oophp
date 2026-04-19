@@ -35,4 +35,14 @@ final class ArrTest extends TestCase
 
         self::assertSame($expected, $actual);
     }
+
+    public function testInvokeCanBeUsedInsteadOfGet(): void
+    {
+        $input = ['first' => 'a', 'second' => 'b'];
+
+        $expected = array_search('b', array_values($input), false);
+        $actual = Arr::of($input)->values()->search('b')();
+
+        self::assertSame($expected, $actual);
+    }
 }

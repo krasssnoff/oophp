@@ -7,4 +7,6 @@ namespace Oophp\Contracts;
 interface Chain
 {
     public function get(): mixed;
+
+    public function __invoke(): mixed;
 }

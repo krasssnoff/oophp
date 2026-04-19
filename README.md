@@ -15,7 +15,7 @@
 - Static methods stay close to native PHP signatures.
 - Fluent calls carry the previous raw return value into the next method.
 - The package does not normalize native PHP behavior.
-- Use `->get()` only when you want to extract the raw PHP value from the chain.
+- Use `->get()` or `()` when you want to extract the raw PHP value from the chain.
 
 ## Examples
 
@@ -26,8 +26,7 @@ use Oophp\Str;
 
 $position = Arr::of(['a' => 'first', 'b' => 'second'])
     ->values()
-    ->search('second')
-    ->get();
+    ->search('second')();
 
 $parts = Str::of('  Foo,Bar  ')
     ->trim()
@@ -39,6 +38,8 @@ $values = Arr::values(['x' => 10, 'y' => 20]);
 $contains = Str::contains('package', 'ack');
 $json = Json::encode(['ok' => true]);
 ```
+
+`->get()` remains available when you prefer an explicit terminal call.
 
 ## Implemented methods
 

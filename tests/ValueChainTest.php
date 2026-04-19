@@ -35,4 +35,14 @@ final class ValueChainTest extends TestCase
 
         self::assertSame($expected, $actual);
     }
+
+    public function testInvokeReturnsSameValueAsGet(): void
+    {
+        $chain = Str::of('  Foo,Bar  ')
+            ->trim()
+            ->lower()
+            ->split(',');
+
+        self::assertSame($chain->get(), $chain());
+    }
 }
