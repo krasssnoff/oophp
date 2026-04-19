@@ -1,0 +1,25 @@
+{
+    "name": "oophp/oophp",
+    "description": "Object-oriented wrappers around selected native PHP functions.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Oophp\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Oophp\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
