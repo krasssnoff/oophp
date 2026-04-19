@@ -1,0 +1,7 @@
+/vendor/
+/.phpunit.cache/
+/composer.lock
+
+# Local playgrounds and editor clutter
+/.DS_Store
+/playground.php
