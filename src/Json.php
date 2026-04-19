@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-use Oophp\Chain\ValueChain;
+use Oophp\Value\MixedChain;
 
 final class Json
 {
-    public static function of(mixed $value): ValueChain
+    public static function of(mixed $value): MixedChain
     {
-        return ValueChain::of($value);
+        return new MixedChain($value);
     }
 
     public static function encode(mixed $value, int $flags = 0, int $depth = 512): string|false

@@ -6,7 +6,7 @@ namespace Oophp\Chain;
 
 use Oophp\Contracts\Chain;
 
-final readonly class ValueChain implements Chain
+readonly class ValueChain implements Chain
 {
     public function __construct(
         private mixed $value,

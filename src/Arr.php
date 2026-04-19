@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-use Oophp\Chain\ValueChain;
+use Oophp\Value\ArrayChain;
 
 final class Arr
 {
-    public static function of(mixed $value): ValueChain
+    public static function of(array $value): ArrayChain
     {
-        return ValueChain::of($value);
+        return new ArrayChain($value);
     }
 
     public static function values(array $array): array

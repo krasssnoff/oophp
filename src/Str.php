@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-use Oophp\Chain\ValueChain;
+use Oophp\Value\StringChain;
 
 final class Str
 {
-    public static function of(mixed $value): ValueChain
+    public static function of(string $value): StringChain
     {
-        return ValueChain::of($value);
+        return new StringChain($value);
     }
 
     public static function replace(array|string $search, array|string $replace, string|array $subject): string|array

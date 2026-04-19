@@ -1,5 +1,5 @@
 {
-    "name": "oophp/oophp",
+    "name": "krasssnoff/oophp",
     "description": "Object-oriented wrappers around selected native PHP functions.",
     "type": "library",
     "license": "MIT",
