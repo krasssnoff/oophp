@@ -19,6 +19,21 @@ final class PhpFunctionMapTest extends TestCase
                 'array_filter' => ['class' => 'Arr', 'static_method' => 'filter', 'chain_method' => 'filter', 'risk_flags' => []],
                 'array_map' => ['class' => 'Arr', 'static_method' => 'map', 'chain_method' => 'map', 'risk_flags' => []],
                 'array_reverse' => ['class' => 'Arr', 'static_method' => 'reverse', 'chain_method' => 'reverse', 'risk_flags' => []],
+                'array_merge' => ['class' => 'Arr', 'static_method' => 'merge', 'chain_method' => 'merge', 'risk_flags' => []],
+                'array_slice' => ['class' => 'Arr', 'static_method' => 'slice', 'chain_method' => 'slice', 'risk_flags' => []],
+                'array_unique' => ['class' => 'Arr', 'static_method' => 'unique', 'chain_method' => 'unique', 'risk_flags' => []],
+                'array_chunk' => ['class' => 'Arr', 'static_method' => 'chunk', 'chain_method' => 'chunk', 'risk_flags' => []],
+                'array_flip' => ['class' => 'Arr', 'static_method' => 'flip', 'chain_method' => 'flip', 'risk_flags' => []],
+                'array_pad' => ['class' => 'Arr', 'static_method' => 'pad', 'chain_method' => 'pad', 'risk_flags' => []],
+                'array_combine' => ['class' => 'Arr', 'static_method' => 'combine', 'chain_method' => 'combine', 'risk_flags' => []],
+                'array_merge_recursive' => ['class' => 'Arr', 'static_method' => 'mergeRecursive', 'chain_method' => 'mergeRecursive', 'risk_flags' => []],
+                'array_column' => ['class' => 'Arr', 'static_method' => 'column', 'chain_method' => 'column', 'risk_flags' => []],
+                'array_diff' => ['class' => 'Arr', 'static_method' => 'diff', 'chain_method' => 'diff', 'risk_flags' => []],
+                'array_intersect' => ['class' => 'Arr', 'static_method' => 'intersect', 'chain_method' => 'intersect', 'risk_flags' => []],
+                'array_replace' => ['class' => 'Arr', 'static_method' => 'replace', 'chain_method' => 'replaceArray', 'risk_flags' => []],
+                'array_count_values' => ['class' => 'Arr', 'static_method' => 'countValues', 'chain_method' => 'countValues', 'risk_flags' => []],
+                'in_array' => ['class' => 'Arr', 'static_method' => 'inArray', 'chain_method' => 'inArray', 'risk_flags' => ['bool-terminal']],
+                'array_is_list' => ['class' => 'Arr', 'static_method' => 'isList', 'chain_method' => 'isList', 'risk_flags' => ['bool-terminal']],
                 'str_replace' => ['class' => 'Str', 'static_method' => 'replace', 'chain_method' => 'replace', 'risk_flags' => []],
                 'strtolower' => ['class' => 'Str', 'static_method' => 'lower', 'chain_method' => 'lower', 'risk_flags' => []],
                 'strtoupper' => ['class' => 'Str', 'static_method' => 'upper', 'chain_method' => 'upper', 'risk_flags' => []],
@@ -53,6 +68,7 @@ final class PhpFunctionMapTest extends TestCase
         $definitions = PhpFunctionMap::definitions();
 
         self::assertTrue($definitions['array_search']['mixed_return']);
+        self::assertContains('bool-terminal', $definitions['in_array']['risk_flags']);
         self::assertTrue($definitions['str_contains']['chainable']);
         self::assertFalse($definitions['json_validate']['chainable']);
         self::assertContains('ambient-state', $definitions['json_last_error']['risk_flags']);

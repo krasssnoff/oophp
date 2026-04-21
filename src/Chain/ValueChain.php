@@ -58,6 +58,81 @@ readonly class ValueChain implements Chain
         return new self(array_reverse($this->value, $preserveKeys));
     }
 
+    public function merge(array ...$arrays): self
+    {
+        return new self(array_merge($this->value, ...$arrays));
+    }
+
+    public function slice(int $offset, ?int $length = null, bool $preserveKeys = false): self
+    {
+        return new self(array_slice($this->value, $offset, $length, $preserveKeys));
+    }
+
+    public function unique(int $flags = SORT_STRING): self
+    {
+        return new self(array_unique($this->value, $flags));
+    }
+
+    public function chunk(int $length, bool $preserveKeys = false): self
+    {
+        return new self(array_chunk($this->value, $length, $preserveKeys));
+    }
+
+    public function flip(): self
+    {
+        return new self(array_flip($this->value));
+    }
+
+    public function pad(int $length, mixed $value): self
+    {
+        return new self(array_pad($this->value, $length, $value));
+    }
+
+    public function combine(array $values): self
+    {
+        return new self(array_combine($this->value, $values));
+    }
+
+    public function mergeRecursive(array ...$arrays): self
+    {
+        return new self(array_merge_recursive($this->value, ...$arrays));
+    }
+
+    public function column(int|string|null $columnKey, int|string|null $indexKey = null): self
+    {
+        return new self(array_column($this->value, $columnKey, $indexKey));
+    }
+
+    public function diff(array ...$arrays): self
+    {
+        return new self(array_diff($this->value, ...$arrays));
+    }
+
+    public function intersect(array ...$arrays): self
+    {
+        return new self(array_intersect($this->value, ...$arrays));
+    }
+
+    public function replaceArray(array ...$replacements): self
+    {
+        return new self(array_replace($this->value, ...$replacements));
+    }
+
+    public function countValues(): self
+    {
+        return new self(array_count_values($this->value));
+    }
+
+    public function inArray(mixed $needle, bool $strict = false): self
+    {
+        return new self(in_array($needle, $this->value, $strict));
+    }
+
+    public function isList(): self
+    {
+        return new self(array_is_list($this->value));
+    }
+
     public function replace(array|string $search, array|string $replace): self
     {
         return new self(str_replace($search, $replace, $this->value));
