@@ -65,6 +65,21 @@ $json = Json::encode(['ok' => true]);
 - `filter`
 - `map`
 - `reverse`
+- `merge`
+- `slice`
+- `unique`
+- `chunk`
+- `flip`
+- `pad`
+- `combine`
+- `mergeRecursive`
+- `column`
+- `diff`
+- `intersect`
+- `replace`
+- `countValues`
+- `inArray`
+- `isList`
 
 ### `Str`
 

@@ -28,6 +28,21 @@ This file defines which function groups are intentionally in v1.
 - `array_filter` -> `Arr::filter`, chain `->filter(...)`, flags: none
 - `array_map` -> `Arr::map`, chain `->map(...)`, flags: none
 - `array_reverse` -> `Arr::reverse`, chain `->reverse(...)`, flags: none
+- `array_merge` -> `Arr::merge`, chain `->merge(...)`, flags: none
+- `array_slice` -> `Arr::slice`, chain `->slice(...)`, flags: none
+- `array_unique` -> `Arr::unique`, chain `->unique(...)`, flags: none
+- `array_chunk` -> `Arr::chunk`, chain `->chunk(...)`, flags: none
+- `array_flip` -> `Arr::flip`, chain `->flip()`, flags: none
+- `array_pad` -> `Arr::pad`, chain `->pad(...)`, flags: none
+- `array_combine` -> `Arr::combine`, chain `->combine(...)`, flags: none
+- `array_merge_recursive` -> `Arr::mergeRecursive`, chain `->mergeRecursive(...)`, flags: none
+- `array_column` -> `Arr::column`, chain `->column(...)`, flags: none
+- `array_diff` -> `Arr::diff`, chain `->diff(...)`, flags: none
+- `array_intersect` -> `Arr::intersect`, chain `->intersect(...)`, flags: none
+- `array_replace` -> `Arr::replace`, chain `->replaceArray(...)`, flags: none
+- `array_count_values` -> `Arr::countValues`, chain `->countValues()`, flags: none
+- `in_array` -> `Arr::inArray`, chain `->inArray(...)`, flags: `bool-terminal`
+- `array_is_list` -> `Arr::isList`, chain `->isList()`, flags: `bool-terminal`
 
 ### Str
 

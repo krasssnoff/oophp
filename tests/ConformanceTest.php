@@ -31,6 +31,24 @@ final class ConformanceTest extends TestCase
             'search_strict_false' => [array_search('20', [10, 20], false), Arr::search('20', [10, 20], false)],
             'search_strict_true' => [array_search('20', [10, 20], true), Arr::search('20', [10, 20], true)],
             'reverse_preserve' => [array_reverse($source, true), Arr::reverse($source, true)],
+            'merge' => [array_merge(['a' => 1], ['b' => 2]), Arr::merge(['a' => 1], ['b' => 2])],
+            'slice_preserve_keys' => [array_slice($source, 1, 1, true), Arr::slice($source, 1, 1, true)],
+            'unique' => [array_unique(['x', 'x', 'y'], SORT_STRING), Arr::unique(['x', 'x', 'y'])],
+            'chunk' => [array_chunk($source, 1, true), Arr::chunk($source, 1, true)],
+            'flip' => [array_flip(['x' => 'alpha', 'y' => 'beta']), Arr::flip(['x' => 'alpha', 'y' => 'beta'])],
+            'pad' => [array_pad([1, 2], 4, 0), Arr::pad([1, 2], 4, 0)],
+            'combine' => [array_combine(['id', 'name'], [10, 'Ann']), Arr::combine(['id', 'name'], [10, 'Ann'])],
+            'merge_recursive' => [array_merge_recursive(['k' => ['a']], ['k' => ['b']]), Arr::mergeRecursive(['k' => ['a']], ['k' => ['b']])],
+            'column_with_index' => [
+                array_column([['id' => 1, 'name' => 'a'], ['id' => 2, 'name' => 'b']], 'name', 'id'),
+                Arr::column([['id' => 1, 'name' => 'a'], ['id' => 2, 'name' => 'b']], 'name', 'id'),
+            ],
+            'diff' => [array_diff(['a', 'b', 'c'], ['b']), Arr::diff(['a', 'b', 'c'], ['b'])],
+            'intersect' => [array_intersect(['a', 'b', 'c'], ['b', 'd']), Arr::intersect(['a', 'b', 'c'], ['b', 'd'])],
+            'replace' => [array_replace(['x' => 1, 'y' => 2], ['y' => 20]), Arr::replace(['x' => 1, 'y' => 2], ['y' => 20])],
+            'count_values' => [array_count_values(['a', 'b', 'a']), Arr::countValues(['a', 'b', 'a'])],
+            'in_array_strict_false' => [in_array('2', [1, 2], false), Arr::inArray('2', [1, 2], false)],
+            'is_list_true' => [array_is_list([10, 20, 30]), Arr::isList([10, 20, 30])],
         ];
     }
 
