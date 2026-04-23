@@ -49,6 +49,21 @@ final class ConformanceTest extends TestCase
             'count_values' => [array_count_values(['a', 'b', 'a']), Arr::countValues(['a', 'b', 'a'])],
             'in_array_strict_false' => [in_array('2', [1, 2], false), Arr::inArray('2', [1, 2], false)],
             'is_list_true' => [array_is_list([10, 20, 30]), Arr::isList([10, 20, 30])],
+            'change_key_case_upper' => [array_change_key_case(['first' => 1], CASE_UPPER), Arr::changeKeyCase(['first' => 1], CASE_UPPER)],
+            'fill_keys' => [array_fill_keys(['id', 'name'], 0), Arr::fillKeys(['id', 'name'], 0)],
+            'key_first' => [array_key_first(['b' => 2, 'a' => 1]), Arr::keyFirst(['b' => 2, 'a' => 1])],
+            'key_last' => [array_key_last(['b' => 2, 'a' => 1]), Arr::keyLast(['b' => 2, 'a' => 1])],
+            'diff_assoc' => [array_diff_assoc(['a' => 1, 'b' => 2], ['a' => 1]), Arr::diffAssoc(['a' => 1, 'b' => 2], ['a' => 1])],
+            'diff_key' => [array_diff_key(['a' => 1, 'b' => 2], ['a' => 9]), Arr::diffKey(['a' => 1, 'b' => 2], ['a' => 9])],
+            'intersect_assoc' => [array_intersect_assoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3]), Arr::intersectAssoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3])],
+            'intersect_key' => [array_intersect_key(['a' => 1, 'b' => 2], ['b' => 9]), Arr::intersectKey(['a' => 1, 'b' => 2], ['b' => 9])],
+            'replace_recursive' => [
+                array_replace_recursive(['cfg' => ['a' => 1]], ['cfg' => ['b' => 2]]),
+                Arr::replaceRecursive(['cfg' => ['a' => 1]], ['cfg' => ['b' => 2]]),
+            ],
+            'sum' => [array_sum([1, 2, 3]), Arr::sum([1, 2, 3])],
+            'product' => [array_product([1.5, 2, 3]), Arr::product([1.5, 2, 3])],
+            'key_exists' => [array_key_exists('a', ['a' => 1]), Arr::keyExists('a', ['a' => 1])],
         ];
     }
 

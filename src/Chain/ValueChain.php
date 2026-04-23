@@ -133,17 +133,77 @@ readonly class ValueChain implements Chain
         return new self(array_is_list($this->value));
     }
 
+    public function changeKeyCase(int $case = CASE_LOWER): self
+    {
+        return new self(array_change_key_case($this->value, $case));
+    }
+
+    public function fillKeys(mixed $value): self
+    {
+        return new self(array_fill_keys($this->value, $value));
+    }
+
+    public function keyFirst(): self
+    {
+        return new self(array_key_first($this->value));
+    }
+
+    public function keyLast(): self
+    {
+        return new self(array_key_last($this->value));
+    }
+
+    public function diffAssoc(array ...$arrays): self
+    {
+        return new self(array_diff_assoc($this->value, ...$arrays));
+    }
+
+    public function diffKey(array ...$arrays): self
+    {
+        return new self(array_diff_key($this->value, ...$arrays));
+    }
+
+    public function intersectAssoc(array ...$arrays): self
+    {
+        return new self(array_intersect_assoc($this->value, ...$arrays));
+    }
+
+    public function intersectKey(array ...$arrays): self
+    {
+        return new self(array_intersect_key($this->value, ...$arrays));
+    }
+
+    public function replaceRecursive(array ...$replacements): self
+    {
+        return new self(array_replace_recursive($this->value, ...$replacements));
+    }
+
+    public function sum(): self
+    {
+        return new self(array_sum($this->value));
+    }
+
+    public function product(): self
+    {
+        return new self(array_product($this->value));
+    }
+
+    public function keyExists(int|string $key): self
+    {
+        return new self(array_key_exists($key, $this->value));
+    }
+
     public function replace(array|string $search, array|string $replace): self
     {
         return new self(str_replace($search, $replace, $this->value));
     }
 
-    public function lower(): self
+    public function toLower(): self
     {
         return new self(strtolower($this->value));
     }
 
-    public function upper(): self
+    public function toUpper(): self
     {
         return new self(strtoupper($this->value));
     }

@@ -5,7 +5,7 @@ OOPHP uses native-conformance testing as the primary correctness signal.
 ## Goals
 
 - Static API returns exactly what native PHP functions return.
-- Fluent API (`of()->...`) produces the same raw values as equivalent native calls.
+- Fluent API preserves the same native behavior, and after terminal extraction via `->get()` or `()` returns the same raw values as equivalent native calls.
 - Type transitions in chains are explicit and preserved.
 
 ## TDD workflow

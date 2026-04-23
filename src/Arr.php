@@ -117,4 +117,64 @@ final class Arr
     {
         return array_is_list($array);
     }
+
+    public static function changeKeyCase(array $array, int $case = CASE_LOWER): array
+    {
+        return array_change_key_case($array, $case);
+    }
+
+    public static function fillKeys(array $keys, mixed $value): array
+    {
+        return array_fill_keys($keys, $value);
+    }
+
+    public static function keyFirst(array $array): int|string|null
+    {
+        return array_key_first($array);
+    }
+
+    public static function keyLast(array $array): int|string|null
+    {
+        return array_key_last($array);
+    }
+
+    public static function diffAssoc(array $array, array ...$arrays): array
+    {
+        return array_diff_assoc($array, ...$arrays);
+    }
+
+    public static function diffKey(array $array, array ...$arrays): array
+    {
+        return array_diff_key($array, ...$arrays);
+    }
+
+    public static function intersectAssoc(array $array, array ...$arrays): array
+    {
+        return array_intersect_assoc($array, ...$arrays);
+    }
+
+    public static function intersectKey(array $array, array ...$arrays): array
+    {
+        return array_intersect_key($array, ...$arrays);
+    }
+
+    public static function replaceRecursive(array $array, array ...$replacements): array
+    {
+        return array_replace_recursive($array, ...$replacements);
+    }
+
+    public static function sum(array $array): int|float
+    {
+        return array_sum($array);
+    }
+
+    public static function product(array $array): int|float
+    {
+        return array_product($array);
+    }
+
+    public static function keyExists(int|string $key, array $array): bool
+    {
+        return array_key_exists($key, $array);
+    }
 }

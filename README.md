@@ -8,7 +8,7 @@
 composer require krasssnoff/oophp
 ```
 
-## Current v1 scope
+## Current scope
 
 - `Arr` for selected `array_*` functions
 - `Str` for selected string functions
@@ -17,12 +17,34 @@ composer require krasssnoff/oophp
 - `ValueChain` as the fluent wrapper behind `Arr::of(...)`, `Str::of(...)`, and `Json::of(...)`
 - Typed wrappers: `ArrayChain`, `StringChain`, `MixedChain`
 
-## Design rules
+## API principles
 
-- Static methods stay close to native PHP signatures.
-- Fluent calls carry the previous raw return value into the next method.
-- The package does not normalize native PHP behavior.
-- Use `->get()` or `()` when you want to extract the raw PHP value from the chain.
+See `docs/CHAIN_RULES.md` for the API contract, naming rules, and fluent-chain behavior.
+
+## Why OOPHP
+
+Native PHP composition can become hard to scan:
+
+```php
+$position = array_search(
+    'beta',
+    array_values(
+        explode(',', strtolower(trim('  alpha,beta,gamma  '))),
+    ),
+    false,
+);
+```
+
+With OOPHP, the same flow stays linear:
+
+```php
+$position = Str::of('  alpha,beta,gamma  ')
+    ->trim()
+    ->toLower()
+    ->split(',')
+    ->values()
+    ->search('beta')();
+```
 
 ## Examples
 
@@ -37,7 +59,7 @@ $position = Arr::of(['a' => 'first', 'b' => 'second'])
 
 $parts = Str::of('  Foo,Bar  ')
     ->trim()
-    ->lower()
+    ->toLower()
     ->split(',')
     ->get();
 
@@ -51,59 +73,12 @@ $json = Json::encode(['ok' => true]);
 ## Design and test docs
 
 - `docs/CHAIN_RULES.md` - fluent-chain contract
-- `docs/V1_SURFACE.md` - v1 whitelist and risk groups
 - `docs/TESTING_STRATEGY.md` - native conformance and TDD workflow
 
-## Implemented methods
+## API reference
 
-### `Arr`
+The current API surface should be read from the source files and tests.
 
-- `of`
-- `values`
-- `keys`
-- `search`
-- `filter`
-- `map`
-- `reverse`
-- `merge`
-- `slice`
-- `unique`
-- `chunk`
-- `flip`
-- `pad`
-- `combine`
-- `mergeRecursive`
-- `column`
-- `diff`
-- `intersect`
-- `replace`
-- `countValues`
-- `inArray`
-- `isList`
-
-### `Str`
-
-- `of`
-- `replace`
-- `lower`
-- `upper`
-- `trim`
-- `contains`
-- `split`
-
-### `Json`
-
-- `of`
-- `encode`
-- `decode`
-- `validate`
-- `lastError`
-- `lastErrorMessage`
-
-### `Sys`
-
-- `env`
-- `hostname`
-- `version`
-- `sapi`
-- `uname`
+- Source files define the actual wrappers and chain methods.
+- Tests define the supported behavior and native PHP conformance.
+- A final consolidated method list can be added later, once the package surface is stable.

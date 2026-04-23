@@ -212,4 +212,130 @@ final class ArrTest extends TestCase
 
         self::assertSame($expected, $actual);
     }
+
+    public function testFluentChangeKeyCaseMatchesNativePhp(): void
+    {
+        $input = ['first' => 1, 'second' => 2];
+
+        $expected = array_change_key_case($input, CASE_UPPER);
+        $actual = Arr::of($input)->changeKeyCase(CASE_UPPER)->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentFillKeysMatchesNativePhp(): void
+    {
+        $keys = ['id', 'name'];
+
+        $expected = array_fill_keys($keys, 0);
+        $actual = Arr::of($keys)->fillKeys(0)->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentKeyFirstMatchesNativePhp(): void
+    {
+        $input = ['b' => 2, 'a' => 1];
+
+        $expected = array_key_first($input);
+        $actual = Arr::of($input)->keyFirst()->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testKeyFirstOnEmptyArrayReturnsNull(): void
+    {
+        self::assertSame(array_key_first([]), Arr::keyFirst([]));
+    }
+
+    public function testFluentKeyLastMatchesNativePhp(): void
+    {
+        $input = ['b' => 2, 'a' => 1];
+
+        $expected = array_key_last($input);
+        $actual = Arr::of($input)->keyLast()->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentDiffAssocMatchesNativePhp(): void
+    {
+        $input = ['a' => 1, 'b' => 2];
+
+        $expected = array_diff_assoc($input, ['a' => 1]);
+        $actual = Arr::of($input)->diffAssoc(['a' => 1])->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentDiffKeyMatchesNativePhp(): void
+    {
+        $input = ['a' => 1, 'b' => 2];
+
+        $expected = array_diff_key($input, ['a' => 9]);
+        $actual = Arr::of($input)->diffKey(['a' => 9])->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentIntersectAssocMatchesNativePhp(): void
+    {
+        $input = ['a' => 1, 'b' => 2];
+
+        $expected = array_intersect_assoc($input, ['b' => 2, 'c' => 3]);
+        $actual = Arr::of($input)->intersectAssoc(['b' => 2, 'c' => 3])->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentIntersectKeyMatchesNativePhp(): void
+    {
+        $input = ['a' => 1, 'b' => 2];
+
+        $expected = array_intersect_key($input, ['b' => 9]);
+        $actual = Arr::of($input)->intersectKey(['b' => 9])->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testStaticReplaceRecursiveMatchesNativePhp(): void
+    {
+        $base = ['cfg' => ['a' => 1, 'nested' => ['x' => 1]]];
+        $replacement = ['cfg' => ['nested' => ['y' => 2]]];
+
+        self::assertSame(
+            array_replace_recursive($base, $replacement),
+            Arr::replaceRecursive($base, $replacement),
+        );
+    }
+
+    public function testFluentSumReturnsNativeScalar(): void
+    {
+        $input = [1, 2.5, 3];
+
+        $expected = array_sum($input);
+        $actual = Arr::of($input)->sum()->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentProductReturnsNativeScalar(): void
+    {
+        $input = [1.5, 2, 3];
+
+        $expected = array_product($input);
+        $actual = Arr::of($input)->product()->get();
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testFluentKeyExistsReturnsNativeBoolean(): void
+    {
+        $input = ['a' => 1, 'b' => 2];
+
+        $expected = array_key_exists('b', $input);
+        $actual = Arr::of($input)->keyExists('b')->get();
+
+        self::assertSame($expected, $actual);
+    }
 }
