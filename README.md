@@ -14,8 +14,8 @@ composer require krasssnoff/oophp
 - `Str` for selected string functions
 - `Json` for selected `json_*` functions
 - `Sys` for a few read-only system helpers
-- `ValueChain` as the fluent wrapper behind `Arr::of(...)`, `Str::of(...)`, and `Json::of(...)`
-- Typed wrappers: `ArrayChain`, `StringChain`, `MixedChain`
+- `ValueChain` as the minimal shared fluent wrapper behind `Arr::of(...)` and `Str::of(...)`
+- Typed wrappers: `ArrayChain`, `StringChain`, and supporting chain classes carry the domain methods and hand off between types as native return values change
 
 ## API principles
 
@@ -69,6 +69,8 @@ $json = Json::encode(['ok' => true]);
 ```
 
 `->get()` remains available when you prefer an explicit terminal call.
+
+`Json` remains a static-only domain because JSON operations do not map naturally to a receiver-based chain model.
 
 ## Design and test docs
 
