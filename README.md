@@ -40,7 +40,7 @@ With OOPHP, the same flow stays linear:
 ```php
 $position = Str::of('  alpha,beta,gamma  ')
     ->trim()
-    ->toLower()
+    ->tolower()
     ->split(',')
     ->values()
     ->search('beta')();
@@ -59,7 +59,7 @@ $position = Arr::of(['a' => 'first', 'b' => 'second'])
 
 $parts = Str::of('  Foo,Bar  ')
     ->trim()
-    ->toLower()
+    ->tolower()
     ->split(',')
     ->get();
 
