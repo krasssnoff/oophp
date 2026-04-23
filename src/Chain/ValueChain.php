@@ -198,12 +198,12 @@ readonly class ValueChain implements Chain
         return new self(str_replace($search, $replace, $this->value));
     }
 
-    public function toLower(): self
+    public function tolower(): self
     {
         return new self(strtolower($this->value));
     }
 
-    public function toUpper(): self
+    public function toupper(): self
     {
         return new self(strtoupper($this->value));
     }
@@ -216,6 +216,66 @@ readonly class ValueChain implements Chain
     public function contains(string $needle): self
     {
         return new self(str_contains($this->value, $needle));
+    }
+
+    public function startsWith(string $needle): self
+    {
+        return new self(str_starts_with($this->value, $needle));
+    }
+
+    public function endsWith(string $needle): self
+    {
+        return new self(str_ends_with($this->value, $needle));
+    }
+
+    public function len(): self
+    {
+        return new self(strlen($this->value));
+    }
+
+    public function pos(string $needle, int $offset = 0): self
+    {
+        return new self(strpos($this->value, $needle, $offset));
+    }
+
+    public function ipos(string $needle, int $offset = 0): self
+    {
+        return new self(stripos($this->value, $needle, $offset));
+    }
+
+    public function rpos(string $needle, int $offset = 0): self
+    {
+        return new self(strrpos($this->value, $needle, $offset));
+    }
+
+    public function ripos(string $needle, int $offset = 0): self
+    {
+        return new self(strripos($this->value, $needle, $offset));
+    }
+
+    public function repeat(int $times): self
+    {
+        return new self(str_repeat($this->value, $times));
+    }
+
+    public function rev(): self
+    {
+        return new self(strrev($this->value));
+    }
+
+    public function substr(int $offset, ?int $length = null): self
+    {
+        return new self(substr($this->value, $offset, $length));
+    }
+
+    public function substrCount(string $needle, int $offset = 0, ?int $length = null): self
+    {
+        return new self(substr_count($this->value, $needle, $offset, $length));
+    }
+
+    public function substrReplace(string|array $replace, int|array $offset, int|array|null $length = null): self
+    {
+        return new self(substr_replace($this->value, $replace, $offset, $length));
     }
 
     public function split(string $separator, int $limit = PHP_INT_MAX): self

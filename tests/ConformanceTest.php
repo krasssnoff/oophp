@@ -80,10 +80,22 @@ final class ConformanceTest extends TestCase
     {
         return [
             'replace' => [str_replace('a', 'b', 'a-cat'), Str::replace('a', 'b', 'a-cat')],
-            'lower' => [strtolower('TeSt'), Str::lower('TeSt')],
-            'upper' => [strtoupper('TeSt'), Str::upper('TeSt')],
+            'tolower' => [strtolower('TeSt'), Str::tolower('TeSt')],
+            'toupper' => [strtoupper('TeSt'), Str::toupper('TeSt')],
             'trim' => [trim('  test  '), Str::trim('  test  ')],
             'contains_true' => [str_contains('package', 'ack'), Str::contains('package', 'ack')],
+            'starts_with' => [str_starts_with('package', 'pack'), Str::startsWith('package', 'pack')],
+            'ends_with' => [str_ends_with('package', 'age'), Str::endsWith('package', 'age')],
+            'len' => [strlen('TeSt'), Str::len('TeSt')],
+            'pos_with_offset' => [strpos('banana', 'na', 3), Str::pos('banana', 'na', 3)],
+            'ipos_with_offset' => [stripos('BaNaNa', 'na', 3), Str::ipos('BaNaNa', 'na', 3)],
+            'rpos' => [strrpos('banana', 'na'), Str::rpos('banana', 'na')],
+            'ripos' => [strripos('BaNaNa', 'NA'), Str::ripos('BaNaNa', 'NA')],
+            'repeat' => [str_repeat('ab', 3), Str::repeat('ab', 3)],
+            'rev' => [strrev('desserts'), Str::rev('desserts')],
+            'substr' => [substr('package', 1, 3), Str::substr('package', 1, 3)],
+            'substr_count' => [substr_count('banana', 'na', 1, 4), Str::substrCount('banana', 'na', 1, 4)],
+            'substr_replace' => [substr_replace('abcdef', 'X', 2, 3), Str::substrReplace('abcdef', 'X', 2, 3)],
             'split_limit' => [explode(',', 'a,b,c', 2), Str::split(',', 'a,b,c', 2)],
         ];
     }
@@ -116,7 +128,7 @@ final class ConformanceTest extends TestCase
 
         $actual = Str::of($input)
             ->trim()
-            ->lower()
+            ->tolower()
             ->split(',')
             ->values()
             ->search('beta')

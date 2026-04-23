@@ -30,9 +30,10 @@ This document defines the core API principles used by OOPHP.
 
 - Each mapping follows `native PHP function -> static wrapper -> chain method`.
 - Method names are derived conservatively from native PHP names.
-- For string functions, only the `str` / `str_` prefix may be removed.
+- CamelCase conversion is applied only to underscore-separated names.
+- The `str` prefix may be removed only when it is a leading native prefix, and it must not be removed from the middle of a name.
 - No additional shortening is allowed beyond that rule.
-- Example: `strtolower -> toLower`, `strtoupper -> toUpper`, while `trim -> trim`.
+- Examples: `strtolower -> tolower`, `strtoupper -> toupper`, `substr_replace -> substrReplace`, while `trim -> trim`.
 - Static wrapper names stay short and domain-oriented.
 - Chain methods reuse the static wrapper name where possible.
 - When needed for clarity, chain names may keep an explicit domain prefix such as `jsonEncode` and `jsonDecode`.

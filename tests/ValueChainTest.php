@@ -40,7 +40,7 @@ final class ValueChainTest extends TestCase
     {
         $chain = Str::of('  Foo,Bar  ')
             ->trim()
-            ->lower()
+            ->tolower()
             ->split(',');
 
         self::assertSame($chain->get(), $chain());
