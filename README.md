@@ -1,11 +1,20 @@
 # OOPHP
 
-`OOPHP` is a Composer package that wraps selected native PHP functions with static entry points and a fluent chain API.
+`OOPHP` is a Composer package that wraps selected native PHP functions with:
 
-## Install (later)
+- static wrappers (`Arr::values(...)`, `Json::encode(...)`, etc.)
+- fluent chains where receiver-based composition is natural (`Arr::of(...)`, `Str::of(...)`)
+
+## Project status
+
+This package is in active development and is not published to Packagist yet.
+
+## Local usage (until Packagist release)
 
 ```bash
-composer require krasssnoff/oophp
+git clone https://github.com/krasssnoff/oophp.git
+cd oophp
+composer install
 ```
 
 ## Current scope
@@ -14,8 +23,10 @@ composer require krasssnoff/oophp
 - `Str` for selected string functions
 - `Json` for selected `json_*` functions
 - `Sys` for a few read-only system helpers
-- `ValueChain` as the minimal shared fluent wrapper behind `Arr::of(...)` and `Str::of(...)`
-- Typed wrappers: `ArrayChain`, `StringChain`, and supporting chain classes carry the domain methods and hand off between types as native return values change
+- Fluent API is available for `Arr` and `Str`
+- `Json` and `Sys` are static-only domains
+- `ValueChain` is the minimal shared chain wrapper
+- Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
 ## API principles
 
@@ -46,27 +57,37 @@ $position = Str::of('  alpha,beta,gamma  ')
     ->search('beta')();
 ```
 
-## Other Examples
+## Examples
 
 ```php
 use Oophp\Arr;
 use Oophp\Json;
+use Oophp\Sys;
 use Oophp\Str;
 
 $position = Arr::of(['a' => 'first', 'b' => 'second'])
     ->values()
     ->search('second')();
 
+$parts = Str::of('  Foo,Bar  ')
+    ->trim()
+    ->tolower()
+    ->split(',')
+    ->get();
+
 $values = Arr::values(['x' => 10, 'y' => 20]);
 
 $contains = Str::contains('package', 'ack');
 
 $json = Json::encode(['ok' => true]);
+$decoded = Json::decode($json, true);
+
+$sapi = Sys::sapi();
 ```
 
-`->get()` `()` remains available when you prefer an explicit terminal call.
+Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Json` remains a static-only domain.
+`Json` and `Sys` remain static-only domains.
 
 ## Design and test docs
 
