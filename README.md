@@ -2,7 +2,7 @@
 
 `OOPHP` is a Composer package that wraps selected native PHP functions with static entry points and a fluent chain API.
 
-## Install
+## Install (later)
 
 ```bash
 composer require krasssnoff/oophp
@@ -46,7 +46,7 @@ $position = Str::of('  alpha,beta,gamma  ')
     ->search('beta')();
 ```
 
-## Examples
+## Other Examples
 
 ```php
 use Oophp\Arr;
@@ -57,20 +57,16 @@ $position = Arr::of(['a' => 'first', 'b' => 'second'])
     ->values()
     ->search('second')();
 
-$parts = Str::of('  Foo,Bar  ')
-    ->trim()
-    ->tolower()
-    ->split(',')
-    ->get();
-
 $values = Arr::values(['x' => 10, 'y' => 20]);
+
 $contains = Str::contains('package', 'ack');
+
 $json = Json::encode(['ok' => true]);
 ```
 
-`->get()` remains available when you prefer an explicit terminal call.
+`->get()` `()` remains available when you prefer an explicit terminal call.
 
-`Json` remains a static-only domain because JSON operations do not map naturally to a receiver-based chain model.
+`Json` remains a static-only domain.
 
 ## Design and test docs
 
