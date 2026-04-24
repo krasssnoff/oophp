@@ -20,7 +20,7 @@ composer install
 
 ## Current scope
 
-- `Arr` for selected `array_*` functions
+- `Arr` for PHP array helpers, including `array_*`, `in_array`, and sort variants
 - `Str` for selected string functions
 - `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
 - `Math` for selected numeric wrappers with `NumberChain`
@@ -99,6 +99,15 @@ use Oophp\Url;
 $position = Arr::of(['a' => 'first', 'b' => 'second'])
     ->values()
     ->search('second')();
+
+$hasId = Arr::of([['id' => 1], ['id' => 2]])
+    ->pop()
+    ->keyExists('id')
+    ->get();
+
+$sorted = Arr::of([3, 1, 2])
+    ->sort(SORT_NUMERIC)
+    ->get();
 
 $parts = Str::of('  Foo,Bar  ')
     ->trim()

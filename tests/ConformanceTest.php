@@ -37,6 +37,8 @@ final class ConformanceTest extends TestCase
     public static function arrStaticProvider(): array
     {
         $source = ['x' => 10, 'y' => 20];
+        $valueCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
+        $keyCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
 
         return [
             'values' => [array_values($source), Arr::values($source)],
@@ -68,16 +70,28 @@ final class ConformanceTest extends TestCase
             'key_last' => [array_key_last(['b' => 2, 'a' => 1]), Arr::keyLast(['b' => 2, 'a' => 1])],
             'diff_assoc' => [array_diff_assoc(['a' => 1, 'b' => 2], ['a' => 1]), Arr::diffAssoc(['a' => 1, 'b' => 2], ['a' => 1])],
             'diff_key' => [array_diff_key(['a' => 1, 'b' => 2], ['a' => 9]), Arr::diffKey(['a' => 1, 'b' => 2], ['a' => 9])],
+            'diff_uassoc' => [array_diff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $keyCompare), Arr::diffUassoc(['a' => 1, 'b' => 2], ['a' => 1], $keyCompare)],
+            'diff_ukey' => [array_diff_ukey(['a' => 1, 'b' => 2], ['a' => 9], $keyCompare), Arr::diffUkey(['a' => 1, 'b' => 2], ['a' => 9], $keyCompare)],
             'intersect_assoc' => [array_intersect_assoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3]), Arr::intersectAssoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3])],
             'intersect_key' => [array_intersect_key(['a' => 1, 'b' => 2], ['b' => 9]), Arr::intersectKey(['a' => 1, 'b' => 2], ['b' => 9])],
+            'intersect_uassoc' => [array_intersect_uassoc(['a' => 1, 'b' => 2], ['b' => 2], $keyCompare), Arr::intersectUassoc(['a' => 1, 'b' => 2], ['b' => 2], $keyCompare)],
+            'intersect_ukey' => [array_intersect_ukey(['a' => 1, 'b' => 2], ['b' => 9], $keyCompare), Arr::intersectUkey(['a' => 1, 'b' => 2], ['b' => 9], $keyCompare)],
             'replace_recursive' => [
                 array_replace_recursive(['cfg' => ['a' => 1]], ['cfg' => ['b' => 2]]),
                 Arr::replaceRecursive(['cfg' => ['a' => 1]], ['cfg' => ['b' => 2]]),
             ],
+            'fill' => [array_fill(2, 3, 'x'), Arr::fill(2, 3, 'x')],
             'sum' => [array_sum([1, 2, 3]), Arr::sum([1, 2, 3])],
             'product' => [array_product([1.5, 2, 3]), Arr::product([1.5, 2, 3])],
             'key_exists' => [array_key_exists('a', ['a' => 1]), Arr::keyExists('a', ['a' => 1])],
             'reduce' => [array_reduce([1, 2, 3], static fn (int $carry, int $item): int => $carry + $item, 0), Arr::reduce([1, 2, 3], static fn (int $carry, int $item): int => $carry + $item, 0)],
+            'rand_all_keys' => [array_rand(['a' => 1, 'b' => 2], 2), Arr::rand(['a' => 1, 'b' => 2], 2)],
+            'udiff' => [array_udiff(['a', 'b', 'c'], ['b'], $valueCompare), Arr::udiff(['a', 'b', 'c'], ['b'], $valueCompare)],
+            'udiff_assoc' => [array_udiff_assoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare), Arr::udiffAssoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare)],
+            'udiff_uassoc' => [array_udiff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare, $keyCompare), Arr::udiffUassoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare, $keyCompare)],
+            'uintersect' => [array_uintersect(['a', 'b', 'c'], ['b'], $valueCompare), Arr::uintersect(['a', 'b', 'c'], ['b'], $valueCompare)],
+            'uintersect_assoc' => [array_uintersect_assoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare), Arr::uintersectAssoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare)],
+            'uintersect_uassoc' => [array_uintersect_uassoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare, $keyCompare), Arr::uintersectUassoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare, $keyCompare)],
             'sort' => [
                 (static function (): array {
                     $value = [3, 1, 2];
@@ -93,6 +107,94 @@ final class ConformanceTest extends TestCase
                     return $value;
                 })(),
                 Arr::rsort([3, 1, 2], SORT_NUMERIC),
+            ],
+            'asort' => [
+                (static function (): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    asort($value, SORT_NUMERIC);
+                    return $value;
+                })(),
+                Arr::asort(['b' => 2, 'a' => 1], SORT_NUMERIC),
+            ],
+            'arsort' => [
+                (static function (): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    arsort($value, SORT_NUMERIC);
+                    return $value;
+                })(),
+                Arr::arsort(['b' => 2, 'a' => 1], SORT_NUMERIC),
+            ],
+            'ksort' => [
+                (static function (): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    ksort($value, SORT_STRING);
+                    return $value;
+                })(),
+                Arr::ksort(['b' => 2, 'a' => 1], SORT_STRING),
+            ],
+            'krsort' => [
+                (static function (): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    krsort($value, SORT_STRING);
+                    return $value;
+                })(),
+                Arr::krsort(['b' => 2, 'a' => 1], SORT_STRING),
+            ],
+            'natsort' => [
+                (static function (): array {
+                    $value = ['img12', 'img10', 'img2', 'img1'];
+                    natsort($value);
+                    return $value;
+                })(),
+                Arr::natsort(['img12', 'img10', 'img2', 'img1']),
+            ],
+            'natcasesort' => [
+                (static function (): array {
+                    $value = ['A10', 'a2', 'A1'];
+                    natcasesort($value);
+                    return $value;
+                })(),
+                Arr::natcasesort(['A10', 'a2', 'A1']),
+            ],
+            'shuffle_single' => [
+                (static function (): array {
+                    $value = ['only'];
+                    shuffle($value);
+                    return $value;
+                })(),
+                Arr::shuffle(['only']),
+            ],
+            'usort' => [
+                (static function () use ($valueCompare): array {
+                    $value = [3, 1, 2];
+                    usort($value, $valueCompare);
+                    return $value;
+                })(),
+                Arr::usort([3, 1, 2], $valueCompare),
+            ],
+            'uasort' => [
+                (static function () use ($valueCompare): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    uasort($value, $valueCompare);
+                    return $value;
+                })(),
+                Arr::uasort(['b' => 2, 'a' => 1], $valueCompare),
+            ],
+            'uksort' => [
+                (static function () use ($keyCompare): array {
+                    $value = ['b' => 2, 'a' => 1];
+                    uksort($value, $keyCompare);
+                    return $value;
+                })(),
+                Arr::uksort(['b' => 2, 'a' => 1], $keyCompare),
+            ],
+            'multisort' => [
+                (static function (): array {
+                    $value = [3, 1, 2];
+                    array_multisort($value, SORT_ASC, SORT_NUMERIC);
+                    return $value;
+                })(),
+                Arr::multisort([3, 1, 2], SORT_ASC, SORT_NUMERIC),
             ],
             'implode' => [implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c'])],
         ];

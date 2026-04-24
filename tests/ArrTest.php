@@ -361,4 +361,196 @@ final class ArrTest extends TestCase
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c']));
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->implode('-')->get());
     }
+
+    public function testStaticCallbackDiffAndIntersectVariantsMatchNativePhp(): void
+    {
+        $valueCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
+        $keyCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
+
+        self::assertSame(
+            array_diff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $keyCompare),
+            Arr::diffUassoc(['a' => 1, 'b' => 2], ['a' => 1], $keyCompare),
+        );
+        self::assertSame(
+            array_diff_ukey(['a' => 1, 'b' => 2], ['a' => 9], $keyCompare),
+            Arr::diffUkey(['a' => 1, 'b' => 2], ['a' => 9], $keyCompare),
+        );
+        self::assertSame(
+            array_udiff(['a', 'b', 'c'], ['b'], $valueCompare),
+            Arr::udiff(['a', 'b', 'c'], ['b'], $valueCompare),
+        );
+        self::assertSame(
+            array_udiff_assoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare),
+            Arr::udiffAssoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare),
+        );
+        self::assertSame(
+            array_udiff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare, $keyCompare),
+            Arr::udiffUassoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare, $keyCompare),
+        );
+        self::assertSame(
+            array_intersect_uassoc(['a' => 1, 'b' => 2], ['b' => 2], $keyCompare),
+            Arr::intersectUassoc(['a' => 1, 'b' => 2], ['b' => 2], $keyCompare),
+        );
+        self::assertSame(
+            array_intersect_ukey(['a' => 1, 'b' => 2], ['b' => 9], $keyCompare),
+            Arr::intersectUkey(['a' => 1, 'b' => 2], ['b' => 9], $keyCompare),
+        );
+        self::assertSame(
+            array_uintersect(['a', 'b', 'c'], ['b'], $valueCompare),
+            Arr::uintersect(['a', 'b', 'c'], ['b'], $valueCompare),
+        );
+        self::assertSame(
+            array_uintersect_assoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare),
+            Arr::uintersectAssoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare),
+        );
+        self::assertSame(
+            array_uintersect_uassoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare, $keyCompare),
+            Arr::uintersectUassoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare, $keyCompare),
+        );
+    }
+
+    public function testStaticMutatorsPreserveNativeReturnAndMutation(): void
+    {
+        $native = [1, 2, 3];
+        $wrapped = [1, 2, 3];
+        self::assertSame(array_pop($native), Arr::pop($wrapped));
+        self::assertSame($native, $wrapped);
+
+        $native = [1, 2];
+        $wrapped = [1, 2];
+        self::assertSame(array_push($native, 3, 4), Arr::push($wrapped, 3, 4));
+        self::assertSame($native, $wrapped);
+
+        $native = [1, 2, 3];
+        $wrapped = [1, 2, 3];
+        self::assertSame(array_shift($native), Arr::shift($wrapped));
+        self::assertSame($native, $wrapped);
+
+        $native = [2, 3];
+        $wrapped = [2, 3];
+        self::assertSame(array_unshift($native, 0, 1), Arr::unshift($wrapped, 0, 1));
+        self::assertSame($native, $wrapped);
+
+        $native = ['a', 'b', 'c', 'd'];
+        $wrapped = ['a', 'b', 'c', 'd'];
+        self::assertSame(array_splice($native, 1, 2, ['x', 'y']), Arr::splice($wrapped, 1, 2, ['x', 'y']));
+        self::assertSame($native, $wrapped);
+
+        $callback = static function (int &$value): void {
+            $value *= 2;
+        };
+        $native = [1, 2, 3];
+        $wrapped = [1, 2, 3];
+        self::assertSame(array_walk($native, $callback), Arr::walk($wrapped, $callback));
+        self::assertSame($native, $wrapped);
+
+        $native = ['nested' => [1, 2]];
+        $wrapped = ['nested' => [1, 2]];
+        self::assertSame(array_walk_recursive($native, $callback), Arr::walkRecursive($wrapped, $callback));
+        self::assertSame($native, $wrapped);
+    }
+
+    public function testFluentMutatorsReturnUpdatedArray(): void
+    {
+        self::assertSame([1, 2, 3, 4], Arr::of([1, 2])->push(3, 4)->get());
+        self::assertSame([0, 1, 2, 3], Arr::of([2, 3])->unshift(0, 1)->get());
+        self::assertSame(['a', 'x', 'y', 'd'], Arr::of(['a', 'b', 'c', 'd'])->splice(1, 2, ['x', 'y'])->get());
+        self::assertSame([2, 4, 6], Arr::of([1, 2, 3])->walk(static function (int &$value): void {
+            $value *= 2;
+        })->get());
+        self::assertSame(['nested' => [2, 4]], Arr::of(['nested' => [1, 2]])->walkRecursive(static function (int &$value): void {
+            $value *= 2;
+        })->get());
+    }
+
+    public function testFluentPopAndShiftReturnExtractedElement(): void
+    {
+        self::assertSame('last', Arr::of(['first', 'last'])->pop()->get());
+        self::assertSame('first', Arr::of(['first', 'last'])->shift()->get());
+        self::assertSame(['id' => 2], Arr::of([['id' => 1], ['id' => 2]])->pop()->get());
+        self::assertSame(['id' => 1], Arr::of([['id' => 1], ['id' => 2]])->shift()->get());
+    }
+
+    public function testAdditionalSortingVariantsMatchNativePhp(): void
+    {
+        $input = ['b' => 2, 'a' => 1, 'c' => 3];
+        $descending = static fn (mixed $left, mixed $right): int => $right <=> $left;
+
+        $expected = $input;
+        asort($expected, SORT_NUMERIC);
+        self::assertSame($expected, Arr::asort($input, SORT_NUMERIC));
+        self::assertSame($expected, Arr::of($input)->asort(SORT_NUMERIC)->get());
+
+        $expected = $input;
+        arsort($expected, SORT_NUMERIC);
+        self::assertSame($expected, Arr::arsort($input, SORT_NUMERIC));
+        self::assertSame($expected, Arr::of($input)->arsort(SORT_NUMERIC)->get());
+
+        $expected = $input;
+        ksort($expected, SORT_STRING);
+        self::assertSame($expected, Arr::ksort($input, SORT_STRING));
+        self::assertSame($expected, Arr::of($input)->ksort(SORT_STRING)->get());
+
+        $expected = $input;
+        krsort($expected, SORT_STRING);
+        self::assertSame($expected, Arr::krsort($input, SORT_STRING));
+        self::assertSame($expected, Arr::of($input)->krsort(SORT_STRING)->get());
+
+        $natural = ['img12', 'img10', 'img2', 'img1'];
+        $expected = $natural;
+        natsort($expected);
+        self::assertSame($expected, Arr::natsort($natural));
+        self::assertSame($expected, Arr::of($natural)->natsort()->get());
+
+        $expected = ['A10', 'a2', 'A1'];
+        natcasesort($expected);
+        self::assertSame($expected, Arr::natcasesort(['A10', 'a2', 'A1']));
+        self::assertSame($expected, Arr::of(['A10', 'a2', 'A1'])->natcasesort()->get());
+
+        self::assertSame(['only'], Arr::shuffle(['only']));
+        self::assertSame(['only'], Arr::of(['only'])->shuffle()->get());
+
+        $expected = $input;
+        uasort($expected, $descending);
+        self::assertSame($expected, Arr::uasort($input, $descending));
+        self::assertSame($expected, Arr::of($input)->uasort($descending)->get());
+
+        $expected = $input;
+        uksort($expected, $descending);
+        self::assertSame($expected, Arr::uksort($input, $descending));
+        self::assertSame($expected, Arr::of($input)->uksort($descending)->get());
+
+        $expected = [3, 1, 2];
+        usort($expected, $descending);
+        self::assertSame($expected, Arr::usort([3, 1, 2], $descending));
+        self::assertSame($expected, Arr::of([3, 1, 2])->usort($descending)->get());
+
+        $expected = [3, 1, 2];
+        array_multisort($expected, SORT_ASC, SORT_NUMERIC);
+        self::assertSame($expected, Arr::multisort([3, 1, 2], SORT_ASC, SORT_NUMERIC));
+        self::assertSame($expected, Arr::of([3, 1, 2])->multisort(SORT_ASC, SORT_NUMERIC)->get());
+    }
+
+    public function testFillRandAndFluentCallbackVariantsMatchNativePhp(): void
+    {
+        $valueCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
+        $keyCompare = static fn (mixed $left, mixed $right): int => $left <=> $right;
+
+        self::assertSame(array_fill(2, 3, 'x'), Arr::fill(2, 3, 'x'));
+        self::assertSame(array_rand(['a' => 1, 'b' => 2], 2), Arr::rand(['a' => 1, 'b' => 2], 2));
+        self::assertSame(array_rand(['a' => 1, 'b' => 2], 2), Arr::of(['a' => 1, 'b' => 2])->rand(2)->get());
+
+        self::assertSame(
+            array_diff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $keyCompare),
+            Arr::of(['a' => 1, 'b' => 2])->diffUassoc(['a' => 1], $keyCompare)->get(),
+        );
+        self::assertSame(
+            array_udiff_uassoc(['a' => 1, 'b' => 2], ['a' => 1], $valueCompare, $keyCompare),
+            Arr::of(['a' => 1, 'b' => 2])->udiffUassoc(['a' => 1], $valueCompare, $keyCompare)->get(),
+        );
+        self::assertSame(
+            array_uintersect_uassoc(['a' => 1, 'b' => 2], ['b' => 2], $valueCompare, $keyCompare),
+            Arr::of(['a' => 1, 'b' => 2])->uintersectUassoc(['b' => 2], $valueCompare, $keyCompare)->get(),
+        );
+    }
 }

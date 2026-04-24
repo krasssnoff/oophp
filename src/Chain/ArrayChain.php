@@ -146,6 +146,16 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_diff_key($this->value, ...$arrays));
     }
 
+    public function diffUassoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_diff_uassoc($this->value, ...$rest));
+    }
+
+    public function diffUkey(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_diff_ukey($this->value, ...$rest));
+    }
+
     public function intersectAssoc(array ...$arrays): ArrayChain
     {
         return self::wrap(array_intersect_assoc($this->value, ...$arrays));
@@ -154,6 +164,16 @@ readonly class ArrayChain extends MixedChain
     public function intersectKey(array ...$arrays): ArrayChain
     {
         return self::wrap(array_intersect_key($this->value, ...$arrays));
+    }
+
+    public function intersectUassoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_intersect_uassoc($this->value, ...$rest));
+    }
+
+    public function intersectUkey(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_intersect_ukey($this->value, ...$rest));
     }
 
     public function replaceRecursive(array ...$replacements): ArrayChain
@@ -181,6 +201,95 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_reduce($this->value, $callback, $initial));
     }
 
+    public function rand(int $num = 1): ArrayChain|StringChain|MixedChain
+    {
+        return self::wrap(array_rand($this->value, $num));
+    }
+
+    public function udiff(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_udiff($this->value, ...$rest));
+    }
+
+    public function udiffAssoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_udiff_assoc($this->value, ...$rest));
+    }
+
+    public function udiffUassoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_udiff_uassoc($this->value, ...$rest));
+    }
+
+    public function uintersect(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_uintersect($this->value, ...$rest));
+    }
+
+    public function uintersectAssoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_uintersect_assoc($this->value, ...$rest));
+    }
+
+    public function uintersectUassoc(mixed ...$rest): ArrayChain
+    {
+        return self::wrap(array_uintersect_uassoc($this->value, ...$rest));
+    }
+
+    public function pop(): ArrayChain|StringChain|MixedChain
+    {
+        $array = $this->value;
+
+        return self::wrap(array_pop($array));
+    }
+
+    public function push(mixed ...$values): ArrayChain
+    {
+        $array = $this->value;
+        array_push($array, ...$values);
+
+        return self::wrap($array);
+    }
+
+    public function shift(): ArrayChain|StringChain|MixedChain
+    {
+        $array = $this->value;
+
+        return self::wrap(array_shift($array));
+    }
+
+    public function unshift(mixed ...$values): ArrayChain
+    {
+        $array = $this->value;
+        array_unshift($array, ...$values);
+
+        return self::wrap($array);
+    }
+
+    public function splice(int $offset, ?int $length = null, array $replacement = []): ArrayChain
+    {
+        $array = $this->value;
+        array_splice($array, $offset, $length, $replacement);
+
+        return self::wrap($array);
+    }
+
+    public function walk(callable $callback, mixed $arg = null): ArrayChain
+    {
+        $array = $this->value;
+        array_walk($array, $callback, $arg);
+
+        return self::wrap($array);
+    }
+
+    public function walkRecursive(callable $callback, mixed $arg = null): ArrayChain
+    {
+        $array = $this->value;
+        array_walk_recursive($array, $callback, $arg);
+
+        return self::wrap($array);
+    }
+
     public function sort(int $flags = SORT_REGULAR): ArrayChain
     {
         $sorted = $this->value;
@@ -193,6 +302,94 @@ readonly class ArrayChain extends MixedChain
     {
         $sorted = $this->value;
         rsort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function asort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        asort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function arsort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        arsort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function ksort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        ksort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function krsort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        krsort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function natsort(): ArrayChain
+    {
+        $sorted = $this->value;
+        natsort($sorted);
+
+        return self::wrap($sorted);
+    }
+
+    public function natcasesort(): ArrayChain
+    {
+        $sorted = $this->value;
+        natcasesort($sorted);
+
+        return self::wrap($sorted);
+    }
+
+    public function shuffle(): ArrayChain
+    {
+        $array = $this->value;
+        shuffle($array);
+
+        return self::wrap($array);
+    }
+
+    public function usort(callable $callback): ArrayChain
+    {
+        $sorted = $this->value;
+        usort($sorted, $callback);
+
+        return self::wrap($sorted);
+    }
+
+    public function uasort(callable $callback): ArrayChain
+    {
+        $sorted = $this->value;
+        uasort($sorted, $callback);
+
+        return self::wrap($sorted);
+    }
+
+    public function uksort(callable $callback): ArrayChain
+    {
+        $sorted = $this->value;
+        uksort($sorted, $callback);
+
+        return self::wrap($sorted);
+    }
+
+    public function multisort(mixed ...$rest): ArrayChain
+    {
+        $sorted = $this->value;
+        array_multisort($sorted, ...$rest);
 
         return self::wrap($sorted);
     }

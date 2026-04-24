@@ -25,6 +25,9 @@ This document defines the core API principles used by OOPHP.
 - `MixedChain` can act as an interoperability bridge via `jsonEncode(...)` / `jsonDecode(...)`.
 - `ValueChain` keeps only shared wrapper mechanics; domain methods live on `ArrayChain`, `StringChain`, `MbStringChain`, `DateChain`, `FsPathChain`, `StreamHandleChain`, `NumberChain`, `UrlChain`, and supporting chain classes.
 - Fluent calls hand off to the next typed chain based on the native return value: arrays become `ArrayChain`, strings become `StringChain`, and all other values stay in `MixedChain`.
+- `ArrayChain` methods that extract a value from the current array, such as `pop()` and `shift()`, continue with the extracted element. If that element is an array, string, or another value type, the next chain is selected by the same handoff rules.
+- `ArrayChain` sort-style methods, including `sort()`, `rsort()`, key/value sort variants, `shuffle()`, and `multisort()`, continue with the reordered array state instead of the native boolean status.
+- `ArrayChain` array mutators that naturally build a new array state, such as `push()`, `unshift()`, `splice()`, `walk()`, and `walkRecursive()`, continue with that updated array state.
 
 ## Immutability
 
