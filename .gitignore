@@ -1,7 +1,8 @@
 /vendor/
 /.phpunit.cache/
 /composer.lock
+/.cursor
 
 # Local playgrounds and editor clutter
 /.DS_Store
-/playground.php
+/pg.php
