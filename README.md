@@ -28,11 +28,12 @@ composer install
 - `Encoding` for base64/hex/pack/unpack and serialization helpers
 - `Preg` for selected `preg_*` regex operations
 - `Path` for selected path helpers
+- `Fs` for selected filesystem and file IO helpers
 - `Sys` for a few read-only system helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Math`, `Json`, `Url`, `Encoding`, `Path`, and `Sys` are static-only domains
+- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -73,6 +74,7 @@ use Oophp\Encoding;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
+use Oophp\Fs;
 use Oophp\Path;
 use Oophp\Preg;
 use Oophp\Sys;
@@ -111,12 +113,14 @@ $matched = Preg::pregMatch('/\w+/', 'alpha');
 
 $filename = Path::basename('/var/www/app/archive.tar.gz');
 
+$written = Fs::filePutContents('/tmp/example.txt', 'payload');
+
 $sapi = Sys::sapi();
 ```
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Math`, `Json`, `Url`, `Encoding`, `Path`, and `Sys` remain static-only domains.
+`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, and `Sys` remain static-only domains.
 
 ## Design and test docs
 
