@@ -9,6 +9,7 @@ use Oophp\Encoding;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
+use Oophp\Preg;
 use Oophp\Str;
 use Oophp\Url;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -254,6 +255,65 @@ final class ConformanceTest extends TestCase
                 Encoding::unserialize($serialized, ['allowed_classes' => false]),
             ],
         ];
+    }
+
+    #[DataProvider('pregStaticProvider')]
+    public function testPregStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function pregStaticProvider(): array
+    {
+        return [
+            'preg_replace' => [
+                preg_replace('/\s+/', '-', 'hello world'),
+                Preg::pregReplace('/\s+/', '-', 'hello world'),
+            ],
+            'preg_split' => [
+                preg_split('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
+                Preg::pregSplit('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
+            ],
+            'preg_grep' => [
+                preg_grep('/^a/u', ['alpha', 'beta', 'axis']),
+                Preg::pregGrep('/^a/u', ['alpha', 'beta', 'axis']),
+            ],
+            'preg_quote' => [
+                preg_quote('a+b?c', '/'),
+                Preg::pregQuote('a+b?c', '/'),
+            ],
+            'preg_replace_callback' => [
+                preg_replace_callback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
+                Preg::pregReplaceCallback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
+            ],
+        ];
+    }
+
+    public function testPregMatchOutputConformance(): void
+    {
+        $expectedMatches = [];
+        $actualMatches = [];
+
+        $expected = preg_match('/(\w+)-(\d+)/', 'item-42', $expectedMatches);
+        $actual = Preg::pregMatch('/(\w+)-(\d+)/', 'item-42', $actualMatches);
+
+        self::assertSame($expected, $actual);
+        self::assertSame($expectedMatches, $actualMatches);
+    }
+
+    public function testPregMatchAllOutputConformance(): void
+    {
+        $expectedMatches = [];
+        $actualMatches = [];
+
+        $expected = preg_match_all('/(\w+)/', 'alpha beta', $expectedMatches, PREG_PATTERN_ORDER);
+        $actual = Preg::pregMatchAll('/(\w+)/', 'alpha beta', $actualMatches, PREG_PATTERN_ORDER);
+
+        self::assertSame($expected, $actual);
+        self::assertSame($expectedMatches, $actualMatches);
     }
 
     public function testFluentConformanceAcrossTypeHandoff(): void

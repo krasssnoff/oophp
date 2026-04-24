@@ -26,9 +26,11 @@ composer install
 - `Json` for selected `json_*` functions
 - `Url` for selected URL/query helpers
 - `Encoding` for base64/hex/pack/unpack and serialization helpers
+- `Preg` for selected `preg_*` regex operations
 - `Sys` for a few read-only system helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
+- Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
 - `Math`, `Json`, `Url`, `Encoding`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
@@ -70,6 +72,7 @@ use Oophp\Encoding;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
+use Oophp\Preg;
 use Oophp\Sys;
 use Oophp\Str;
 use Oophp\Url;
@@ -101,6 +104,8 @@ $rounded = Math::round(2.55, 1);
 $query = Url::buildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
 
 $encoded = Encoding::base64Encode('hello');
+
+$matched = Preg::pregMatch('/\w+/', 'alpha');
 
 $sapi = Sys::sapi();
 ```

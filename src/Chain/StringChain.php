@@ -100,4 +100,18 @@ readonly class StringChain extends MixedChain
     {
         return self::wrap(explode($separator, $this->value, $limit));
     }
+
+    public function pregReplace(
+        array|string $pattern,
+        array|string $replacement,
+        int $limit = -1,
+        ?int &$count = null,
+    ): StringChain|MixedChain {
+        return self::wrap(preg_replace($pattern, $replacement, $this->value, $limit, $count));
+    }
+
+    public function pregSplit(string $pattern, int $limit = -1, int $flags = 0): ArrayChain|MixedChain
+    {
+        return self::wrap(preg_split($pattern, $this->value, $limit, $flags));
+    }
 }
