@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Arr;
+use Oophp\Encoding;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
@@ -222,6 +223,36 @@ final class ConformanceTest extends TestCase
             'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawdecode('a%20b%2Fc')],
             'encode' => [urlencode('a b/c'), Url::encode('a b/c')],
             'decode' => [urldecode('a+b%2Fc'), Url::decode('a+b%2Fc')],
+        ];
+    }
+
+    #[DataProvider('encodingStaticProvider')]
+    public function testEncodingStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function encodingStaticProvider(): array
+    {
+        $payload = ['ok' => true, 'count' => 2];
+        $serialized = serialize($payload);
+        $packed = pack('nvc*', 0x1234, 0x56, 0x78, 0x9A);
+
+        return [
+            'base64_encode' => [base64_encode('hello'), Encoding::base64Encode('hello')],
+            'base64_decode_strict' => [base64_decode('aGVsbG8=', true), Encoding::base64Decode('aGVsbG8=', true)],
+            'bin2hex' => [bin2hex("A\0B"), Encoding::bin2hex("A\0B")],
+            'hex2bin' => [hex2bin('410042'), Encoding::hex2bin('410042')],
+            'pack' => [pack('nvc*', 0x1234, 0x56, 0x78, 0x9A), Encoding::pack('nvc*', 0x1234, 0x56, 0x78, 0x9A)],
+            'unpack' => [unpack('nfirst/csecond/c*rest', $packed), Encoding::unpack('nfirst/csecond/c*rest', $packed)],
+            'serialize' => [$serialized, Encoding::serialize($payload)],
+            'unserialize' => [
+                unserialize($serialized, ['allowed_classes' => false]),
+                Encoding::unserialize($serialized, ['allowed_classes' => false]),
+            ],
         ];
     }
 
