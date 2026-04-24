@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace Oophp;
 
+use Oophp\Chain\NumberChain;
+
 final class Math
 {
+    public static function of(int|float $value): NumberChain
+    {
+        return new NumberChain($value);
+    }
+
     public static function abs(int|float $num): int|float
     {
         return abs($num);

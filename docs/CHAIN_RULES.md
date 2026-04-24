@@ -4,8 +4,8 @@ This document defines the core API principles used by OOPHP.
 
 ## Core model
 
-- `Arr`, `Str`, extension-gated `MbStr`, `Date`, `Fs`, and `Stream` provide static wrappers and fluent chains via `::of(...)`.
-- `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only.
+- `Arr`, `Str`, extension-gated `MbStr`, `Date`, `Fs`, `Stream`, `Math`, and `Url` provide static wrappers and fluent chains via `::of(...)`.
+- `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only.
 - `Regex` is static-first, while receiver-friendly regex transforms are exposed on `StringChain`.
 - `Sys` is read-only by policy and does not include process/mutation APIs.
 - `Proc` is explicitly effectful and remains static-only.
@@ -23,7 +23,7 @@ This document defines the core API principles used by OOPHP.
 - Raw PHP values are extracted only through `->get()` or `()`.
 - There are no special terminal fluent methods that directly return raw values.
 - `MixedChain` can act as an interoperability bridge via `jsonEncode(...)` / `jsonDecode(...)`.
-- `ValueChain` keeps only shared wrapper mechanics; domain methods live on `ArrayChain`, `StringChain`, `MbStringChain`, `DateChain`, `FsPathChain`, `StreamHandleChain`, and supporting chain classes.
+- `ValueChain` keeps only shared wrapper mechanics; domain methods live on `ArrayChain`, `StringChain`, `MbStringChain`, `DateChain`, `FsPathChain`, `StreamHandleChain`, `NumberChain`, `UrlChain`, and supporting chain classes.
 - Fluent calls hand off to the next typed chain based on the native return value: arrays become `ArrayChain`, strings become `StringChain`, and all other values stay in `MixedChain`.
 
 ## Immutability

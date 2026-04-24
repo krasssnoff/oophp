@@ -23,9 +23,9 @@ composer install
 - `Arr` for selected `array_*` functions
 - `Str` for selected string functions
 - `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
-- `Math` for selected numeric wrappers
+- `Math` for selected numeric wrappers with `NumberChain`
 - `Json` for selected `json_*` functions
-- `Url` for selected URL/query helpers
+- `Url` for selected URL/query helpers with string-backed chains
 - `Enc` for base64/hex/pack/unpack and serialization helpers
 - `Regex` for selected `preg_*` regex operations
 - `Fs` for selected filesystem/file IO helpers, including path helpers
@@ -41,8 +41,9 @@ composer install
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
 - `Date` also exposes immutable fluent chains via `Date::of(...)`
 - `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
+- `Math` exposes `NumberChain` via `Math::of(...)`; `Url` exposes URL/string chains via `Url::of(...)`
 - `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
-- `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
+- `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -118,8 +119,17 @@ $json = Json::encode(['ok' => true]);
 $decoded = Json::decode($json, true);
 
 $rounded = Math::round(2.55, 1);
+$distance = Math::of(-2.55)
+    ->abs()
+    ->round(1)
+    ->pow(2)
+    ->sqrt()
+    ->get();
 
 $query = Url::buildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
+$host = Url::of('https://example.com/path?q=1#frag')
+    ->parse(PHP_URL_HOST)
+    ->get();
 
 $encoded = Enc::base64Encode('hello');
 
@@ -153,7 +163,7 @@ $sapi = Sys::sapi();
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Arr`, `Str`, `MbStr`, `Date`, `Fs`, and `Stream` are static+fluent, while `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` remain static-only.
+`Arr`, `Str`, `MbStr`, `Date`, `Fs`, `Stream`, `Math`, and `Url` are static+fluent, while `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` remain static-only.
 
 ## Design and test docs
 

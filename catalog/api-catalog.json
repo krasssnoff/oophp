@@ -28,8 +28,8 @@
         },
         {
             "name": "Math",
-            "mode": "static-only",
-            "methods": ["abs", "ceil", "floor", "fmod", "intdiv", "max", "min", "pow", "round", "sqrt"]
+            "mode": "static+fluent",
+            "methods": ["abs", "ceil", "floor", "fmod", "intdiv", "max", "min", "of", "pow", "round", "sqrt"]
         },
         {
             "name": "MbStr",
@@ -78,8 +78,8 @@
         },
         {
             "name": "Url",
-            "mode": "static-only",
-            "methods": ["buildQuery", "decode", "encode", "parse", "rawdecode", "rawencode"]
+            "mode": "static+fluent",
+            "methods": ["buildQuery", "decode", "encode", "of", "parse", "query", "rawdecode", "rawencode"]
         }
     ]
 }

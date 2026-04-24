@@ -226,6 +226,7 @@ final class ConformanceTest extends TestCase
             'sqrt' => [sqrt(49), Math::sqrt(49)],
             'fmod' => [fmod(5.7, 1.3), Math::fmod(5.7, 1.3)],
             'intdiv' => [intdiv(20, 3), Math::intdiv(20, 3)],
+            'number_chain' => [sqrt(pow(abs(-3), 2)), Math::of(-3)->abs()->pow(2)->sqrt()->get()],
         ];
     }
 
@@ -250,10 +251,15 @@ final class ConformanceTest extends TestCase
                 http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
                 Url::buildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
             ],
+            'query_chain' => [
+                http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
+                Url::query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986)->get(),
+            ],
             'rawencode' => [rawurlencode('a b/c'), Url::rawencode('a b/c')],
             'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawdecode('a%20b%2Fc')],
             'encode' => [urlencode('a b/c'), Url::encode('a b/c')],
             'decode' => [urldecode('a+b%2Fc'), Url::decode('a+b%2Fc')],
+            'url_chain_parse' => [parse_url('https://example.com/path?q=1#frag', PHP_URL_HOST), Url::of('https://example.com/path?q=1#frag')->parse(PHP_URL_HOST)->get()],
         ];
     }
 
