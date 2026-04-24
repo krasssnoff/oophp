@@ -34,11 +34,12 @@ composer install
 - `Hash` for selected hash/random/password helpers
 - `Type` for selected value/type inspection and cast helpers
 - `Network` for selected DNS/network utility helpers
+- `Process` for explicit effectful process/exec helpers
 - `Sys` for read-only system/runtime helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, and `Sys` are static-only domains
+- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -83,6 +84,7 @@ use Oophp\Network;
 use Oophp\Fs;
 use Oophp\Hash;
 use Oophp\Path;
+use Oophp\Process;
 use Oophp\Preg;
 use Oophp\Stream;
 use Oophp\Sys;
@@ -135,6 +137,8 @@ $isNumeric = Type::isNumeric('42');
 
 $localhostIp = Network::getHostByName('localhost');
 
+$execOutput = Process::shellExec(PHP_BINARY . ' -r "echo 42;"');
+
 $memoryLimit = Sys::iniGet('memory_limit');
 
 $sapi = Sys::sapi();
@@ -142,7 +146,7 @@ $sapi = Sys::sapi();
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, and `Sys` remain static-only domains.
+`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, and `Sys` remain static-only domains.
 
 ## Design and test docs
 
