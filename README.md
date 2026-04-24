@@ -24,10 +24,11 @@ composer install
 - `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
 - `Math` for selected numeric wrappers
 - `Json` for selected `json_*` functions
+- `Url` for selected URL/query helpers
 - `Sys` for a few read-only system helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
-- `Math`, `Json`, and `Sys` are static-only domains
+- `Math`, `Json`, `Url`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -69,6 +70,7 @@ use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Sys;
 use Oophp\Str;
+use Oophp\Url;
 
 $position = Arr::of(['a' => 'first', 'b' => 'second'])
     ->values()
@@ -94,12 +96,14 @@ $decoded = Json::decode($json, true);
 
 $rounded = Math::round(2.55, 1);
 
+$query = Url::buildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
+
 $sapi = Sys::sapi();
 ```
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Math`, `Json`, and `Sys` remain static-only domains.
+`Math`, `Json`, `Url`, and `Sys` remain static-only domains.
 
 ## Design and test docs
 

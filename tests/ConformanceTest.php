@@ -9,6 +9,7 @@ use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Str;
+use Oophp\Url;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -193,6 +194,34 @@ final class ConformanceTest extends TestCase
             'sqrt' => [sqrt(49), Math::sqrt(49)],
             'fmod' => [fmod(5.7, 1.3), Math::fmod(5.7, 1.3)],
             'intdiv' => [intdiv(20, 3), Math::intdiv(20, 3)],
+        ];
+    }
+
+    #[DataProvider('urlStaticProvider')]
+    public function testUrlStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function urlStaticProvider(): array
+    {
+        return [
+            'parse' => [parse_url('https://example.com/path?q=1#frag'), Url::parse('https://example.com/path?q=1#frag')],
+            'parse_host' => [
+                parse_url('https://example.com/path?q=1#frag', PHP_URL_HOST),
+                Url::parse('https://example.com/path?q=1#frag', PHP_URL_HOST),
+            ],
+            'build_query' => [
+                http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
+                Url::buildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
+            ],
+            'rawencode' => [rawurlencode('a b/c'), Url::rawencode('a b/c')],
+            'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawdecode('a%20b%2Fc')],
+            'encode' => [urlencode('a b/c'), Url::encode('a b/c')],
+            'decode' => [urldecode('a+b%2Fc'), Url::decode('a+b%2Fc')],
         ];
     }
 
