@@ -5,6 +5,12 @@
 - static wrappers (`Arr::values(...)`, `Json::encode(...)`, etc.)
 - fluent chains where receiver-based composition is natural (`Arr::of(...)`, `Str::of(...)`)
 
+**Requirements:** PHP `>= 8.3` (see `composer.json`).
+
+**Native function footprint (runtime inventory):** how many of PHP’s *internal* (native) functions appear as direct calls anywhere under `src/`, as a share of *all* internal functions in the current PHP build (the exact total depends on version and enabled extensions). Recompute: `php scripts/native-function-footprint.php`.
+
+`[==                  ] 10.1%` — 211 of 2084 internal functions (PHP 8.3 in this repo’s dev environment).
+
 ## Project status
 
 This package is in active development and is not published to Packagist yet.
