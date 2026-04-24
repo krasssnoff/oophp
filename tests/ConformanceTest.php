@@ -9,6 +9,7 @@ use Oophp\Encoding;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
+use Oophp\Path;
 use Oophp\Preg;
 use Oophp\Str;
 use Oophp\Url;
@@ -314,6 +315,31 @@ final class ConformanceTest extends TestCase
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedMatches, $actualMatches);
+    }
+
+    #[DataProvider('pathStaticProvider')]
+    public function testPathStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function pathStaticProvider(): array
+    {
+        $samplePath = '/var/www/app/archive.tar.gz';
+        $existingPath = __FILE__;
+
+        return [
+            'basename' => [basename($samplePath), Path::basename($samplePath)],
+            'basename_suffix' => [basename($samplePath, '.gz'), Path::basename($samplePath, '.gz')],
+            'dirname' => [dirname($samplePath), Path::dirname($samplePath)],
+            'dirname_levels' => [dirname($samplePath, 2), Path::dirname($samplePath, 2)],
+            'pathinfo' => [pathinfo($samplePath), Path::pathinfo($samplePath)],
+            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Path::pathinfo($samplePath, PATHINFO_EXTENSION)],
+            'realpath' => [realpath($existingPath), Path::realpath($existingPath)],
+        ];
     }
 
     public function testFluentConformanceAcrossTypeHandoff(): void
