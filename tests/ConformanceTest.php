@@ -123,6 +123,22 @@ final class ConformanceTest extends TestCase
         ];
     }
 
+    public function testJsonErrorStateConformanceAfterInvalidDecode(): void
+    {
+        $invalidJson = '{"broken": }';
+
+        json_decode($invalidJson, true, 512, 0);
+        $expectedError = json_last_error();
+        $expectedMessage = json_last_error_msg();
+
+        Json::decode($invalidJson);
+        $actualError = Json::lastError();
+        $actualMessage = Json::lastErrorMessage();
+
+        self::assertSame($expectedError, $actualError);
+        self::assertSame($expectedMessage, $actualMessage);
+    }
+
     #[DataProvider('mbStrStaticProvider')]
     public function testMbStrStaticConformance(mixed $expected, mixed $actual): void
     {
