@@ -5,7 +5,7 @@ This document defines the core API principles used by OOPHP.
 ## Core model
 
 - `Arr`, `Str`, and extension-gated `MbStr` provide static wrappers and fluent chains via `::of(...)`.
-- `Math`, `Json`, and `Sys` are static-only.
+- `Math`, `Json`, `Url`, and `Sys` are static-only.
 - Fluent chains wrap the current value and pass it into the next native operation.
 
 ## Native-first contract
