@@ -6,6 +6,7 @@ namespace Oophp\Tests;
 
 use Oophp\Arr;
 use Oophp\Json;
+use Oophp\MbStr;
 use Oophp\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -118,6 +119,38 @@ final class ConformanceTest extends TestCase
             'encode' => [json_encode($payload, 0, 512), Json::encode($payload)],
             'decode' => [json_decode($encoded, true, 512, 0), Json::decode($encoded)],
             'validate' => [json_validate($encoded), Json::validate($encoded)],
+        ];
+    }
+
+    #[DataProvider('mbStrStaticProvider')]
+    public function testMbStrStaticConformance(mixed $expected, mixed $actual): void
+    {
+        if (!function_exists('mb_strlen')) {
+            self::markTestSkipped('mbstring extension is not available.');
+        }
+
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function mbStrStaticProvider(): array
+    {
+        if (!function_exists('mb_strlen')) {
+            return [
+                'mbstring_unavailable' => [null, null],
+            ];
+        }
+
+        return [
+            'tolower' => [mb_strtolower('ПрИвЕт', 'UTF-8'), MbStr::tolower('ПрИвЕт', 'UTF-8')],
+            'toupper' => [mb_strtoupper('ПрИвЕт', 'UTF-8'), MbStr::toupper('ПрИвЕт', 'UTF-8')],
+            'len' => [mb_strlen('Привет', 'UTF-8'), MbStr::len('Привет', 'UTF-8')],
+            'pos' => [mb_strpos('До свидания', 'вид', 0, 'UTF-8'), MbStr::pos('До свидания', 'вид', 0, 'UTF-8')],
+            'rpos' => [mb_strrpos('абв абв', 'абв', 0, 'UTF-8'), MbStr::rpos('абв абв', 'абв', 0, 'UTF-8')],
+            'substr' => [mb_substr('Привет', 1, 3, 'UTF-8'), MbStr::substr('Привет', 1, 3, 'UTF-8')],
+            'split' => [mb_str_split('Привет', 2, 'UTF-8'), MbStr::split('Привет', 2, 'UTF-8')],
         ];
     }
 

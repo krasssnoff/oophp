@@ -21,9 +21,11 @@ composer install
 
 - `Arr` for selected `array_*` functions
 - `Str` for selected string functions
+- `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
 - `Json` for selected `json_*` functions
 - `Sys` for a few read-only system helpers
 - Fluent API is available for `Arr` and `Str`
+- Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - `Json` and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
@@ -62,6 +64,7 @@ $position = Str::of('  alpha,beta,gamma  ')
 ```php
 use Oophp\Arr;
 use Oophp\Json;
+use Oophp\MbStr;
 use Oophp\Sys;
 use Oophp\Str;
 
@@ -78,6 +81,11 @@ $parts = Str::of('  Foo,Bar  ')
 $values = Arr::values(['x' => 10, 'y' => 20]);
 
 $contains = Str::contains('package', 'ack');
+
+$chars = MbStr::of('ПрИвЕт')
+    ->tolower('UTF-8')
+    ->split(2, 'UTF-8')
+    ->get();
 
 $json = Json::encode(['ok' => true]);
 $decoded = Json::decode($json, true);

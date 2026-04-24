@@ -7,9 +7,9 @@ namespace Oophp\Tests;
 use Oophp\Arr;
 use Oophp\Json;
 use Oophp\Str;
-use Oophp\Value\ArrayChain;
-use Oophp\Value\MixedChain;
-use Oophp\Value\StringChain;
+use Oophp\Chain\ArrayChain;
+use Oophp\Chain\MixedChain;
+use Oophp\Chain\StringChain;
 use PHPUnit\Framework\TestCase;
 
 final class ValueChainTest extends TestCase
