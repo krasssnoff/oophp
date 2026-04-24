@@ -3,13 +3,9 @@
 `OOPHP` is a Composer package that wraps selected native PHP functions with:
 
 - static wrappers (`Arr::values(...)`, `Json::encode(...)`, etc.)
-- fluent chains where receiver-based composition is natural (`Arr::of(...)`, `Str::of(...)`)
+- fluent chains where receiver-based composition is natural (`Arr::of($arr)->values()->sort()->get()`)
 
 **Requirements:** PHP `>= 8.3` (see `composer.json`).
-
-**Native function footprint (runtime inventory):** how many of PHP’s *internal* (native) functions appear as direct calls anywhere under `src/`, as a share of *all* internal functions in the current PHP build (the exact total depends on version and enabled extensions). Recompute: `php scripts/native-function-footprint.php`.
-
-`[==                  ] 10.1%` — 211 of 2084 internal functions (PHP 8.3 in this repo’s dev environment).
 
 ## Project status
 
@@ -23,39 +19,6 @@ git clone https://github.com/krasssnoff/oophp.git
 cd oophp
 composer install
 ```
-
-## Current scope
-
-- `Arr` for PHP array helpers, including `array_*`, `in_array`, and sort variants
-- `Str` for selected string functions
-- `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
-- `Math` for selected numeric wrappers with `NumberChain`
-- `Json` for selected `json_*` functions
-- `Url` for selected URL/query helpers with string-backed chains
-- `Enc` for base64/hex/pack/unpack and serialization helpers
-- `Regex` for selected `preg_*` regex operations
-- `Fs` for selected filesystem/file IO helpers, including path helpers
-- `Stream` for selected stream/resource helpers with optional fluent handle workflow
-- `Date` for rich immutable date/time wrappers with fluent entrypoint
-- `Hash` for selected hash/random/password helpers
-- `Type` for selected value/type inspection and cast helpers
-- `Net` for selected DNS/network utility helpers
-- `Proc` for explicit effectful process/exec helpers
-- `Sys` for read-only system/runtime helpers
-- Fluent API is available for `Arr` and `Str`
-- Fluent API is also available for `MbStr` when `ext-mbstring` is installed
-- Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Date` also exposes immutable fluent chains via `Date::of(...)`
-- `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
-- `Math` exposes `NumberChain` via `Math::of(...)`; `Url` exposes URL/string chains via `Url::of(...)`
-- `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
-- `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
-- `ValueChain` is the minimal shared chain wrapper
-- Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
-
-## API principles
-
-See `docs/CHAIN_RULES.md` for the API contract, naming rules, and fluent-chain behavior.
 
 ## Why OOPHP
 
@@ -180,6 +143,39 @@ Use `->get()` or `()` to extract raw PHP values from a chain.
 
 `Arr`, `Str`, `MbStr`, `Date`, `Fs`, `Stream`, `Math`, and `Url` are static+fluent, while `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` remain static-only.
 
+## Current scope
+
+- `Arr` for PHP array helpers, including `array_*`, `in_array`, and sort variants
+- `Str` for selected string functions
+- `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
+- `Math` for selected numeric wrappers with `NumberChain`
+- `Json` for selected `json_*` functions
+- `Url` for selected URL/query helpers with string-backed chains
+- `Enc` for base64/hex/pack/unpack and serialization helpers
+- `Regex` for selected `preg_*` regex operations
+- `Fs` for selected filesystem/file IO helpers, including path helpers
+- `Stream` for selected stream/resource helpers with optional fluent handle workflow
+- `Date` for rich immutable date/time wrappers with fluent entrypoint
+- `Hash` for selected hash/random/password helpers
+- `Type` for selected value/type inspection and cast helpers
+- `Net` for selected DNS/network utility helpers
+- `Proc` for explicit effectful process/exec helpers
+- `Sys` for read-only system/runtime helpers
+- Fluent API is available for `Arr` and `Str`
+- Fluent API is also available for `MbStr` when `ext-mbstring` is installed
+- Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
+- `Date` also exposes immutable fluent chains via `Date::of(...)`
+- `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
+- `Math` exposes `NumberChain` via `Math::of(...)`; `Url` exposes URL/string chains via `Url::of(...)`
+- `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
+- `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
+- `ValueChain` is the abstract `Chain` base. `ValueChain::of(mixed ...)` dispatches to `ArrayChain` / `StringChain` / `MixedChain` by the carried value; `Arr::of` and `Str::of` return `ArrayChain` and `StringChain` directly; `MbStr::of` returns `MbStringChain` for multibyte `mb_*` flows
+- Domain-specific chains: `NumberChain` (`Math::of(...)`), `DateChain` (`Date::of(...)` and related), `UrlChain` (`Url::of(...)`), `FsPathChain` (path steps from `Fs::of(...)`), and `StreamHandleChain` (resource workflow from `Stream::of(...)`)
+
+## API principles
+
+See `docs/CHAIN_RULES.md` for the API contract, naming rules, and fluent-chain behavior.
+
 ## Design and test docs
 
 - `docs/DOCS_NAVIGATION.md` - documentation entry point and domain map
@@ -193,6 +189,12 @@ Use `->get()` or `()` to extract raw PHP values from a chain.
 
 - Local CI command: `composer ci` (composer validation + full test suite).
 - Release readiness command: `composer release:check`.
+
+## Native function footprint (runtime inventory)
+
+How many of PHP’s *internal* (native) functions appear as direct calls anywhere under `src/`, as a share of *all* internal functions in the current PHP build (the exact total depends on version and enabled extensions). Recompute: `php scripts/native-function-footprint.php`.
+
+`[==                  ] 10.1%` — 211 of 2084 internal functions (PHP 8.3 in this repo’s dev environment).
 
 ## API reference
 
