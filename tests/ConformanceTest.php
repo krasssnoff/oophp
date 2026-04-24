@@ -15,6 +15,7 @@ use Oophp\Path;
 use Oophp\Preg;
 use Oophp\Stream;
 use Oophp\Str;
+use Oophp\Sys;
 use Oophp\Time;
 use Oophp\Type;
 use Oophp\Url;
@@ -521,6 +522,33 @@ final class ConformanceTest extends TestCase
             'cast_float' => [(float) '42.5', Type::toFloat('42.5')],
             'cast_string' => [(string) 42, Type::toString(42)],
             'cast_bool' => [(bool) 1, Type::toBool(1)],
+        ];
+    }
+
+    #[DataProvider('sysStaticProvider')]
+    public function testSysStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function sysStaticProvider(): array
+    {
+        return [
+            'env' => [getenv('PATH', false), Sys::env('PATH')],
+            'hostname' => [gethostname(), Sys::hostname()],
+            'version' => [phpversion(), Sys::version()],
+            'sapi' => [php_sapi_name(), Sys::sapi()],
+            'uname' => [php_uname('a'), Sys::uname('a')],
+            'ini_get' => [ini_get('memory_limit'), Sys::iniGet('memory_limit')],
+            'ini_loaded_file' => [php_ini_loaded_file(), Sys::iniLoadedFile()],
+            'ini_scanned_files' => [php_ini_scanned_files(), Sys::iniScannedFiles()],
+            'extension_loaded_json' => [extension_loaded('json'), Sys::extensionLoaded('json')],
+            'loaded_extensions' => [get_loaded_extensions(false), Sys::loadedExtensions(false)],
+            'cwd' => [getcwd(), Sys::currentWorkingDirectory()],
+            'temp_dir' => [sys_get_temp_dir(), Sys::tempDirectory()],
         ];
     }
 
