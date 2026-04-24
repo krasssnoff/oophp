@@ -6,6 +6,7 @@ namespace Oophp\Tests;
 
 use Oophp\Arr;
 use Oophp\Json;
+use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -151,6 +152,31 @@ final class ConformanceTest extends TestCase
             'rpos' => [mb_strrpos('абв абв', 'абв', 0, 'UTF-8'), MbStr::rpos('абв абв', 'абв', 0, 'UTF-8')],
             'substr' => [mb_substr('Привет', 1, 3, 'UTF-8'), MbStr::substr('Привет', 1, 3, 'UTF-8')],
             'split' => [mb_str_split('Привет', 2, 'UTF-8'), MbStr::split('Привет', 2, 'UTF-8')],
+        ];
+    }
+
+    #[DataProvider('mathStaticProvider')]
+    public function testMathStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function mathStaticProvider(): array
+    {
+        return [
+            'abs' => [abs(-8.5), Math::abs(-8.5)],
+            'ceil' => [ceil(2.1), Math::ceil(2.1)],
+            'floor' => [floor(2.9), Math::floor(2.9)],
+            'round' => [round(2.55, 1, PHP_ROUND_HALF_UP), Math::round(2.55, 1, PHP_ROUND_HALF_UP)],
+            'max' => [max(10, 2, 7), Math::max(10, 2, 7)],
+            'min' => [min(10, 2, 7), Math::min(10, 2, 7)],
+            'pow' => [pow(3, 4), Math::pow(3, 4)],
+            'sqrt' => [sqrt(49), Math::sqrt(49)],
+            'fmod' => [fmod(5.7, 1.3), Math::fmod(5.7, 1.3)],
+            'intdiv' => [intdiv(20, 3), Math::intdiv(20, 3)],
         ];
     }
 
