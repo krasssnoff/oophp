@@ -11,6 +11,7 @@ use Oophp\Hash;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
+use Oophp\Network;
 use Oophp\Path;
 use Oophp\Preg;
 use Oophp\Stream;
@@ -550,6 +551,42 @@ final class ConformanceTest extends TestCase
             'cwd' => [getcwd(), Sys::currentWorkingDirectory()],
             'temp_dir' => [sys_get_temp_dir(), Sys::tempDirectory()],
         ];
+    }
+
+    #[DataProvider('networkStaticProvider')]
+    public function testNetworkStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function networkStaticProvider(): array
+    {
+        return [
+            'gethostbyname' => [gethostbyname('localhost'), Network::getHostByName('localhost')],
+            'gethostbynamel' => [gethostbynamel('localhost'), Network::getHostByNameList('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Network::getHostByAddr('127.0.0.1')],
+            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Network::checkDns('localhost', 'A')],
+            'ip2long' => [ip2long('127.0.0.1'), Network::ipToLong('127.0.0.1')],
+            'long2ip' => [long2ip(2130706433), Network::longToIp(2130706433)],
+        ];
+    }
+
+    public function testNetworkDnsGetRecordOutputConformance(): void
+    {
+        $nativeAuth = null;
+        $nativeAdditional = null;
+        $wrappedAuth = null;
+        $wrappedAdditional = null;
+
+        $expected = dns_get_record('localhost', DNS_A, $nativeAuth, $nativeAdditional, false);
+        $actual = Network::dnsGetRecord('localhost', DNS_A, $wrappedAuth, $wrappedAdditional, false);
+
+        self::assertSame($expected, $actual);
+        self::assertSame($nativeAuth, $wrappedAuth);
+        self::assertSame($nativeAdditional, $wrappedAdditional);
     }
 
     public function testFluentConformanceAcrossTypeHandoff(): void
