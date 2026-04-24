@@ -4,7 +4,7 @@ This document defines the core API principles used by OOPHP.
 
 ## Core model
 
-- `Arr` and `Str` provide both static wrappers and fluent chains via `::of(...)`.
+- `Arr`, `Str`, and extension-gated `MbStr` provide static wrappers and fluent chains via `::of(...)`.
 - `Json` and `Sys` are static-only.
 - Fluent chains wrap the current value and pass it into the next native operation.
 
@@ -19,7 +19,7 @@ This document defines the core API principles used by OOPHP.
 - All fluent methods always return a chain object.
 - Raw PHP values are extracted only through `->get()` or `()`.
 - There are no special terminal fluent methods that directly return raw values.
-- `ValueChain` keeps only shared wrapper mechanics; domain methods live on `ArrayChain`, `StringChain`, and supporting chain classes.
+- `ValueChain` keeps only shared wrapper mechanics; domain methods live on `ArrayChain`, `StringChain`, `MbStringChain`, and supporting chain classes.
 - Fluent calls hand off to the next typed chain based on the native return value: arrays become `ArrayChain`, strings become `StringChain`, and all other values stay in `MixedChain`.
 
 ## Immutability
