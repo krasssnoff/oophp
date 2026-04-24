@@ -1,0 +1,90 @@
+{
+    "version": 1,
+    "domains": [
+        {
+            "name": "Arr",
+            "mode": "static+fluent",
+            "methods": ["changeKeyCase", "chunk", "column", "combine", "countValues", "diff", "diffAssoc", "diffKey", "fillKeys", "filter", "flip", "inArray", "intersect", "intersectAssoc", "intersectKey", "isList", "keyExists", "keyFirst", "keyLast", "keys", "map", "merge", "mergeRecursive", "of", "pad", "product", "replace", "replaceRecursive", "reverse", "search", "slice", "sum", "unique", "values"]
+        },
+        {
+            "name": "Encoding",
+            "mode": "static-only",
+            "methods": ["base64Decode", "base64Encode", "bin2hex", "hex2bin", "pack", "serialize", "unpack", "unserialize"]
+        },
+        {
+            "name": "Fs",
+            "mode": "static-only",
+            "methods": ["copy", "fileExists", "fileGetContents", "filePutContents", "glob", "mkdir", "rename", "scandir", "unlink"]
+        },
+        {
+            "name": "Hash",
+            "mode": "static-only",
+            "methods": ["hash", "hashEquals", "hashHmac", "md5", "passwordHash", "passwordNeedsRehash", "passwordVerify", "randomBytes", "randomInt", "sha1"]
+        },
+        {
+            "name": "Json",
+            "mode": "static-only",
+            "methods": ["decode", "encode", "lastError", "lastErrorMessage", "validate"]
+        },
+        {
+            "name": "Math",
+            "mode": "static-only",
+            "methods": ["abs", "ceil", "floor", "fmod", "intdiv", "max", "min", "pow", "round", "sqrt"]
+        },
+        {
+            "name": "MbStr",
+            "mode": "static+fluent",
+            "methods": ["len", "of", "pos", "rpos", "split", "substr", "tolower", "toupper"]
+        },
+        {
+            "name": "Network",
+            "mode": "static-only",
+            "methods": ["checkDns", "dnsGetRecord", "getHostByAddr", "getHostByName", "getHostByNameList", "getMxRecords", "ipToLong", "longToIp"]
+        },
+        {
+            "name": "Path",
+            "mode": "static-only",
+            "methods": ["basename", "dirname", "pathinfo", "realpath"]
+        },
+        {
+            "name": "Preg",
+            "mode": "static-first",
+            "methods": ["pregGrep", "pregLastError", "pregLastErrorMessage", "pregMatch", "pregMatchAll", "pregQuote", "pregReplace", "pregReplaceCallback", "pregSplit"]
+        },
+        {
+            "name": "Process",
+            "mode": "static-only",
+            "methods": ["exec", "passthru", "procClose", "procGetStatus", "procOpen", "shellExec", "system"]
+        },
+        {
+            "name": "Str",
+            "mode": "static+fluent",
+            "methods": ["contains", "endsWith", "ipos", "len", "of", "pos", "repeat", "replace", "rev", "ripos", "rpos", "split", "startsWith", "substr", "substrCount", "substrReplace", "tolower", "toupper", "trim"]
+        },
+        {
+            "name": "Stream",
+            "mode": "static-only",
+            "methods": ["fclose", "fopen", "fread", "fwrite", "streamGetContents"]
+        },
+        {
+            "name": "Sys",
+            "mode": "static-only",
+            "methods": ["currentWorkingDirectory", "env", "extensionLoaded", "hostname", "iniGet", "iniGetAll", "iniLoadedFile", "iniScannedFiles", "loadedExtensions", "memoryPeakUsage", "memoryUsage", "sapi", "tempDirectory", "uname", "version"]
+        },
+        {
+            "name": "Time",
+            "mode": "static-only",
+            "methods": ["date", "gmdate", "hrtime", "microtime", "mktime", "strtotime", "timezoneGet", "timezoneSet"]
+        },
+        {
+            "name": "Type",
+            "mode": "static-only",
+            "methods": ["getDebugType", "gettype", "isArray", "isBool", "isFloat", "isInt", "isNull", "isNumeric", "isObject", "isScalar", "isString", "toBool", "toFloat", "toInt", "toString"]
+        },
+        {
+            "name": "Url",
+            "mode": "static-only",
+            "methods": ["buildQuery", "decode", "encode", "parse", "rawdecode", "rawencode"]
+        }
+    ]
+}
