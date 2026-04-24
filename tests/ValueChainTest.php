@@ -197,9 +197,9 @@ final class ValueChainTest extends TestCase
         self::assertSame(array_sum([1, 2, 3]), $chain->get());
     }
 
-    public function testMixedChainDoesNotExposeFluentJsonMethods(): void
+    public function testMixedChainExposesFluentJsonBridgeMethods(): void
     {
-        self::assertFalse(method_exists(MixedChain::class, 'jsonEncode'));
-        self::assertFalse(method_exists(MixedChain::class, 'jsonDecode'));
+        self::assertTrue(method_exists(MixedChain::class, 'jsonEncode'));
+        self::assertTrue(method_exists(MixedChain::class, 'jsonDecode'));
     }
 }

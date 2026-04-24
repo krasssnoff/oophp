@@ -114,4 +114,9 @@ readonly class StringChain extends MixedChain
     {
         return self::wrap(preg_split($pattern, $this->value, $limit, $flags));
     }
+
+    public function join(array $array): StringChain|MixedChain
+    {
+        return self::wrap(implode($this->value, $array));
+    }
 }

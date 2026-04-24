@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-final class Network
+final class Net
 {
     public static function getHostByName(string $hostname): string
     {

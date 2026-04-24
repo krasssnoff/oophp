@@ -175,4 +175,30 @@ readonly class ArrayChain extends MixedChain
     {
         return self::wrap(array_key_exists($key, $this->value));
     }
+
+    public function reduce(callable $callback, mixed $initial = null): MixedChain
+    {
+        return self::wrap(array_reduce($this->value, $callback, $initial));
+    }
+
+    public function sort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        sort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function rsort(int $flags = SORT_REGULAR): ArrayChain
+    {
+        $sorted = $this->value;
+        rsort($sorted, $flags);
+
+        return self::wrap($sorted);
+    }
+
+    public function implode(string $separator): StringChain|MixedChain
+    {
+        return self::wrap(implode($separator, $this->value));
+    }
 }

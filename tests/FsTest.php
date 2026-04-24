@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Fs;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class FsTest extends TestCase
 {
     public function testFsDomainRemainsStaticOnly(): void
     {
-        self::assertFalse(method_exists(Fs::class, 'of'));
+        self::assertTrue(method_exists(Fs::class, 'of'));
     }
 
     public function testTmpLifecycleMatchesNativePhpBehavior(): void
@@ -66,6 +67,77 @@ final class FsTest extends TestCase
             @unlink($wrappedCopy);
             @unlink($wrappedSource);
             @rmdir($wrappedRoot);
+        }
+    }
+
+    #[DataProvider('pathStaticProvider')]
+    public function testPathHelpersMatchNativePhp(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function pathStaticProvider(): array
+    {
+        $samplePath = '/var/www/app/archive.tar.gz';
+        $existingPath = __FILE__;
+
+        return [
+            'basename' => [basename($samplePath), Fs::basename($samplePath)],
+            'basename_with_suffix' => [basename($samplePath, '.gz'), Fs::basename($samplePath, '.gz')],
+            'dirname' => [dirname($samplePath), Fs::dirname($samplePath)],
+            'dirname_levels' => [dirname($samplePath, 2), Fs::dirname($samplePath, 2)],
+            'pathinfo_all' => [pathinfo($samplePath), Fs::pathinfo($samplePath)],
+            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Fs::pathinfo($samplePath, PATHINFO_EXTENSION)],
+            'realpath_existing' => [realpath($existingPath), Fs::realpath($existingPath)],
+        ];
+    }
+
+    public function testRealpathMissingPathMatchesNativePhp(): void
+    {
+        $missing = '/tmp/oophp-not-existing-path-' . uniqid('', true);
+
+        self::assertSame(realpath($missing), Fs::realpath($missing));
+    }
+
+    public function testFsFluentWorkflowFromPathToStream(): void
+    {
+        $base = sys_get_temp_dir() . '/oophp-fs-fluent-' . uniqid('', true);
+        $source = $base . '.txt';
+        $copy = $base . '-copy.txt';
+        $renamed = $base . '-renamed.txt';
+
+        try {
+            $chain = Fs::of($source)->normalize();
+            self::assertSame(str_replace('\\', '/', $source), $chain->get());
+            self::assertSame(basename($source), $chain->basename()->get());
+
+            self::assertSame(file_put_contents($source, "alpha\nbeta"), $chain->write("alpha\nbeta")->get());
+            self::assertSame(file_exists($source), $chain->exists()->get());
+            self::assertSame(file_get_contents($source), $chain->read()->get());
+
+            $copied = $chain->copyTo($copy);
+            self::assertSame($copy, $copied->get());
+            self::assertSame(file_exists($copy), $copied->exists()->get());
+
+            $renamedChain = $copied->renameTo($renamed);
+            self::assertSame($renamed, $renamedChain->get());
+
+            $stream = $renamedChain->stream('r');
+            $native = fopen($renamed, 'r');
+            self::assertIsResource($native);
+            self::assertSame(stream_get_contents($native), $stream->contents()->get());
+            fclose($native);
+            self::assertTrue($stream->close()->get());
+
+            self::assertTrue($chain->delete()->get());
+            self::assertTrue($renamedChain->delete()->get());
+        } finally {
+            @unlink($source);
+            @unlink($copy);
+            @unlink($renamed);
         }
     }
 }

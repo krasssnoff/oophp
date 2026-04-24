@@ -177,4 +177,28 @@ final class Arr
     {
         return array_key_exists($key, $array);
     }
+
+    public static function reduce(array $array, callable $callback, mixed $initial = null): mixed
+    {
+        return array_reduce($array, $callback, $initial);
+    }
+
+    public static function sort(array $array, int $flags = SORT_REGULAR): array
+    {
+        sort($array, $flags);
+
+        return $array;
+    }
+
+    public static function rsort(array $array, int $flags = SORT_REGULAR): array
+    {
+        rsort($array, $flags);
+
+        return $array;
+    }
+
+    public static function implode(string $separator, array $array): string
+    {
+        return implode($separator, $array);
+    }
 }

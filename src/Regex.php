@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-final class Preg
+final class Regex
 {
     public static function pregMatch(
         string $pattern,

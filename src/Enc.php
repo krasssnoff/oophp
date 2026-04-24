@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-final class Encoding
+final class Enc
 {
     public static function base64Encode(string $string): string
     {

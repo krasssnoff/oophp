@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace Oophp;
 
+use Oophp\Chain\StreamHandleChain;
+
 final class Stream
 {
+    public static function of(mixed $stream): StreamHandleChain
+    {
+        return new StreamHandleChain($stream);
+    }
+
     public static function fopen(string $filename, string $mode, bool $useIncludePath = false, mixed $context = null): mixed
     {
         return fopen($filename, $mode, $useIncludePath, $context);
