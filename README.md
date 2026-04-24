@@ -31,11 +31,12 @@ composer install
 - `Fs` for selected filesystem and file IO helpers
 - `Stream` for selected stream/resource helpers
 - `Time` for selected procedural date/time helpers
+- `Hash` for selected hash/random/password helpers
 - `Sys` for a few read-only system helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, and `Sys` are static-only domains
+- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -77,6 +78,7 @@ use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Fs;
+use Oophp\Hash;
 use Oophp\Path;
 use Oophp\Preg;
 use Oophp\Stream;
@@ -123,12 +125,14 @@ $handle = Stream::fopen('/tmp/example.txt', 'r');
 
 $tomorrow = Time::strtotime('+1 day');
 
+$digest = Hash::hash('sha256', 'payload');
+
 $sapi = Sys::sapi();
 ```
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, and `Sys` remain static-only domains.
+`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, and `Sys` remain static-only domains.
 
 ## Design and test docs
 

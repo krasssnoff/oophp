@@ -7,6 +7,7 @@ namespace Oophp\Tests;
 use Oophp\Arr;
 use Oophp\Encoding;
 use Oophp\Fs;
+use Oophp\Hash;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
@@ -468,6 +469,26 @@ final class ConformanceTest extends TestCase
         } finally {
             date_default_timezone_set($original);
         }
+    }
+
+    #[DataProvider('hashStaticProvider')]
+    public function testHashStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function hashStaticProvider(): array
+    {
+        return [
+            'hash' => [hash('sha256', 'payload'), Hash::hash('sha256', 'payload')],
+            'hash_hmac' => [hash_hmac('sha256', 'payload', 'secret'), Hash::hashHmac('sha256', 'payload', 'secret')],
+            'hash_equals' => [hash_equals('abc', 'abc'), Hash::hashEquals('abc', 'abc')],
+            'md5' => [md5('payload'), Hash::md5('payload')],
+            'sha1' => [sha1('payload'), Hash::sha1('payload')],
+        ];
     }
 
     public function testFluentConformanceAcrossTypeHandoff(): void
