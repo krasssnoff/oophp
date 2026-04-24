@@ -151,6 +151,7 @@ Use `->get()` or `()` to extract raw PHP values from a chain.
 ## Design and test docs
 
 - `docs/CHAIN_RULES.md` - fluent-chain contract
+- `docs/API_CATALOG.md` - machine-readable API catalog and sync policy
 - `docs/EXTENSION_PACKS.md` - optional extension pack strategy
 - `docs/TESTING_STRATEGY.md` - native conformance and TDD workflow
 
