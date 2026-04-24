@@ -12,6 +12,7 @@ use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Path;
 use Oophp\Preg;
+use Oophp\Stream;
 use Oophp\Str;
 use Oophp\Url;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -390,6 +391,48 @@ final class ConformanceTest extends TestCase
             @unlink($wrappedCopy);
             @unlink($wrappedSource);
             @rmdir($wrappedRoot);
+        }
+    }
+
+    public function testStreamResourceLifecycleConformance(): void
+    {
+        $base = sys_get_temp_dir() . '/oophp-stream-conformance-' . uniqid('', true);
+        $nativePath = $base . '-native.txt';
+        $wrappedPath = $base . '-wrapped.txt';
+
+        $native = null;
+        $wrapped = null;
+
+        try {
+            $native = fopen($nativePath, 'w+');
+            $wrapped = Stream::fopen($wrappedPath, 'w+');
+
+            self::assertIsResource($native);
+            self::assertIsResource($wrapped);
+            self::assertSame(fwrite($native, "alpha\nbeta"), Stream::fwrite($wrapped, "alpha\nbeta"));
+
+            rewind($native);
+            rewind($wrapped);
+            self::assertSame(stream_get_contents($native), Stream::streamGetContents($wrapped));
+
+            rewind($native);
+            rewind($wrapped);
+            self::assertSame(fread($native, 5), Stream::fread($wrapped, 5));
+
+            self::assertSame(fclose($native), Stream::fclose($wrapped));
+            $native = null;
+            $wrapped = null;
+        } finally {
+            if (is_resource($native)) {
+                @fclose($native);
+            }
+
+            if (is_resource($wrapped)) {
+                @fclose($wrapped);
+            }
+
+            @unlink($nativePath);
+            @unlink($wrappedPath);
         }
     }
 
