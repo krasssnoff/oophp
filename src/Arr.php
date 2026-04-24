@@ -373,4 +373,9 @@ final class Arr
     {
         return implode($separator, $array);
     }
+
+    public static function join(string $separator, array $array): string
+    {
+        return implode($separator, $array);
+    }
 }

@@ -4,7 +4,7 @@
         {
             "name": "Arr",
             "mode": "static+fluent",
-            "methods": ["arsort", "asort", "changeKeyCase", "chunk", "column", "combine", "countValues", "diff", "diffAssoc", "diffKey", "diffUassoc", "diffUkey", "fill", "fillKeys", "filter", "flip", "implode", "inArray", "intersect", "intersectAssoc", "intersectKey", "intersectUassoc", "intersectUkey", "isList", "keyExists", "keyFirst", "keyLast", "keys", "krsort", "ksort", "map", "merge", "mergeRecursive", "multisort", "natcasesort", "natsort", "of", "pad", "pop", "product", "push", "rand", "reduce", "replace", "replaceRecursive", "reverse", "rsort", "search", "shift", "shuffle", "slice", "sort", "splice", "sum", "uasort", "udiff", "udiffAssoc", "udiffUassoc", "uintersect", "uintersectAssoc", "uintersectUassoc", "uksort", "unique", "unshift", "usort", "values", "walk", "walkRecursive"]
+            "methods": ["arsort", "asort", "changeKeyCase", "chunk", "column", "combine", "countValues", "diff", "diffAssoc", "diffKey", "diffUassoc", "diffUkey", "fill", "fillKeys", "filter", "flip", "implode", "inArray", "intersect", "intersectAssoc", "intersectKey", "intersectUassoc", "intersectUkey", "isList", "join", "keyExists", "keyFirst", "keyLast", "keys", "krsort", "ksort", "map", "merge", "mergeRecursive", "multisort", "natcasesort", "natsort", "of", "pad", "pop", "product", "push", "rand", "reduce", "replace", "replaceRecursive", "reverse", "rsort", "search", "shift", "shuffle", "slice", "sort", "splice", "sum", "uasort", "udiff", "udiffAssoc", "udiffUassoc", "uintersect", "uintersectAssoc", "uintersectUassoc", "uksort", "unique", "unshift", "usort", "values", "walk", "walkRecursive"]
         },
         {
             "name": "Enc",

@@ -398,4 +398,9 @@ readonly class ArrayChain extends MixedChain
     {
         return self::wrap(implode($separator, $this->value));
     }
+
+    public function join(string $separator): StringChain|MixedChain
+    {
+        return self::wrap(implode($separator, $this->value));
+    }
 }

@@ -197,6 +197,7 @@ final class ConformanceTest extends TestCase
                 Arr::multisort([3, 1, 2], SORT_ASC, SORT_NUMERIC),
             ],
             'implode' => [implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c'])],
+            'join' => [implode('-', ['a', 'b', 'c']), Arr::join('-', ['a', 'b', 'c'])],
         ];
     }
 

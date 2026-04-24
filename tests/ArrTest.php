@@ -339,7 +339,7 @@ final class ArrTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testReduceSortRsortAndImplodeMatchNativePhp(): void
+    public function testReduceSortRsortImplodeAndJoinMatchNativePhp(): void
     {
         $input = [3, 1, 2];
 
@@ -360,6 +360,8 @@ final class ArrTest extends TestCase
 
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c']));
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->implode('-')->get());
+        self::assertSame(implode('-', ['a', 'b', 'c']), Arr::join('-', ['a', 'b', 'c']));
+        self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->join('-')->get());
     }
 
     public function testStaticCallbackDiffAndIntersectVariantsMatchNativePhp(): void
