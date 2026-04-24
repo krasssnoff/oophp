@@ -33,7 +33,7 @@ composer install
 - `Time` for selected procedural date/time helpers
 - `Hash` for selected hash/random/password helpers
 - `Type` for selected value/type inspection and cast helpers
-- `Sys` for a few read-only system helpers
+- `Sys` for read-only system/runtime helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
@@ -130,6 +130,8 @@ $tomorrow = Time::strtotime('+1 day');
 $digest = Hash::hash('sha256', 'payload');
 
 $isNumeric = Type::isNumeric('42');
+
+$memoryLimit = Sys::iniGet('memory_limit');
 
 $sapi = Sys::sapi();
 ```
