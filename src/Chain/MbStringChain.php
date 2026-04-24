@@ -46,6 +46,29 @@ readonly class MbStringChain extends MixedChain
         return self::wrapMb(mb_str_split($this->value, $length, $encoding));
     }
 
+    public function contains(string $needle, ?string $encoding = null): MixedChain
+    {
+        return self::wrapMb(mb_strpos($this->value, $needle, 0, $encoding) !== false);
+    }
+
+    public function startsWith(string $needle, ?string $encoding = null): MixedChain
+    {
+        if ($needle === '') {
+            return self::wrapMb(true);
+        }
+
+        return self::wrapMb(mb_substr($this->value, 0, mb_strlen($needle, $encoding), $encoding) === $needle);
+    }
+
+    public function endsWith(string $needle, ?string $encoding = null): MixedChain
+    {
+        if ($needle === '') {
+            return self::wrapMb(true);
+        }
+
+        return self::wrapMb(mb_substr($this->value, -mb_strlen($needle, $encoding), null, $encoding) === $needle);
+    }
+
     protected static function wrapMb(mixed $value): ArrayChain|MbStringChain|MixedChain
     {
         if (is_array($value)) {

@@ -106,4 +106,9 @@ final class Str
     {
         return explode($separator, $string, $limit);
     }
+
+    public static function join(array $array, string $separator = ''): string
+    {
+        return implode($separator, $array);
+    }
 }

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Oophp\Tests;
 
-use Oophp\Preg;
+use Oophp\Regex;
 use Oophp\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-final class PregTest extends TestCase
+final class RegexTest extends TestCase
 {
     public function testPregDomainRemainsStaticOnlyEntry(): void
     {
-        self::assertFalse(method_exists(Preg::class, 'of'));
+        self::assertFalse(method_exists(Regex::class, 'of'));
     }
 
     #[DataProvider('staticProvider')]
@@ -30,19 +30,19 @@ final class PregTest extends TestCase
         return [
             'preg_split' => [
                 preg_split('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
-                Preg::pregSplit('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
+                Regex::pregSplit('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
             ],
             'preg_grep' => [
                 preg_grep('/^a/u', ['alpha', 'beta', 'axis']),
-                Preg::pregGrep('/^a/u', ['alpha', 'beta', 'axis']),
+                Regex::pregGrep('/^a/u', ['alpha', 'beta', 'axis']),
             ],
             'preg_quote' => [
                 preg_quote('a+b?c', '/'),
-                Preg::pregQuote('a+b?c', '/'),
+                Regex::pregQuote('a+b?c', '/'),
             ],
             'preg_replace_callback' => [
                 preg_replace_callback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
-                Preg::pregReplaceCallback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
+                Regex::pregReplaceCallback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
             ],
         ];
     }
@@ -53,7 +53,7 @@ final class PregTest extends TestCase
         $actualCount = null;
 
         $expected = preg_replace('/\s+/', '-', 'hello world', -1, $expectedCount);
-        $actual = Preg::pregReplace('/\s+/', '-', 'hello world', -1, $actualCount);
+        $actual = Regex::pregReplace('/\s+/', '-', 'hello world', -1, $actualCount);
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedCount, $actualCount);
@@ -65,7 +65,7 @@ final class PregTest extends TestCase
         $actualMatches = [];
 
         $expected = preg_match('/(\w+)-(\d+)/', 'item-42', $expectedMatches);
-        $actual = Preg::pregMatch('/(\w+)-(\d+)/', 'item-42', $actualMatches);
+        $actual = Regex::pregMatch('/(\w+)-(\d+)/', 'item-42', $actualMatches);
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedMatches, $actualMatches);
@@ -77,7 +77,7 @@ final class PregTest extends TestCase
         $actualMatches = [];
 
         $expected = preg_match_all('/(\w+)/', 'alpha beta', $expectedMatches, PREG_PATTERN_ORDER);
-        $actual = Preg::pregMatchAll('/(\w+)/', 'alpha beta', $actualMatches, PREG_PATTERN_ORDER);
+        $actual = Regex::pregMatchAll('/(\w+)/', 'alpha beta', $actualMatches, PREG_PATTERN_ORDER);
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedMatches, $actualMatches);

@@ -87,4 +87,12 @@ final class StrTest extends TestCase
             'split_negative_limit' => [explode(',', 'a,b,c', -1), Str::split(',', 'a,b,c', -1)],
         ];
     }
+
+    public function testJoinMatchesNativePhpInStaticAndFluentModes(): void
+    {
+        $parts = ['a', 'b', 'c'];
+
+        self::assertSame(implode('-', $parts), Str::join($parts, '-'));
+        self::assertSame(implode('-', $parts), Str::of('-')->join($parts)->get());
+    }
 }

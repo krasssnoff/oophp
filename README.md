@@ -25,21 +25,23 @@ composer install
 - `Math` for selected numeric wrappers
 - `Json` for selected `json_*` functions
 - `Url` for selected URL/query helpers
-- `Encoding` for base64/hex/pack/unpack and serialization helpers
-- `Preg` for selected `preg_*` regex operations
-- `Path` for selected path helpers
-- `Fs` for selected filesystem and file IO helpers
-- `Stream` for selected stream/resource helpers
-- `Time` for selected procedural date/time helpers
+- `Enc` for base64/hex/pack/unpack and serialization helpers
+- `Regex` for selected `preg_*` regex operations
+- `Fs` for selected filesystem/file IO helpers, including path helpers
+- `Stream` for selected stream/resource helpers with optional fluent handle workflow
+- `Date` for rich immutable date/time wrappers with fluent entrypoint
 - `Hash` for selected hash/random/password helpers
 - `Type` for selected value/type inspection and cast helpers
-- `Network` for selected DNS/network utility helpers
+- `Net` for selected DNS/network utility helpers
 - `Process` for explicit effectful process/exec helpers
 - `Sys` for read-only system/runtime helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
 - Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, and `Sys` are static-only domains
+- `Date` also exposes immutable fluent chains via `Date::of(...)`
+- `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
+- `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
+- `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Process`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -76,19 +78,18 @@ $position = Str::of('  alpha,beta,gamma  ')
 
 ```php
 use Oophp\Arr;
-use Oophp\Encoding;
+use Oophp\Enc;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
-use Oophp\Network;
+use Oophp\Net;
 use Oophp\Fs;
 use Oophp\Hash;
-use Oophp\Path;
 use Oophp\Process;
-use Oophp\Preg;
+use Oophp\Regex;
 use Oophp\Stream;
 use Oophp\Sys;
-use Oophp\Time;
+use Oophp\Date;
 use Oophp\Type;
 use Oophp\Str;
 use Oophp\Url;
@@ -119,23 +120,28 @@ $rounded = Math::round(2.55, 1);
 
 $query = Url::buildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
 
-$encoded = Encoding::base64Encode('hello');
+$encoded = Enc::base64Encode('hello');
 
-$matched = Preg::pregMatch('/\w+/', 'alpha');
+$matched = Regex::pregMatch('/\w+/', 'alpha');
 
-$filename = Path::basename('/var/www/app/archive.tar.gz');
+$filename = Fs::basename('/var/www/app/archive.tar.gz');
 
 $written = Fs::filePutContents('/tmp/example.txt', 'payload');
 
 $handle = Stream::fopen('/tmp/example.txt', 'r');
 
-$tomorrow = Time::strtotime('+1 day');
+$tomorrow = Date::strtotime('+1 day');
+$windowEnd = Date::of('2024-01-10 14:30:00', 'UTC')
+    ->modify('+2 days')
+    ->endOfDay()
+    ->format('c')
+    ->get();
 
 $digest = Hash::hash('sha256', 'payload');
 
 $isNumeric = Type::isNumeric('42');
 
-$localhostIp = Network::getHostByName('localhost');
+$localhostIp = Net::getHostByName('localhost');
 
 $execOutput = Process::shellExec(PHP_BINARY . ' -r "echo 42;"');
 
@@ -146,7 +152,7 @@ $sapi = Sys::sapi();
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, and `Sys` remain static-only domains.
+`Arr`, `Str`, `MbStr`, `Date`, `Fs`, and `Stream` are static+fluent, while `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Process`, and `Sys` remain static-only.
 
 ## Design and test docs
 

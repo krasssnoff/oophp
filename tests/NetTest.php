@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Oophp\Tests;
 
-use Oophp\Network;
+use Oophp\Net;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-final class NetworkTest extends TestCase
+final class NetTest extends TestCase
 {
     public function testNetworkDomainRemainsStaticOnly(): void
     {
-        self::assertFalse(method_exists(Network::class, 'of'));
+        self::assertFalse(method_exists(Net::class, 'of'));
     }
 
     #[DataProvider('staticProvider')]
@@ -27,12 +27,12 @@ final class NetworkTest extends TestCase
     public static function staticProvider(): array
     {
         return [
-            'gethostbyname' => [gethostbyname('localhost'), Network::getHostByName('localhost')],
-            'gethostbynamel' => [gethostbynamel('localhost'), Network::getHostByNameList('localhost')],
-            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Network::getHostByAddr('127.0.0.1')],
-            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Network::checkDns('localhost', 'A')],
-            'ip2long' => [ip2long('127.0.0.1'), Network::ipToLong('127.0.0.1')],
-            'long2ip' => [long2ip(2130706433), Network::longToIp(2130706433)],
+            'gethostbyname' => [gethostbyname('localhost'), Net::getHostByName('localhost')],
+            'gethostbynamel' => [gethostbynamel('localhost'), Net::getHostByNameList('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::getHostByAddr('127.0.0.1')],
+            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Net::checkDns('localhost', 'A')],
+            'ip2long' => [ip2long('127.0.0.1'), Net::ipToLong('127.0.0.1')],
+            'long2ip' => [long2ip(2130706433), Net::longToIp(2130706433)],
         ];
     }
 
@@ -44,7 +44,7 @@ final class NetworkTest extends TestCase
         $wrappedAdditional = null;
 
         $expected = dns_get_record('localhost', DNS_A, $nativeAuth, $nativeAdditional, false);
-        $actual = Network::dnsGetRecord('localhost', DNS_A, $wrappedAuth, $wrappedAdditional, false);
+        $actual = Net::dnsGetRecord('localhost', DNS_A, $wrappedAuth, $wrappedAdditional, false);
 
         self::assertSame($expected, $actual);
         self::assertSame($nativeAuth, $wrappedAuth);
@@ -59,7 +59,7 @@ final class NetworkTest extends TestCase
         $wrappedWeights = [];
 
         $expected = getmxrr('localhost', $nativeHosts, $nativeWeights);
-        $actual = Network::getMxRecords('localhost', $wrappedHosts, $wrappedWeights);
+        $actual = Net::getMxRecords('localhost', $wrappedHosts, $wrappedWeights);
 
         self::assertSame($expected, $actual);
         self::assertSame($nativeHosts, $wrappedHosts);

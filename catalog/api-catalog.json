@@ -4,17 +4,17 @@
         {
             "name": "Arr",
             "mode": "static+fluent",
-            "methods": ["changeKeyCase", "chunk", "column", "combine", "countValues", "diff", "diffAssoc", "diffKey", "fillKeys", "filter", "flip", "inArray", "intersect", "intersectAssoc", "intersectKey", "isList", "keyExists", "keyFirst", "keyLast", "keys", "map", "merge", "mergeRecursive", "of", "pad", "product", "replace", "replaceRecursive", "reverse", "search", "slice", "sum", "unique", "values"]
+            "methods": ["changeKeyCase", "chunk", "column", "combine", "countValues", "diff", "diffAssoc", "diffKey", "fillKeys", "filter", "flip", "implode", "inArray", "intersect", "intersectAssoc", "intersectKey", "isList", "keyExists", "keyFirst", "keyLast", "keys", "map", "merge", "mergeRecursive", "of", "pad", "product", "reduce", "replace", "replaceRecursive", "reverse", "rsort", "search", "slice", "sort", "sum", "unique", "values"]
         },
         {
-            "name": "Encoding",
+            "name": "Enc",
             "mode": "static-only",
             "methods": ["base64Decode", "base64Encode", "bin2hex", "hex2bin", "pack", "serialize", "unpack", "unserialize"]
         },
         {
             "name": "Fs",
-            "mode": "static-only",
-            "methods": ["copy", "fileExists", "fileGetContents", "filePutContents", "glob", "mkdir", "rename", "scandir", "unlink"]
+            "mode": "static+fluent",
+            "methods": ["basename", "copy", "dirname", "fileExists", "fileGetContents", "filePutContents", "glob", "mkdir", "of", "pathinfo", "realpath", "rename", "scandir", "unlink"]
         },
         {
             "name": "Hash",
@@ -34,20 +34,15 @@
         {
             "name": "MbStr",
             "mode": "static+fluent",
-            "methods": ["len", "of", "pos", "rpos", "split", "substr", "tolower", "toupper"]
+            "methods": ["contains", "endsWith", "len", "of", "pos", "rpos", "split", "startsWith", "substr", "tolower", "toupper"]
         },
         {
-            "name": "Network",
+            "name": "Net",
             "mode": "static-only",
             "methods": ["checkDns", "dnsGetRecord", "getHostByAddr", "getHostByName", "getHostByNameList", "getMxRecords", "ipToLong", "longToIp"]
         },
         {
-            "name": "Path",
-            "mode": "static-only",
-            "methods": ["basename", "dirname", "pathinfo", "realpath"]
-        },
-        {
-            "name": "Preg",
+            "name": "Regex",
             "mode": "static-first",
             "methods": ["pregGrep", "pregLastError", "pregLastErrorMessage", "pregMatch", "pregMatchAll", "pregQuote", "pregReplace", "pregReplaceCallback", "pregSplit"]
         },
@@ -59,12 +54,12 @@
         {
             "name": "Str",
             "mode": "static+fluent",
-            "methods": ["contains", "endsWith", "ipos", "len", "of", "pos", "repeat", "replace", "rev", "ripos", "rpos", "split", "startsWith", "substr", "substrCount", "substrReplace", "tolower", "toupper", "trim"]
+            "methods": ["contains", "endsWith", "ipos", "join", "len", "of", "pos", "repeat", "replace", "rev", "ripos", "rpos", "split", "startsWith", "substr", "substrCount", "substrReplace", "tolower", "toupper", "trim"]
         },
         {
             "name": "Stream",
-            "mode": "static-only",
-            "methods": ["fclose", "fopen", "fread", "fwrite", "streamGetContents"]
+            "mode": "static+fluent",
+            "methods": ["fclose", "fopen", "fread", "fwrite", "of", "streamGetContents"]
         },
         {
             "name": "Sys",
@@ -72,9 +67,9 @@
             "methods": ["currentWorkingDirectory", "env", "extensionLoaded", "hostname", "iniGet", "iniGetAll", "iniLoadedFile", "iniScannedFiles", "loadedExtensions", "memoryPeakUsage", "memoryUsage", "sapi", "tempDirectory", "uname", "version"]
         },
         {
-            "name": "Time",
-            "mode": "static-only",
-            "methods": ["date", "gmdate", "hrtime", "microtime", "mktime", "strtotime", "timezoneGet", "timezoneSet"]
+            "name": "Date",
+            "mode": "static+fluent",
+            "methods": ["create", "createFromFormat", "date", "diff", "endOfDay", "format", "fromTimestamp", "gmdate", "hrtime", "microtime", "mktime", "now", "of", "parse", "range", "startOfDay", "strtotime", "timestamp", "timezone", "timezoneGet", "timezoneSet"]
         },
         {
             "name": "Type",

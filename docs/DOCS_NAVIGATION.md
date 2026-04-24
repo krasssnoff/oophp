@@ -14,6 +14,6 @@ Use this index as the entry point for package conventions, roadmap-adjacent poli
 
 Current domains are tracked in `catalog/api-catalog.json`.
 
-- `static+fluent`: `Arr`, `Str`, `MbStr`
-- `static-first`: `Preg` (with receiver-friendly fluent transforms on `StringChain`)
-- `static-only`: `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, `Sys`
+- `static+fluent`: `Arr`, `Str`, `MbStr`, `Date` (via `Date::of(...)` and immutable `DateChain`), `Fs` (path workflow), `Stream` (handle workflow)
+- `static-first`: `Regex` (with receiver-friendly fluent transforms on `StringChain`)
+- `static-only`: `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Process`, `Sys`

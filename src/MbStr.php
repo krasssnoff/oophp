@@ -47,4 +47,27 @@ final class MbStr
     {
         return mb_str_split($string, $length, $encoding);
     }
+
+    public static function contains(string $haystack, string $needle, ?string $encoding = null): bool
+    {
+        return self::pos($haystack, $needle, 0, $encoding) !== false;
+    }
+
+    public static function startsWith(string $haystack, string $needle, ?string $encoding = null): bool
+    {
+        if ($needle === '') {
+            return true;
+        }
+
+        return self::substr($haystack, 0, self::len($needle, $encoding), $encoding) === $needle;
+    }
+
+    public static function endsWith(string $haystack, string $needle, ?string $encoding = null): bool
+    {
+        if ($needle === '') {
+            return true;
+        }
+
+        return self::substr($haystack, -self::len($needle, $encoding), null, $encoding) === $needle;
+    }
 }

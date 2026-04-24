@@ -13,8 +13,8 @@ final class JsonTest extends TestCase
     public function testJsonRemainsStaticOnlyDomain(): void
     {
         self::assertFalse(method_exists(Json::class, 'of'));
-        self::assertFalse(method_exists(MixedChain::class, 'jsonEncode'));
-        self::assertFalse(method_exists(MixedChain::class, 'jsonDecode'));
+        self::assertTrue(method_exists(MixedChain::class, 'jsonEncode'));
+        self::assertTrue(method_exists(MixedChain::class, 'jsonDecode'));
     }
 
     public function testStaticEncodeMatchesNativePhp(): void
@@ -52,5 +52,17 @@ final class JsonTest extends TestCase
 
         self::assertSame($expectedError, $actualError);
         self::assertSame($expectedMessage, $actualMessage);
+    }
+
+    public function testMixedChainJsonBridgeSupportsRoundTrip(): void
+    {
+        $payload = ['ok' => true, 'count' => 2];
+
+        $decoded = (new MixedChain($payload))
+            ->jsonEncode()
+            ->jsonDecode()
+            ->get();
+
+        self::assertSame($payload, $decoded);
     }
 }

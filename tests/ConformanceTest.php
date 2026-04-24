@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Arr;
-use Oophp\Encoding;
+use Oophp\Enc;
 use Oophp\Fs;
 use Oophp\Hash;
 use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
-use Oophp\Network;
-use Oophp\Path;
+use Oophp\Net;
 use Oophp\Process;
-use Oophp\Preg;
+use Oophp\Regex;
 use Oophp\Stream;
 use Oophp\Str;
 use Oophp\Sys;
-use Oophp\Time;
+use Oophp\Date;
 use Oophp\Type;
 use Oophp\Url;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -78,6 +77,24 @@ final class ConformanceTest extends TestCase
             'sum' => [array_sum([1, 2, 3]), Arr::sum([1, 2, 3])],
             'product' => [array_product([1.5, 2, 3]), Arr::product([1.5, 2, 3])],
             'key_exists' => [array_key_exists('a', ['a' => 1]), Arr::keyExists('a', ['a' => 1])],
+            'reduce' => [array_reduce([1, 2, 3], static fn (int $carry, int $item): int => $carry + $item, 0), Arr::reduce([1, 2, 3], static fn (int $carry, int $item): int => $carry + $item, 0)],
+            'sort' => [
+                (static function (): array {
+                    $value = [3, 1, 2];
+                    sort($value, SORT_NUMERIC);
+                    return $value;
+                })(),
+                Arr::sort([3, 1, 2], SORT_NUMERIC),
+            ],
+            'rsort' => [
+                (static function (): array {
+                    $value = [3, 1, 2];
+                    rsort($value, SORT_NUMERIC);
+                    return $value;
+                })(),
+                Arr::rsort([3, 1, 2], SORT_NUMERIC),
+            ],
+            'implode' => [implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c'])],
         ];
     }
 
@@ -111,6 +128,7 @@ final class ConformanceTest extends TestCase
             'substr_count' => [substr_count('banana', 'na', 1, 4), Str::substrCount('banana', 'na', 1, 4)],
             'substr_replace' => [substr_replace('abcdef', 'X', 2, 3), Str::substrReplace('abcdef', 'X', 2, 3)],
             'split_limit' => [explode(',', 'a,b,c', 2), Str::split(',', 'a,b,c', 2)],
+            'join' => [implode('-', ['a', 'b', 'c']), Str::join(['a', 'b', 'c'], '-')],
         ];
     }
 
@@ -180,6 +198,9 @@ final class ConformanceTest extends TestCase
             'rpos' => [mb_strrpos('абв абв', 'абв', 0, 'UTF-8'), MbStr::rpos('абв абв', 'абв', 0, 'UTF-8')],
             'substr' => [mb_substr('Привет', 1, 3, 'UTF-8'), MbStr::substr('Привет', 1, 3, 'UTF-8')],
             'split' => [mb_str_split('Привет', 2, 'UTF-8'), MbStr::split('Привет', 2, 'UTF-8')],
+            'contains' => [mb_strpos('До свидания', 'вид', 0, 'UTF-8') !== false, MbStr::contains('До свидания', 'вид', 'UTF-8')],
+            'starts_with' => [mb_substr('Привет', 0, mb_strlen('При', 'UTF-8'), 'UTF-8') === 'При', MbStr::startsWith('Привет', 'При', 'UTF-8')],
+            'ends_with' => [mb_substr('Привет', -mb_strlen('вет', 'UTF-8'), null, 'UTF-8') === 'вет', MbStr::endsWith('Привет', 'вет', 'UTF-8')],
         ];
     }
 
@@ -252,16 +273,16 @@ final class ConformanceTest extends TestCase
         $packed = pack('nvc*', 0x1234, 0x56, 0x78, 0x9A);
 
         return [
-            'base64_encode' => [base64_encode('hello'), Encoding::base64Encode('hello')],
-            'base64_decode_strict' => [base64_decode('aGVsbG8=', true), Encoding::base64Decode('aGVsbG8=', true)],
-            'bin2hex' => [bin2hex("A\0B"), Encoding::bin2hex("A\0B")],
-            'hex2bin' => [hex2bin('410042'), Encoding::hex2bin('410042')],
-            'pack' => [pack('nvc*', 0x1234, 0x56, 0x78, 0x9A), Encoding::pack('nvc*', 0x1234, 0x56, 0x78, 0x9A)],
-            'unpack' => [unpack('nfirst/csecond/c*rest', $packed), Encoding::unpack('nfirst/csecond/c*rest', $packed)],
-            'serialize' => [$serialized, Encoding::serialize($payload)],
+            'base64_encode' => [base64_encode('hello'), Enc::base64Encode('hello')],
+            'base64_decode_strict' => [base64_decode('aGVsbG8=', true), Enc::base64Decode('aGVsbG8=', true)],
+            'bin2hex' => [bin2hex("A\0B"), Enc::bin2hex("A\0B")],
+            'hex2bin' => [hex2bin('410042'), Enc::hex2bin('410042')],
+            'pack' => [pack('nvc*', 0x1234, 0x56, 0x78, 0x9A), Enc::pack('nvc*', 0x1234, 0x56, 0x78, 0x9A)],
+            'unpack' => [unpack('nfirst/csecond/c*rest', $packed), Enc::unpack('nfirst/csecond/c*rest', $packed)],
+            'serialize' => [$serialized, Enc::serialize($payload)],
             'unserialize' => [
                 unserialize($serialized, ['allowed_classes' => false]),
-                Encoding::unserialize($serialized, ['allowed_classes' => false]),
+                Enc::unserialize($serialized, ['allowed_classes' => false]),
             ],
         ];
     }
@@ -280,23 +301,23 @@ final class ConformanceTest extends TestCase
         return [
             'preg_replace' => [
                 preg_replace('/\s+/', '-', 'hello world'),
-                Preg::pregReplace('/\s+/', '-', 'hello world'),
+                Regex::pregReplace('/\s+/', '-', 'hello world'),
             ],
             'preg_split' => [
                 preg_split('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
-                Preg::pregSplit('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
+                Regex::pregSplit('/\s*,\s*/', 'a, b, c', -1, PREG_SPLIT_NO_EMPTY),
             ],
             'preg_grep' => [
                 preg_grep('/^a/u', ['alpha', 'beta', 'axis']),
-                Preg::pregGrep('/^a/u', ['alpha', 'beta', 'axis']),
+                Regex::pregGrep('/^a/u', ['alpha', 'beta', 'axis']),
             ],
             'preg_quote' => [
                 preg_quote('a+b?c', '/'),
-                Preg::pregQuote('a+b?c', '/'),
+                Regex::pregQuote('a+b?c', '/'),
             ],
             'preg_replace_callback' => [
                 preg_replace_callback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
-                Preg::pregReplaceCallback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
+                Regex::pregReplaceCallback('/(\d+)/', static fn (array $m): string => '[' . $m[1] . ']', 'id=42'),
             ],
         ];
     }
@@ -307,7 +328,7 @@ final class ConformanceTest extends TestCase
         $actualMatches = [];
 
         $expected = preg_match('/(\w+)-(\d+)/', 'item-42', $expectedMatches);
-        $actual = Preg::pregMatch('/(\w+)-(\d+)/', 'item-42', $actualMatches);
+        $actual = Regex::pregMatch('/(\w+)-(\d+)/', 'item-42', $actualMatches);
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedMatches, $actualMatches);
@@ -319,14 +340,14 @@ final class ConformanceTest extends TestCase
         $actualMatches = [];
 
         $expected = preg_match_all('/(\w+)/', 'alpha beta', $expectedMatches, PREG_PATTERN_ORDER);
-        $actual = Preg::pregMatchAll('/(\w+)/', 'alpha beta', $actualMatches, PREG_PATTERN_ORDER);
+        $actual = Regex::pregMatchAll('/(\w+)/', 'alpha beta', $actualMatches, PREG_PATTERN_ORDER);
 
         self::assertSame($expected, $actual);
         self::assertSame($expectedMatches, $actualMatches);
     }
 
-    #[DataProvider('pathStaticProvider')]
-    public function testPathStaticConformance(mixed $expected, mixed $actual): void
+    #[DataProvider('fsPathStaticProvider')]
+    public function testFsPathStaticConformance(mixed $expected, mixed $actual): void
     {
         self::assertSame($expected, $actual);
     }
@@ -334,19 +355,19 @@ final class ConformanceTest extends TestCase
     /**
      * @return array<string, array{0:mixed,1:mixed}>
      */
-    public static function pathStaticProvider(): array
+    public static function fsPathStaticProvider(): array
     {
         $samplePath = '/var/www/app/archive.tar.gz';
         $existingPath = __FILE__;
 
         return [
-            'basename' => [basename($samplePath), Path::basename($samplePath)],
-            'basename_suffix' => [basename($samplePath, '.gz'), Path::basename($samplePath, '.gz')],
-            'dirname' => [dirname($samplePath), Path::dirname($samplePath)],
-            'dirname_levels' => [dirname($samplePath, 2), Path::dirname($samplePath, 2)],
-            'pathinfo' => [pathinfo($samplePath), Path::pathinfo($samplePath)],
-            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Path::pathinfo($samplePath, PATHINFO_EXTENSION)],
-            'realpath' => [realpath($existingPath), Path::realpath($existingPath)],
+            'basename' => [basename($samplePath), Fs::basename($samplePath)],
+            'basename_suffix' => [basename($samplePath, '.gz'), Fs::basename($samplePath, '.gz')],
+            'dirname' => [dirname($samplePath), Fs::dirname($samplePath)],
+            'dirname_levels' => [dirname($samplePath, 2), Fs::dirname($samplePath, 2)],
+            'pathinfo' => [pathinfo($samplePath), Fs::pathinfo($samplePath)],
+            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Fs::pathinfo($samplePath, PATHINFO_EXTENSION)],
+            'realpath' => [realpath($existingPath), Fs::realpath($existingPath)],
         ];
     }
 
@@ -456,10 +477,10 @@ final class ConformanceTest extends TestCase
         $timestamp = 1_704_067_200;
 
         return [
-            'date' => [date('Y-m-d', $timestamp), Time::date('Y-m-d', $timestamp)],
-            'gmdate' => [gmdate('Y-m-d H:i:s', $timestamp), Time::gmdate('Y-m-d H:i:s', $timestamp)],
-            'strtotime' => [strtotime('+2 days', $timestamp), Time::strtotime('+2 days', $timestamp)],
-            'mktime' => [mktime(12, 30, 15, 5, 10, 2024), Time::mktime(12, 30, 15, 5, 10, 2024)],
+            'date' => [date('Y-m-d', $timestamp), Date::date('Y-m-d', $timestamp)],
+            'gmdate' => [gmdate('Y-m-d H:i:s', $timestamp), Date::gmdate('Y-m-d H:i:s', $timestamp)],
+            'strtotime' => [strtotime('+2 days', $timestamp), Date::strtotime('+2 days', $timestamp)],
+            'mktime' => [mktime(12, 30, 15, 5, 10, 2024), Date::mktime(12, 30, 15, 5, 10, 2024)],
         ];
     }
 
@@ -468,8 +489,8 @@ final class ConformanceTest extends TestCase
         $original = date_default_timezone_get();
 
         try {
-            self::assertSame(date_default_timezone_set('UTC'), Time::timezoneSet('UTC'));
-            self::assertSame(date_default_timezone_get(), Time::timezoneGet());
+            self::assertSame(date_default_timezone_set('UTC'), Date::timezoneSet('UTC'));
+            self::assertSame(date_default_timezone_get(), Date::timezoneGet());
         } finally {
             date_default_timezone_set($original);
         }
@@ -566,12 +587,12 @@ final class ConformanceTest extends TestCase
     public static function networkStaticProvider(): array
     {
         return [
-            'gethostbyname' => [gethostbyname('localhost'), Network::getHostByName('localhost')],
-            'gethostbynamel' => [gethostbynamel('localhost'), Network::getHostByNameList('localhost')],
-            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Network::getHostByAddr('127.0.0.1')],
-            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Network::checkDns('localhost', 'A')],
-            'ip2long' => [ip2long('127.0.0.1'), Network::ipToLong('127.0.0.1')],
-            'long2ip' => [long2ip(2130706433), Network::longToIp(2130706433)],
+            'gethostbyname' => [gethostbyname('localhost'), Net::getHostByName('localhost')],
+            'gethostbynamel' => [gethostbynamel('localhost'), Net::getHostByNameList('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::getHostByAddr('127.0.0.1')],
+            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Net::checkDns('localhost', 'A')],
+            'ip2long' => [ip2long('127.0.0.1'), Net::ipToLong('127.0.0.1')],
+            'long2ip' => [long2ip(2130706433), Net::longToIp(2130706433)],
         ];
     }
 
@@ -583,7 +604,7 @@ final class ConformanceTest extends TestCase
         $wrappedAdditional = null;
 
         $expected = dns_get_record('localhost', DNS_A, $nativeAuth, $nativeAdditional, false);
-        $actual = Network::dnsGetRecord('localhost', DNS_A, $wrappedAuth, $wrappedAdditional, false);
+        $actual = Net::dnsGetRecord('localhost', DNS_A, $wrappedAuth, $wrappedAdditional, false);
 
         self::assertSame($expected, $actual);
         self::assertSame($nativeAuth, $wrappedAuth);

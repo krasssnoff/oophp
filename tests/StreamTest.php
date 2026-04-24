@@ -11,7 +11,7 @@ final class StreamTest extends TestCase
 {
     public function testStreamDomainRemainsStaticOnly(): void
     {
-        self::assertFalse(method_exists(Stream::class, 'of'));
+        self::assertTrue(method_exists(Stream::class, 'of'));
     }
 
     public function testTmpFileStreamLifecycleMatchesNativePhp(): void
@@ -41,6 +41,48 @@ final class StreamTest extends TestCase
             self::assertSame(fread($native, 5), Stream::fread($wrapped, 5));
 
             self::assertSame(fclose($native), Stream::fclose($wrapped));
+            $native = null;
+            $wrapped = null;
+        } finally {
+            if (is_resource($native)) {
+                @fclose($native);
+            }
+
+            if (is_resource($wrapped)) {
+                @fclose($wrapped);
+            }
+
+            @unlink($nativePath);
+            @unlink($wrappedPath);
+        }
+    }
+
+    public function testStreamFluentHandleWorkflowMatchesNativePhp(): void
+    {
+        $base = sys_get_temp_dir() . '/oophp-stream-fluent-' . uniqid('', true);
+        $nativePath = $base . '-native.txt';
+        $wrappedPath = $base . '-wrapped.txt';
+
+        $native = null;
+        $wrapped = null;
+
+        try {
+            $native = fopen($nativePath, 'w+');
+            $wrapped = fopen($wrappedPath, 'w+');
+            self::assertIsResource($native);
+            self::assertIsResource($wrapped);
+
+            $chain = Stream::of($wrapped);
+            self::assertSame(fwrite($native, "alpha\nbeta"), $chain->write("alpha\nbeta")->get());
+
+            rewind($native);
+            rewind($wrapped);
+            self::assertSame(stream_get_contents($native), $chain->contents()->get());
+
+            rewind($native);
+            rewind($wrapped);
+            self::assertSame(fread($native, 5), $chain->read(5)->get());
+            self::assertSame(fclose($native), $chain->close()->get());
             $native = null;
             $wrapped = null;
         } finally {
