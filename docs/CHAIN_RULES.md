@@ -5,9 +5,10 @@ This document defines the core API principles used by OOPHP.
 ## Core model
 
 - `Arr`, `Str`, and extension-gated `MbStr` provide static wrappers and fluent chains via `::of(...)`.
-- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, and `Sys` are static-only.
+- `Math`, `Json`, `Url`, `Encoding`, `Path`, `Fs`, `Stream`, `Time`, `Hash`, `Type`, `Network`, `Process`, and `Sys` are static-only.
 - `Preg` is static-first, while receiver-friendly regex transforms are exposed on `StringChain`.
 - `Sys` is read-only by policy and does not include process/mutation APIs.
+- `Process` is explicitly effectful and remains static-only.
 - Fluent chains wrap the current value and pass it into the next native operation.
 
 ## Native-first contract

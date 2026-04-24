@@ -13,6 +13,7 @@ use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Network;
 use Oophp\Path;
+use Oophp\Process;
 use Oophp\Preg;
 use Oophp\Stream;
 use Oophp\Str;
@@ -587,6 +588,41 @@ final class ConformanceTest extends TestCase
         self::assertSame($expected, $actual);
         self::assertSame($nativeAuth, $wrappedAuth);
         self::assertSame($nativeAdditional, $wrappedAdditional);
+    }
+
+    #[DataProvider('processStaticProvider')]
+    public function testProcessStaticConformance(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function processStaticProvider(): array
+    {
+        $shellCommand = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "shell-ok";');
+
+        return [
+            'shell_exec' => [shell_exec($shellCommand), Process::shellExec($shellCommand)],
+        ];
+    }
+
+    public function testProcessExecOutputConformance(): void
+    {
+        $command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "exec-ok";');
+
+        $nativeOutput = [];
+        $nativeCode = 0;
+        $wrappedOutput = [];
+        $wrappedCode = 0;
+
+        $expected = exec($command, $nativeOutput, $nativeCode);
+        $actual = Process::exec($command, $wrappedOutput, $wrappedCode);
+
+        self::assertSame($expected, $actual);
+        self::assertSame($nativeOutput, $wrappedOutput);
+        self::assertSame($nativeCode, $wrappedCode);
     }
 
     public function testFluentConformanceAcrossTypeHandoff(): void
