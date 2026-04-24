@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Oophp\Tests;
 
-use Oophp\Process;
+use Oophp\Proc;
 use PHPUnit\Framework\TestCase;
 
-final class ProcessTest extends TestCase
+final class ProcTest extends TestCase
 {
-    public function testProcessDomainRemainsStaticOnly(): void
+    public function testProcDomainRemainsStaticOnly(): void
     {
-        self::assertFalse(method_exists(Process::class, 'of'));
+        self::assertFalse(method_exists(Proc::class, 'of'));
     }
 
     public function testExecConformanceWithOutputParameters(): void
@@ -24,7 +24,7 @@ final class ProcessTest extends TestCase
         $wrappedCode = 0;
 
         $expected = exec($command, $nativeOutput, $nativeCode);
-        $actual = Process::exec($command, $wrappedOutput, $wrappedCode);
+        $actual = Proc::exec($command, $wrappedOutput, $wrappedCode);
 
         self::assertSame($expected, $actual);
         self::assertSame($nativeOutput, $wrappedOutput);
@@ -35,7 +35,7 @@ final class ProcessTest extends TestCase
     {
         $command = $this->phpEchoCommand('shell-ok');
 
-        self::assertSame(shell_exec($command), Process::shellExec($command));
+        self::assertSame(shell_exec($command), Proc::shellExec($command));
     }
 
     public function testSystemConformanceWithCapturedOutput(): void
@@ -49,7 +49,7 @@ final class ProcessTest extends TestCase
 
         $wrappedCode = 0;
         ob_start();
-        $actual = Process::system($command, $wrappedCode);
+        $actual = Proc::system($command, $wrappedCode);
         $wrappedOutput = ob_get_clean();
 
         self::assertSame($expected, $actual);
@@ -68,7 +68,7 @@ final class ProcessTest extends TestCase
 
         $wrappedCode = 0;
         ob_start();
-        $actual = Process::passthru($command, $wrappedCode);
+        $actual = Proc::passthru($command, $wrappedCode);
         $wrappedOutput = ob_get_clean();
 
         self::assertSame($expected, $actual);
@@ -89,11 +89,11 @@ final class ProcessTest extends TestCase
         self::assertIsResource($nativeProcess);
 
         $wrappedPipes = [];
-        $wrappedProcess = Process::procOpen($command, $descriptors, $wrappedPipes);
+        $wrappedProcess = Proc::procOpen($command, $descriptors, $wrappedPipes);
         self::assertIsResource($wrappedProcess);
 
         $nativeStatus = proc_get_status($nativeProcess);
-        $wrappedStatus = Process::procGetStatus($wrappedProcess);
+        $wrappedStatus = Proc::procGetStatus($wrappedProcess);
         self::assertIsArray($nativeStatus);
         self::assertIsArray($wrappedStatus);
         self::assertSame($nativeStatus['running'], $wrappedStatus['running']);
@@ -107,7 +107,7 @@ final class ProcessTest extends TestCase
         fclose($wrappedPipes[2]);
 
         $nativeCode = proc_close($nativeProcess);
-        $wrappedCode = Process::procClose($wrappedProcess);
+        $wrappedCode = Proc::procClose($wrappedProcess);
 
         self::assertSame($nativeStdout, $wrappedStdout);
         self::assertSame($nativeCode, $wrappedCode);

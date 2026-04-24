@@ -12,7 +12,7 @@ use Oophp\Json;
 use Oophp\Math;
 use Oophp\MbStr;
 use Oophp\Net;
-use Oophp\Process;
+use Oophp\Proc;
 use Oophp\Regex;
 use Oophp\Stream;
 use Oophp\Str;
@@ -611,8 +611,8 @@ final class ConformanceTest extends TestCase
         self::assertSame($nativeAdditional, $wrappedAdditional);
     }
 
-    #[DataProvider('processStaticProvider')]
-    public function testProcessStaticConformance(mixed $expected, mixed $actual): void
+    #[DataProvider('procStaticProvider')]
+    public function testProcStaticConformance(mixed $expected, mixed $actual): void
     {
         self::assertSame($expected, $actual);
     }
@@ -620,16 +620,16 @@ final class ConformanceTest extends TestCase
     /**
      * @return array<string, array{0:mixed,1:mixed}>
      */
-    public static function processStaticProvider(): array
+    public static function procStaticProvider(): array
     {
         $shellCommand = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "shell-ok";');
 
         return [
-            'shell_exec' => [shell_exec($shellCommand), Process::shellExec($shellCommand)],
+            'shell_exec' => [shell_exec($shellCommand), Proc::shellExec($shellCommand)],
         ];
     }
 
-    public function testProcessExecOutputConformance(): void
+    public function testProcExecOutputConformance(): void
     {
         $command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "exec-ok";');
 
@@ -639,7 +639,7 @@ final class ConformanceTest extends TestCase
         $wrappedCode = 0;
 
         $expected = exec($command, $nativeOutput, $nativeCode);
-        $actual = Process::exec($command, $wrappedOutput, $wrappedCode);
+        $actual = Proc::exec($command, $wrappedOutput, $wrappedCode);
 
         self::assertSame($expected, $actual);
         self::assertSame($nativeOutput, $wrappedOutput);

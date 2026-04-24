@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-final class Process
+final class Proc
 {
     public static function exec(string $command, array &$output = [], int &$resultCode = 0): string|false
     {

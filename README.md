@@ -8,6 +8,7 @@
 ## Project status
 
 This package is in active development and is not published to Packagist yet.
+The project is currently in alpha stage: the API is unstable and can change (including breaking changes) between versions.
 
 ## Local usage (until Packagist release)
 
@@ -33,7 +34,7 @@ composer install
 - `Hash` for selected hash/random/password helpers
 - `Type` for selected value/type inspection and cast helpers
 - `Net` for selected DNS/network utility helpers
-- `Process` for explicit effectful process/exec helpers
+- `Proc` for explicit effectful process/exec helpers
 - `Sys` for read-only system/runtime helpers
 - Fluent API is available for `Arr` and `Str`
 - Fluent API is also available for `MbStr` when `ext-mbstring` is installed
@@ -41,7 +42,7 @@ composer install
 - `Date` also exposes immutable fluent chains via `Date::of(...)`
 - `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
 - `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
-- `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Process`, and `Sys` are static-only domains
+- `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
 - `ValueChain` is the minimal shared chain wrapper
 - Typed chains (`ArrayChain`, `StringChain`, `MixedChain`) carry domain methods and handle type handoff
 
@@ -85,7 +86,7 @@ use Oophp\MbStr;
 use Oophp\Net;
 use Oophp\Fs;
 use Oophp\Hash;
-use Oophp\Process;
+use Oophp\Proc;
 use Oophp\Regex;
 use Oophp\Stream;
 use Oophp\Sys;
@@ -143,7 +144,7 @@ $isNumeric = Type::isNumeric('42');
 
 $localhostIp = Net::getHostByName('localhost');
 
-$execOutput = Process::shellExec(PHP_BINARY . ' -r "echo 42;"');
+$execOutput = Proc::shellExec(PHP_BINARY . ' -r "echo 42;"');
 
 $memoryLimit = Sys::iniGet('memory_limit');
 
@@ -152,7 +153,7 @@ $sapi = Sys::sapi();
 
 Use `->get()` or `()` to extract raw PHP values from a chain.
 
-`Arr`, `Str`, `MbStr`, `Date`, `Fs`, and `Stream` are static+fluent, while `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Process`, and `Sys` remain static-only.
+`Arr`, `Str`, `MbStr`, `Date`, `Fs`, and `Stream` are static+fluent, while `Math`, `Json`, `Url`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` remain static-only.
 
 ## Design and test docs
 

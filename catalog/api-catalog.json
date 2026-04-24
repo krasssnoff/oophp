@@ -47,7 +47,7 @@
             "methods": ["pregGrep", "pregLastError", "pregLastErrorMessage", "pregMatch", "pregMatchAll", "pregQuote", "pregReplace", "pregReplaceCallback", "pregSplit"]
         },
         {
-            "name": "Process",
+            "name": "Proc",
             "mode": "static-only",
             "methods": ["exec", "passthru", "procClose", "procGetStatus", "procOpen", "shellExec", "system"]
         },
