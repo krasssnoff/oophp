@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Arr;
+use Oophp\Json;
 use Oophp\Str;
 use Oophp\Value\ArrayChain;
 use Oophp\Value\MixedChain;
@@ -38,6 +39,17 @@ final class ValueChainTest extends TestCase
         self::assertSame($chain->get(), $chain());
     }
 
+    public function testJsonHelpersKeepRawPhpSemantics(): void
+    {
+        $expected = json_decode(json_encode(['a' => 1], 0, 512), true, 512, 0);
+        $actual = Arr::of(['a' => 1])
+            ->jsonEncode()
+            ->jsonDecode()
+            ->get();
+
+        self::assertSame($expected, $actual);
+    }
+
     public function testStringSplitHandsOffToArrayChain(): void
     {
         $chain = Str::of('alpha,beta')->split(',');
@@ -60,5 +72,17 @@ final class ValueChainTest extends TestCase
 
         self::assertInstanceOf(MixedChain::class, $chain);
         self::assertSame(array_sum([1, 2, 3]), $chain->get());
+    }
+
+    public function testJsonEncodeAndDecodePreserveTypedHandoff(): void
+    {
+        $encoded = Arr::of(['a' => 1])->jsonEncode();
+
+        self::assertInstanceOf(StringChain::class, $encoded);
+
+        $decoded = $encoded->jsonDecode();
+
+        self::assertInstanceOf(ArrayChain::class, $decoded);
+        self::assertTrue($decoded->keyExists('a')->get());
     }
 }

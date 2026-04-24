@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Oophp\Value;
+namespace Oophp\Chain;
 
 readonly class ArrayChain extends MixedChain
 {

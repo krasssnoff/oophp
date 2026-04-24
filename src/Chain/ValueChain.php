@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Oophp\Chain;
 
 use Oophp\Contracts\Chain;
-use Oophp\Value\ArrayChain;
-use Oophp\Value\MixedChain;
-use Oophp\Value\StringChain;
+use Oophp\Chain\ArrayChain;
+use Oophp\Chain\MixedChain;
+use Oophp\Chain\StringChain;
 
 abstract readonly class ValueChain implements Chain
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-use Oophp\Value\StringChain;
+use Oophp\Chain\StringChain;
 
 final class Str
 {

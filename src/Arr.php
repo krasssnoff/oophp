@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Oophp;
 
-use Oophp\Value\ArrayChain;
+use Oophp\Chain\ArrayChain;
 
 final class Arr
 {
