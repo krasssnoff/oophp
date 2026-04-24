@@ -150,10 +150,17 @@ Use `->get()` or `()` to extract raw PHP values from a chain.
 
 ## Design and test docs
 
+- `docs/DOCS_NAVIGATION.md` - documentation entry point and domain map
 - `docs/CHAIN_RULES.md` - fluent-chain contract
 - `docs/API_CATALOG.md` - machine-readable API catalog and sync policy
 - `docs/EXTENSION_PACKS.md` - optional extension pack strategy
 - `docs/TESTING_STRATEGY.md` - native conformance and TDD workflow
+- `docs/RELEASE_PROCESS.md` - release checklist and publishing flow
+
+## CI and releases
+
+- Local CI command: `composer ci` (composer validation + full test suite).
+- Release readiness command: `composer release:check`.
 
 ## API reference
 

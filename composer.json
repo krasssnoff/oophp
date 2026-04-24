@@ -27,6 +27,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "ci": "composer validate --strict && composer test",
+        "release:check": "composer validate --strict && composer test"
     }
 }
