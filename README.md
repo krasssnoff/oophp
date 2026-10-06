@@ -12,12 +12,20 @@
 This package is in active development and is not published to Packagist yet.
 The project is currently in alpha stage: the API is unstable and can change (including breaking changes) between versions.
 
-## Local usage (until Packagist release)
+## Local composer usage (until Packagist release)
 
 ```bash
-git clone https://github.com/krasssnoff/oophp.git
-cd oophp
-composer install
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/krasssnoff/oophp"
+    }
+  ],
+  "require": {
+    "krasssnoff/oophp": "dev-main"
+  }
+}
 ```
 
 ## Why OOPHP
@@ -171,19 +179,6 @@ Use `->get()` or `()` to extract raw PHP values from a chain.
 - `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
 - `ValueChain` is the abstract `Chain` base. `ValueChain::of(mixed ...)` dispatches to `ArrayChain` / `StringChain` / `MixedChain` by the carried value; `Arr::of` and `Str::of` return `ArrayChain` and `StringChain` directly; `MbStr::of` returns `MbStringChain` for multibyte `mb_*` flows
 - Domain-specific chains: `NumberChain` (`Math::of(...)`), `DateChain` (`Date::of(...)` and related), `UrlChain` (`Url::of(...)`), `FsPathChain` (path steps from `Fs::of(...)`), and `StreamHandleChain` (resource workflow from `Stream::of(...)`)
-
-## API principles
-
-See `docs/CHAIN_RULES.md` for the API contract, naming rules, and fluent-chain behavior.
-
-## Design and test docs
-
-- `docs/DOCS_NAVIGATION.md` - documentation entry point and domain map
-- `docs/CHAIN_RULES.md` - fluent-chain contract
-- `docs/API_CATALOG.md` - machine-readable API catalog and sync policy
-- `docs/EXTENSION_PACKS.md` - optional extension pack strategy
-- `docs/TESTING_STRATEGY.md` - native conformance and TDD workflow
-- `docs/RELEASE_PROCESS.md` - release checklist and publishing flow
 
 ## CI and releases
 
