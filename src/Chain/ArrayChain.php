@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+/**
+ * @extends MixedChain<array<mixed>>
+ */
 readonly class ArrayChain extends MixedChain
 {
     public function __construct(array $value)
@@ -395,11 +398,6 @@ readonly class ArrayChain extends MixedChain
     }
 
     public function implode(string $separator): StringChain|MixedChain
-    {
-        return self::wrap(implode($separator, $this->value));
-    }
-
-    public function join(string $separator): StringChain|MixedChain
     {
         return self::wrap(implode($separator, $this->value));
     }

@@ -6,27 +6,27 @@ namespace Oophp\Chain;
 
 final readonly class UrlChain extends StringChain
 {
-    public function parse(int $component = -1): ArrayChain|StringChain|MixedChain
+    public function parse(int $component = -1): ArrayChain|self|MixedChain
     {
         return self::wrap(parse_url($this->value, $component));
     }
 
-    public function rawencode(): StringChain
+    public function rawencode(): self
     {
         return self::wrap(rawurlencode($this->value));
     }
 
-    public function rawdecode(): StringChain
+    public function rawdecode(): self
     {
         return self::wrap(rawurldecode($this->value));
     }
 
-    public function encode(): StringChain
+    public function encode(): self
     {
         return self::wrap(urlencode($this->value));
     }
 
-    public function decode(): StringChain
+    public function decode(): self
     {
         return self::wrap(urldecode($this->value));
     }

@@ -23,7 +23,7 @@ final class StrTest extends TestCase
         $input = '  Foo,Bar  ';
 
         $expected = explode(',', strtolower(trim($input)));
-        $actual = Str::of($input)->trim()->tolower()->split(',')->get();
+        $actual = Str::of($input)->trim()->tolower()->explode(',')->get();
 
         self::assertSame($expected, $actual);
     }
@@ -84,15 +84,7 @@ final class StrTest extends TestCase
             'substr_negative_offset' => [substr('package', -3), Str::substr('package', -3)],
             'substr_count_window' => [substr_count('banana', 'na', 1, 4), Str::substrCount('banana', 'na', 1, 4)],
             'substr_replace_array_subject' => [substr_replace(['abc', 'def'], 'X', 1, 1), Str::substrReplace(['abc', 'def'], 'X', 1, 1)],
-            'split_negative_limit' => [explode(',', 'a,b,c', -1), Str::split(',', 'a,b,c', -1)],
+            'explode_negative_limit' => [explode(',', 'a,b,c', -1), Str::explode(',', 'a,b,c', -1)],
         ];
-    }
-
-    public function testJoinMatchesNativePhpInStaticAndFluentModes(): void
-    {
-        $parts = ['a', 'b', 'c'];
-
-        self::assertSame(implode('-', $parts), Str::join($parts, '-'));
-        self::assertSame(implode('-', $parts), Str::of('-')->join($parts)->get());
     }
 }

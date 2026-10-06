@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+/**
+ * @template-covariant T
+ * @extends ValueChain<T>
+ */
 readonly class MixedChain extends ValueChain
 {
     public function jsonEncode(int $flags = 0, int $depth = 512): StringChain|MixedChain

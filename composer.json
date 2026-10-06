@@ -7,14 +7,11 @@
         "php": "^8.3"
     },
     "suggest": {
-        "ext-mbstring": "Enables the optional Oophp\\\\MbStr domain.",
-        "ext-intl": "Planned optional Intl extension pack.",
-        "ext-bcmath": "Planned optional Bcmath extension pack.",
-        "ext-ctype": "Planned optional Ctype extension pack.",
-        "ext-iconv": "Planned optional Iconv extension pack."
+        "ext-mbstring": "Enables the optional Oophp\\MbStr domain."
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^11.5",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +25,11 @@
     },
     "scripts": {
         "test": "phpunit",
-        "ci": "composer validate --strict && composer test",
-        "release:check": "composer validate --strict && composer test"
+        "analyse": "phpstan analyse --no-progress",
+        "ci": [
+            "@composer validate --strict",
+            "@analyse",
+            "@test"
+        ]
     }
 }

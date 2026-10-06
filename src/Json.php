@@ -16,6 +16,9 @@ final class Json
         return json_decode($json, $associative, $depth, $flags);
     }
 
+    /**
+     * @param 0|JSON_INVALID_UTF8_IGNORE $flags
+     */
     public static function validate(string $json, int $depth = 512, int $flags = 0): bool
     {
         return json_validate($json, $depth, $flags);

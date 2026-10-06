@@ -6,6 +6,9 @@ namespace Oophp;
 
 final class Regex
 {
+    /**
+     * @param int-mask-of<PREG_OFFSET_CAPTURE|PREG_UNMATCHED_AS_NULL> $flags
+     */
     public static function pregMatch(
         string $pattern,
         string $subject,

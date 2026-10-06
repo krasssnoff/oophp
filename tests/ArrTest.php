@@ -360,8 +360,6 @@ final class ArrTest extends TestCase
 
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c']));
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->implode('-')->get());
-        self::assertSame(implode('-', ['a', 'b', 'c']), Arr::join('-', ['a', 'b', 'c']));
-        self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->join('-')->get());
     }
 
     public function testStaticCallbackDiffAndIntersectVariantsMatchNativePhp(): void

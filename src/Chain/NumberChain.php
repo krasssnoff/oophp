@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+/**
+ * @extends MixedChain<int|float>
+ */
 final readonly class NumberChain extends MixedChain
 {
     public function __construct(int|float $value)
@@ -26,6 +29,9 @@ final readonly class NumberChain extends MixedChain
         return new self(floor($this->value));
     }
 
+    /**
+     * @param PHP_ROUND_HALF_UP|PHP_ROUND_HALF_DOWN|PHP_ROUND_HALF_EVEN|PHP_ROUND_HALF_ODD $mode
+     */
     public function round(int $precision = 0, int $mode = PHP_ROUND_HALF_UP): self
     {
         return new self(round($this->value, $precision, $mode));
@@ -61,6 +67,9 @@ final readonly class NumberChain extends MixedChain
         return new self(intdiv((int) $this->value, $num2));
     }
 
+    /**
+     * @return ($value is int|float ? NumberChain : ($value is array ? ArrayChain : ($value is string ? StringChain : MixedChain)))
+     */
     private static function wrapNumber(mixed $value): NumberChain|ArrayChain|StringChain|MixedChain
     {
         if (is_int($value) || is_float($value)) {

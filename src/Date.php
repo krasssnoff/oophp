@@ -132,21 +132,11 @@ final class Date
         return microtime($asFloat);
     }
 
+    // @phpstan-ignore return.unusedType (native hrtime() signature keeps false)
     public static function hrtime(bool $asNumber = false): array|int|float|false
     {
         return hrtime($asNumber);
     }
-
-    public static function timezoneGet(): string
-    {
-        return date_default_timezone_get();
-    }
-
-    public static function timezoneSet(string $timezoneId): bool
-    {
-        return date_default_timezone_set($timezoneId);
-    }
-
 }
 
 function oophp_date_normalize_datetime(DateTimeInterface|string|int|null $value, DateTimeZone|string|null $timezone = null): DateTimeImmutable

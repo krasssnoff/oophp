@@ -28,6 +28,9 @@ final class Math
         return floor($num);
     }
 
+    /**
+     * @param PHP_ROUND_HALF_UP|PHP_ROUND_HALF_DOWN|PHP_ROUND_HALF_EVEN|PHP_ROUND_HALF_ODD $mode
+     */
     public static function round(int|float $num, int $precision = 0, int $mode = PHP_ROUND_HALF_UP): float
     {
         return round($num, $precision, $mode);

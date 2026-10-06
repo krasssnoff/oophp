@@ -62,6 +62,9 @@ final class Fs
         return glob($pattern, $flags);
     }
 
+    /**
+     * @param SCANDIR_SORT_ASCENDING|SCANDIR_SORT_DESCENDING|SCANDIR_SORT_NONE $sortingOrder
+     */
     public static function scandir(string $directory, int $sortingOrder = SCANDIR_SORT_ASCENDING, mixed $context = null): array|false
     {
         return scandir($directory, $sortingOrder, $context);

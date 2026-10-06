@@ -42,7 +42,7 @@ final class Proc
         return proc_close($process);
     }
 
-    public static function procGetStatus(mixed $process): array|false
+    public static function procGetStatus(mixed $process): array
     {
         return proc_get_status($process);
     }

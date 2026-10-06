@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+/**
+ * @extends MixedChain<string>
+ */
 readonly class MbStringChain extends MixedChain
 {
     public function __construct(string $value)
@@ -69,6 +72,9 @@ readonly class MbStringChain extends MixedChain
         return self::wrapMb(mb_substr($this->value, -mb_strlen($needle, $encoding), null, $encoding) === $needle);
     }
 
+    /**
+     * @return ($value is array ? ArrayChain : ($value is string ? MbStringChain : MixedChain))
+     */
     protected static function wrapMb(mixed $value): ArrayChain|MbStringChain|MixedChain
     {
         if (is_array($value)) {

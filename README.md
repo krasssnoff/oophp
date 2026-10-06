@@ -12,9 +12,18 @@
 This package is in active development and is not published to Packagist yet.
 The project is currently in alpha stage: the API is unstable and can change (including breaking changes) between versions.
 
-## Local composer usage (until Packagist release)
+## Installation (until Packagist release)
+
+Add the GitHub repository and require the development branch:
 
 ```bash
+composer config repositories.oophp vcs https://github.com/krasssnoff/oophp
+composer require krasssnoff/oophp:dev-main
+```
+
+This is the same as adding the following to your project's `composer.json`:
+
+```json
 {
   "repositories": [
     {
@@ -29,6 +38,13 @@ The project is currently in alpha stage: the API is unstable and can change (inc
 ```
 
 ## Why OOPHP
+
+OOPHP is OOP-first: the goal is to write PHP the way you write C#, without calling global functions at all.
+Every wrapped native function is reachable as a static method of a domain class (`Math::round(...)`, much like `Math.Round(...)` in C#),
+and operations on a value compose as fluent chains.
+
+Wrappers keep native semantics 1:1: same arguments, same return values, same errors.
+Unlike Laravel Collections or `symfony/string`, OOPHP adds no behavior of its own, so knowledge of the PHP manual applies unchanged.
 
 Native PHP composition can become hard to scan:
 
@@ -48,7 +64,7 @@ With OOPHP, the same flow stays linear:
 $position = Str::of('  alpha,beta,gamma  ')
     ->trim()
     ->tolower()
-    ->split(',')
+    ->explode(',')
     ->values()
     ->search('beta')();
 ```
@@ -89,7 +105,7 @@ $sorted = Arr::of([3, 1, 2])
 $parts = Str::of('  Foo,Bar  ')
     ->trim()
     ->tolower()
-    ->split(',')
+    ->explode(',')
     ->get();
 
 $values = Arr::values(['x' => 10, 'y' => 20]);
@@ -112,7 +128,7 @@ $distance = Math::of(-2.55)
     ->sqrt()
     ->get();
 
-$query = Url::buildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
+$query = Url::query(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986)->get();
 $host = Url::of('https://example.com/path?q=1#frag')
     ->parse(PHP_URL_HOST)
     ->get();
@@ -138,58 +154,61 @@ $digest = Hash::hash('sha256', 'payload');
 
 $isNumeric = Type::isNumeric('42');
 
-$localhostIp = Net::getHostByName('localhost');
+$localhostIp = Net::gethostbyname('localhost');
 
 $execOutput = Proc::shellExec(PHP_BINARY . ' -r "echo 42;"');
 
 $memoryLimit = Sys::iniGet('memory_limit');
-
-$sapi = Sys::sapi();
 ```
 
-Use `->get()` or `()` to extract raw PHP values from a chain.
+## Naming
 
-`Arr`, `Str`, `MbStr`, `Date`, `Fs`, `Stream`, `Math`, and `Url` are static+fluent, while `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` remain static-only.
+- `snake_case` becomes `camelCase`: `array_key_exists` → `Arr::keyExists`, `hash_hmac` → `Hash::hashHmac`, `preg_match` → `Regex::pregMatch`.
+- One-word PHP functions keep their name as is: `sort` → `Arr::sort`, `intdiv` → `Math::intdiv`, `basename` → `Fs::basename`, `gettype` → `Type::gettype`.
+- A prefix that repeats the domain name is dropped so it does not appear twice: `array_*` in `Arr`, `str_*` / `str*` in `Str` (`str_contains` → `Str::contains`, `strtolower` → `Str::tolower`), and likewise `mb_*` in `MbStr`, `json_*` in `Json`, `url` in `Url` (`rawurlencode` → `Url::rawencode`).
+- Helpers without a single native counterpart (`Date::startOfDay`, `Url::query`, `MbStr::contains`, …) and the workflow chains `DateChain`, `FsPathChain`, `StreamHandleChain` use descriptive names.
 
-## Current scope
+## Chains
 
-- `Arr` for PHP array helpers, including `array_*`, `in_array`, and sort variants
-- `Str` for selected string functions
-- `MbStr` for selected `mb_*` functions (optional `ext-mbstring`)
-- `Math` for selected numeric wrappers with `NumberChain`
-- `Json` for selected `json_*` functions
-- `Url` for selected URL/query helpers with string-backed chains
-- `Enc` for base64/hex/pack/unpack and serialization helpers
-- `Regex` for selected `preg_*` regex operations
-- `Fs` for selected filesystem/file IO helpers, including path helpers
-- `Stream` for selected stream/resource helpers with optional fluent handle workflow
-- `Date` for rich immutable date/time wrappers with fluent entrypoint
-- `Hash` for selected hash/random/password helpers
-- `Type` for selected value/type inspection and cast helpers
-- `Net` for selected DNS/network utility helpers
-- `Proc` for explicit effectful process/exec helpers
-- `Sys` for read-only system/runtime helpers
-- Fluent API is available for `Arr` and `Str`
-- Fluent API is also available for `MbStr` when `ext-mbstring` is installed
-- Receiver-friendly regex transforms are available on `StringChain` (`pregReplace`, `pregSplit`)
-- `Date` also exposes immutable fluent chains via `Date::of(...)`
-- `Fs` and `Stream` expose compact workflow chains via `Fs::of(...)` and `Stream::of(...)`
-- `Math` exposes `NumberChain` via `Math::of(...)`; `Url` exposes URL/string chains via `Url::of(...)`
-- `MixedChain` exposes JSON bridge helpers (`jsonEncode`, `jsonDecode`) for chain handoff
-- `Json`, `Enc`, `Hash`, `Type`, `Net`, `Proc`, and `Sys` are static-only domains
-- `ValueChain` is the abstract `Chain` base. `ValueChain::of(mixed ...)` dispatches to `ArrayChain` / `StringChain` / `MixedChain` by the carried value; `Arr::of` and `Str::of` return `ArrayChain` and `StringChain` directly; `MbStr::of` returns `MbStringChain` for multibyte `mb_*` flows
-- Domain-specific chains: `NumberChain` (`Math::of(...)`), `DateChain` (`Date::of(...)` and related), `UrlChain` (`Url::of(...)`), `FsPathChain` (path steps from `Fs::of(...)`), and `StreamHandleChain` (resource workflow from `Stream::of(...)`)
+- `Domain::of(...)` starts a chain; `->get()` or `()` returns the raw PHP value.
+- Chains are immutable: every step returns a new chain.
+- The chain type follows the value: an array continues as `ArrayChain`, a string as `StringChain` (string chains such as `MbStringChain` and `UrlChain` keep their own type), a number inside `Math` as `NumberChain`, anything else as `MixedChain`. `ValueChain::of(mixed ...)` picks the chain by the value.
+- Native by-reference functions (`sort`, `shuffle`, `array_push`, `array_walk`, …) work on a copy, and the chain continues with the modified array instead of `true`. `pop()` and `shift()` continue with the removed element.
+- Errors are passed through unchanged: a native `false` / `null` is returned as is (in a chain it becomes `MixedChain`), and exceptions thrown by PHP propagate.
+- `ArrayChain`, `StringChain`, `MbStringChain`, `UrlChain` and `NumberChain` can hand off through JSON with `jsonEncode()` / `jsonDecode()`.
 
-## CI and releases
+## Domains
 
-- Local CI command: `composer ci` (composer validation + full test suite).
-- Release readiness command: `composer release:check`.
+| Domain | Wraps | Fluent entrypoint |
+| --- | --- | --- |
+| `Arr` | `array_*`, `in_array`, sort functions, `implode` | `Arr::of()` → `ArrayChain` |
+| `Str` | selected string functions | `Str::of()` → `StringChain` (also `pregReplace`, `pregSplit`) |
+| `MbStr` | selected `mb_*` functions (requires `ext-mbstring`) | `MbStr::of()` → `MbStringChain` |
+| `Math` | numeric functions | `Math::of()` → `NumberChain` |
+| `Url` | URL and query helpers | `Url::of()` → `UrlChain` |
+| `Date` | date/time functions and immutable `DateTimeImmutable` helpers | `Date::of()` → `DateChain` |
+| `Fs` | filesystem, file IO and path helpers | `Fs::of()` → `FsPathChain` |
+| `Stream` | stream/resource helpers | `Stream::of()` → `StreamHandleChain` |
+| `Json` | `json_*` | static only |
+| `Regex` | `preg_*` | static only |
+| `Enc` | base64, hex, pack/unpack, serialization | static only |
+| `Hash` | hash, random and password helpers | static only |
+| `Type` | `is_*`, `gettype`, `get_debug_type` | static only |
+| `Net` | `gethostbyname`, `gethostbyaddr`, `dns_get_record` | static only |
+| `Proc` | process execution (effectful) | static only |
+| `Sys` | `ini_get`, `ini_get_all`, `extension_loaded` | static only |
+
+## Development
+
+- `composer test`: PHPUnit suite, including conformance tests against native PHP behavior.
+- `composer analyse`: PHPStan (level 5, `src/`).
+- `composer ci`: `composer validate --strict`, analysis and tests. GitHub Actions runs it on PHP 8.3, 8.4 and 8.5.
 
 ## Native function footprint (runtime inventory)
 
 How many of PHP’s *internal* (native) functions appear as direct calls anywhere under `src/`, as a share of *all* internal functions in the current PHP build (the exact total depends on version and enabled extensions). Recompute: `php scripts/native-function-footprint.php`.
 
-`[==                  ] 10.1%` — 211 of 2084 internal functions (PHP 8.3 in this repo’s dev environment).
+`[==                  ] 9.2%` — 192 of 2086 internal functions (PHP 8.3 in this repo’s dev environment).
 
 ## API reference
 
@@ -198,3 +217,7 @@ The current API surface should be read from the source files and tests.
 - Source files define the actual wrappers and chain methods.
 - Tests define the supported behavior and native PHP conformance.
 - A final consolidated method list can be added later, once the package surface is stable.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

@@ -102,13 +102,8 @@ final class Str
         return substr_replace($string, $replace, $offset, $length);
     }
 
-    public static function split(string $separator, string $string, int $limit = PHP_INT_MAX): array
+    public static function explode(string $separator, string $string, int $limit = PHP_INT_MAX): array
     {
         return explode($separator, $string, $limit);
-    }
-
-    public static function join(array $array, string $separator = ''): string
-    {
-        return implode($separator, $array);
     }
 }

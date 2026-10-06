@@ -24,12 +24,7 @@ final readonly class DateChain implements Chain
 
     public function modify(string $modifier): self
     {
-        $updated = $this->value->modify($modifier);
-        if ($updated === false) {
-            throw new \InvalidArgumentException("Invalid date modifier: {$modifier}");
-        }
-
-        return new self($updated);
+        return new self($this->value->modify($modifier));
     }
 
     public function setDate(int $year, int $month, int $day): self

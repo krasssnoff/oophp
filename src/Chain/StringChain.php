@@ -4,29 +4,32 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+/**
+ * @extends MixedChain<string>
+ */
 readonly class StringChain extends MixedChain
 {
-    public function __construct(string $value)
+    final public function __construct(string $value)
     {
         parent::__construct($value);
     }
 
-    public function replace(array|string $search, array|string $replace): StringChain
+    public function replace(array|string $search, array|string $replace): static
     {
         return self::wrap(str_replace($search, $replace, $this->value));
     }
 
-    public function tolower(): StringChain
+    public function tolower(): static
     {
         return self::wrap(strtolower($this->value));
     }
 
-    public function toupper(): StringChain
+    public function toupper(): static
     {
         return self::wrap(strtoupper($this->value));
     }
 
-    public function trim(string $characters = " \n\r\t\v\x00"): StringChain
+    public function trim(string $characters = " \n\r\t\v\x00"): static
     {
         return self::wrap(trim($this->value, $characters));
     }
@@ -71,17 +74,17 @@ readonly class StringChain extends MixedChain
         return self::wrap(strripos($this->value, $needle, $offset));
     }
 
-    public function repeat(int $times): StringChain
+    public function repeat(int $times): static
     {
         return self::wrap(str_repeat($this->value, $times));
     }
 
-    public function rev(): StringChain
+    public function rev(): static
     {
         return self::wrap(strrev($this->value));
     }
 
-    public function substr(int $offset, ?int $length = null): StringChain
+    public function substr(int $offset, ?int $length = null): static
     {
         return self::wrap(substr($this->value, $offset, $length));
     }
@@ -91,12 +94,12 @@ readonly class StringChain extends MixedChain
         return self::wrap(substr_count($this->value, $needle, $offset, $length));
     }
 
-    public function substrReplace(string $replace, int $offset, ?int $length = null): StringChain
+    public function substrReplace(string $replace, int $offset, ?int $length = null): static
     {
         return self::wrap(substr_replace($this->value, $replace, $offset, $length));
     }
 
-    public function split(string $separator, int $limit = PHP_INT_MAX): ArrayChain
+    public function explode(string $separator, int $limit = PHP_INT_MAX): ArrayChain
     {
         return self::wrap(explode($separator, $this->value, $limit));
     }
@@ -106,7 +109,7 @@ readonly class StringChain extends MixedChain
         array|string $replacement,
         int $limit = -1,
         ?int &$count = null,
-    ): StringChain|MixedChain {
+    ): static|MixedChain {
         return self::wrap(preg_replace($pattern, $replacement, $this->value, $limit, $count));
     }
 
@@ -115,8 +118,15 @@ readonly class StringChain extends MixedChain
         return self::wrap(preg_split($pattern, $this->value, $limit, $flags));
     }
 
-    public function join(array $array): StringChain|MixedChain
+    /**
+     * @return ($value is string ? static : ($value is array ? ArrayChain : MixedChain))
+     */
+    protected static function wrap(mixed $value): ArrayChain|StringChain|MixedChain
     {
-        return self::wrap(implode($this->value, $array));
+        if (is_string($value)) {
+            return new static($value);
+        }
+
+        return parent::wrap($value);
     }
 }

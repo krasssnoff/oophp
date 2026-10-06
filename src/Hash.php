@@ -6,12 +6,12 @@ namespace Oophp;
 
 final class Hash
 {
-    public static function hash(string $algo, string $data, bool $binary = false, array $options = []): string|false
+    public static function hash(string $algo, string $data, bool $binary = false, array $options = []): string
     {
         return hash($algo, $data, $binary, $options);
     }
 
-    public static function hashHmac(string $algo, string $data, string $key, bool $binary = false): string|false
+    public static function hashHmac(string $algo, string $data, string $key, bool $binary = false): string
     {
         return hash_hmac($algo, $data, $key, $binary);
     }
@@ -21,7 +21,7 @@ final class Hash
         return hash_equals($knownString, $userString);
     }
 
-    public static function passwordHash(string $password, string|int|null $algo, array $options = []): string|false|null
+    public static function passwordHash(string $password, string|int|null $algo, array $options = []): string
     {
         return password_hash($password, $algo, $options);
     }

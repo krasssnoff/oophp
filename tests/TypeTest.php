@@ -40,10 +40,6 @@ final class TypeTest extends TestCase
             'is_string' => [is_string('x'), Type::isString('x')],
             'gettype' => [gettype($object), Type::gettype($object)],
             'get_debug_type' => [get_debug_type($object), Type::getDebugType($object)],
-            'cast_int' => [(int) '42', Type::toInt('42')],
-            'cast_float' => [(float) '42.5', Type::toFloat('42.5')],
-            'cast_string' => [(string) 42, Type::toString(42)],
-            'cast_bool' => [(bool) 1, Type::toBool(1)],
         ];
     }
 }

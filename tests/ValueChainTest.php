@@ -34,7 +34,7 @@ final class ValueChainTest extends TestCase
         $actual = Str::of($input)
             ->trim()
             ->tolower()
-            ->split(',')
+            ->explode(',')
             ->filter(static fn (string $value): bool => $value !== '')
             ->unique()
             ->values()
@@ -91,12 +91,12 @@ final class ValueChainTest extends TestCase
 
         $actual = Str::of($input)
             ->trim()
-            ->split(',')
+            ->explode(',')
             ->reverse()
             ->flip()
             ->search(1, true)
             ->toupper()
-            ->split('T')
+            ->explode('T')
             ->search('BE', true);
 
         self::assertInstanceOf(MixedChain::class, $actual);
@@ -140,7 +140,7 @@ final class ValueChainTest extends TestCase
         $actual = Arr::of(['Alpha' => 'x', 'Beta' => 'y'])
             ->search('y', true)
             ->tolower()
-            ->split('e')
+            ->explode('e')
             ->search('missing', true);
 
         self::assertInstanceOf(MixedChain::class, $actual);
@@ -155,7 +155,7 @@ final class ValueChainTest extends TestCase
         $expected = array_search('beta', array_values(explode(',', trim($input))), false);
         $actual = Str::of($input)
             ->trim()
-            ->split(',')
+            ->explode(',')
             ->values()
             ->search('beta')
             ->get();
@@ -168,14 +168,14 @@ final class ValueChainTest extends TestCase
         $chain = Str::of('  Foo,Bar  ')
             ->trim()
             ->tolower()
-            ->split(',');
+            ->explode(',');
 
         self::assertSame($chain->get(), $chain());
     }
 
-    public function testStringSplitHandsOffToArrayChain(): void
+    public function testStringExplodeHandsOffToArrayChain(): void
     {
-        $chain = Str::of('alpha,beta')->split(',');
+        $chain = Str::of('alpha,beta')->explode(',');
 
         self::assertInstanceOf(ArrayChain::class, $chain);
         self::assertSame(['alpha', 'beta'], $chain->get());

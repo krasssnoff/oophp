@@ -19,15 +19,6 @@ final class Url
         return parse_url($url, $component);
     }
 
-    public static function buildQuery(
-        array|object $data,
-        string $numericPrefix = '',
-        ?string $argSeparator = null,
-        int $encodingType = PHP_QUERY_RFC1738,
-    ): string {
-        return http_build_query($data, $numericPrefix, $argSeparator, $encodingType);
-    }
-
     public static function rawencode(string $string): string
     {
         return rawurlencode($string);
@@ -50,6 +41,6 @@ final class Url
 
     public static function query(array|object $data, string $numericPrefix = '', ?string $argSeparator = null, int $encodingType = PHP_QUERY_RFC1738): StringChain
     {
-        return new StringChain(self::buildQuery($data, $numericPrefix, $argSeparator, $encodingType));
+        return new StringChain(http_build_query($data, $numericPrefix, $argSeparator, $encodingType));
     }
 }

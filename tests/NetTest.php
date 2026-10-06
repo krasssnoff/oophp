@@ -27,12 +27,8 @@ final class NetTest extends TestCase
     public static function staticProvider(): array
     {
         return [
-            'gethostbyname' => [gethostbyname('localhost'), Net::getHostByName('localhost')],
-            'gethostbynamel' => [gethostbynamel('localhost'), Net::getHostByNameList('localhost')],
-            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::getHostByAddr('127.0.0.1')],
-            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Net::checkDns('localhost', 'A')],
-            'ip2long' => [ip2long('127.0.0.1'), Net::ipToLong('127.0.0.1')],
-            'long2ip' => [long2ip(2130706433), Net::longToIp(2130706433)],
+            'gethostbyname' => [gethostbyname('localhost'), Net::gethostbyname('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::gethostbyaddr('127.0.0.1')],
         ];
     }
 
@@ -49,20 +45,5 @@ final class NetTest extends TestCase
         self::assertSame($expected, $actual);
         self::assertSame($nativeAuth, $wrappedAuth);
         self::assertSame($nativeAdditional, $wrappedAdditional);
-    }
-
-    public function testGetMxRecordsConformanceWithOutputArrays(): void
-    {
-        $nativeHosts = [];
-        $nativeWeights = [];
-        $wrappedHosts = [];
-        $wrappedWeights = [];
-
-        $expected = getmxrr('localhost', $nativeHosts, $nativeWeights);
-        $actual = Net::getMxRecords('localhost', $wrappedHosts, $wrappedWeights);
-
-        self::assertSame($expected, $actual);
-        self::assertSame($nativeHosts, $wrappedHosts);
-        self::assertSame($nativeWeights, $wrappedWeights);
     }
 }

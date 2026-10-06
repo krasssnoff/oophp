@@ -94,16 +94,4 @@ final class DateTest extends TestCase
         self::assertIsArray($wrappedHrtime);
         self::assertCount(count($nativeHrtime), $wrappedHrtime);
     }
-
-    public function testTimezoneGetAndSetMatchNativePhp(): void
-    {
-        $original = date_default_timezone_get();
-
-        try {
-            self::assertSame(date_default_timezone_set('UTC'), Date::timezoneSet('UTC'));
-            self::assertSame(date_default_timezone_get(), Date::timezoneGet());
-        } finally {
-            date_default_timezone_set($original);
-        }
-    }
 }

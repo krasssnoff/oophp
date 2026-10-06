@@ -60,24 +60,4 @@ final class Type
     {
         return get_debug_type($value);
     }
-
-    public static function toInt(mixed $value): int
-    {
-        return (int) $value;
-    }
-
-    public static function toFloat(mixed $value): float
-    {
-        return (float) $value;
-    }
-
-    public static function toString(mixed $value): string
-    {
-        return (string) $value;
-    }
-
-    public static function toBool(mixed $value): bool
-    {
-        return (bool) $value;
-    }
 }

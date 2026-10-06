@@ -38,14 +38,6 @@ final class UrlTest extends TestCase
                 parse_url('https://example.com/path?q=1#frag', PHP_URL_HOST),
                 Url::parse('https://example.com/path?q=1#frag', PHP_URL_HOST),
             ],
-            'build_query_rfc1738' => [
-                http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC1738),
-                Url::buildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC1738),
-            ],
-            'build_query_rfc3986' => [
-                http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
-                Url::buildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
-            ],
             'query_chain_entry' => [
                 http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
                 Url::query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986)->get(),
@@ -67,6 +59,15 @@ final class UrlTest extends TestCase
         self::assertSame(rawurldecode('a%20b%2Fc'), Url::of('a%20b%2Fc')->rawdecode()->get());
         self::assertSame(urlencode('a b/c'), Url::of('a b/c')->encode()->get());
         self::assertSame(urldecode('a+b%2Fc'), Url::of('a+b%2Fc')->decode()->get());
+    }
+
+    public function testUrlChainKeepsTypeAfterStringSteps(): void
+    {
+        $chain = Url::of('  HTTPS://EXAMPLE.COM/path  ')->trim()->tolower();
+
+        self::assertInstanceOf(UrlChain::class, $chain);
+        self::assertSame('example.com', $chain->parse(PHP_URL_HOST)->get());
+        self::assertInstanceOf(UrlChain::class, Url::of('a b')->encode()->rawdecode());
     }
 
     public function testUrlQueryReturnsStringChain(): void

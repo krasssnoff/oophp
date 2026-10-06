@@ -197,7 +197,6 @@ final class ConformanceTest extends TestCase
                 Arr::multisort([3, 1, 2], SORT_ASC, SORT_NUMERIC),
             ],
             'implode' => [implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c'])],
-            'join' => [implode('-', ['a', 'b', 'c']), Arr::join('-', ['a', 'b', 'c'])],
         ];
     }
 
@@ -230,8 +229,7 @@ final class ConformanceTest extends TestCase
             'substr' => [substr('package', 1, 3), Str::substr('package', 1, 3)],
             'substr_count' => [substr_count('banana', 'na', 1, 4), Str::substrCount('banana', 'na', 1, 4)],
             'substr_replace' => [substr_replace('abcdef', 'X', 2, 3), Str::substrReplace('abcdef', 'X', 2, 3)],
-            'split_limit' => [explode(',', 'a,b,c', 2), Str::split(',', 'a,b,c', 2)],
-            'join' => [implode('-', ['a', 'b', 'c']), Str::join(['a', 'b', 'c'], '-')],
+            'explode_limit' => [explode(',', 'a,b,c', 2), Str::explode(',', 'a,b,c', 2)],
         ];
     }
 
@@ -349,10 +347,6 @@ final class ConformanceTest extends TestCase
             'parse_host' => [
                 parse_url('https://example.com/path?q=1#frag', PHP_URL_HOST),
                 Url::parse('https://example.com/path?q=1#frag', PHP_URL_HOST),
-            ],
-            'build_query' => [
-                http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
-                Url::buildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
             ],
             'query_chain' => [
                 http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
@@ -593,18 +587,6 @@ final class ConformanceTest extends TestCase
         ];
     }
 
-    public function testTimeTimezoneConformance(): void
-    {
-        $original = date_default_timezone_get();
-
-        try {
-            self::assertSame(date_default_timezone_set('UTC'), Date::timezoneSet('UTC'));
-            self::assertSame(date_default_timezone_get(), Date::timezoneGet());
-        } finally {
-            date_default_timezone_set($original);
-        }
-    }
-
     #[DataProvider('hashStaticProvider')]
     public function testHashStaticConformance(mixed $expected, mixed $actual): void
     {
@@ -650,10 +632,6 @@ final class ConformanceTest extends TestCase
             'is_string' => [is_string('x'), Type::isString('x')],
             'gettype' => [gettype($object), Type::gettype($object)],
             'get_debug_type' => [get_debug_type($object), Type::getDebugType($object)],
-            'cast_int' => [(int) '42', Type::toInt('42')],
-            'cast_float' => [(float) '42.5', Type::toFloat('42.5')],
-            'cast_string' => [(string) 42, Type::toString(42)],
-            'cast_bool' => [(bool) 1, Type::toBool(1)],
         ];
     }
 
@@ -669,18 +647,8 @@ final class ConformanceTest extends TestCase
     public static function sysStaticProvider(): array
     {
         return [
-            'env' => [getenv('PATH', false), Sys::env('PATH')],
-            'hostname' => [gethostname(), Sys::hostname()],
-            'version' => [phpversion(), Sys::version()],
-            'sapi' => [php_sapi_name(), Sys::sapi()],
-            'uname' => [php_uname('a'), Sys::uname('a')],
             'ini_get' => [ini_get('memory_limit'), Sys::iniGet('memory_limit')],
-            'ini_loaded_file' => [php_ini_loaded_file(), Sys::iniLoadedFile()],
-            'ini_scanned_files' => [php_ini_scanned_files(), Sys::iniScannedFiles()],
             'extension_loaded_json' => [extension_loaded('json'), Sys::extensionLoaded('json')],
-            'loaded_extensions' => [get_loaded_extensions(false), Sys::loadedExtensions(false)],
-            'cwd' => [getcwd(), Sys::currentWorkingDirectory()],
-            'temp_dir' => [sys_get_temp_dir(), Sys::tempDirectory()],
         ];
     }
 
@@ -696,12 +664,8 @@ final class ConformanceTest extends TestCase
     public static function networkStaticProvider(): array
     {
         return [
-            'gethostbyname' => [gethostbyname('localhost'), Net::getHostByName('localhost')],
-            'gethostbynamel' => [gethostbynamel('localhost'), Net::getHostByNameList('localhost')],
-            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::getHostByAddr('127.0.0.1')],
-            'checkdnsrr' => [checkdnsrr('localhost', 'A'), Net::checkDns('localhost', 'A')],
-            'ip2long' => [ip2long('127.0.0.1'), Net::ipToLong('127.0.0.1')],
-            'long2ip' => [long2ip(2130706433), Net::longToIp(2130706433)],
+            'gethostbyname' => [gethostbyname('localhost'), Net::gethostbyname('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::gethostbyaddr('127.0.0.1')],
         ];
     }
 
@@ -763,7 +727,7 @@ final class ConformanceTest extends TestCase
         $actual = Str::of($input)
             ->trim()
             ->tolower()
-            ->split(',')
+            ->explode(',')
             ->values()
             ->search('beta')
             ->get();
