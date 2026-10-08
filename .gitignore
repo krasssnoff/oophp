@@ -6,3 +6,5 @@
 # Local playgrounds and editor clutter
 /.DS_Store
 /pg.php
+
+.vscode

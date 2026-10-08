@@ -33,7 +33,7 @@ final class Stream
         return fclose($stream);
     }
 
-    public static function streamGetContents(mixed $stream, ?int $length = null, int $offset = -1): string|false
+    public static function getContents(mixed $stream, ?int $length = null, int $offset = -1): string|false
     {
         return stream_get_contents($stream, $length, $offset);
     }

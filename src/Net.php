@@ -6,12 +6,12 @@ namespace Oophp;
 
 final class Net
 {
-    public static function gethostbyname(string $hostname): string
+    public static function getHostByName(string $hostname): string
     {
         return gethostbyname($hostname);
     }
 
-    public static function gethostbyaddr(string $ipAddress): string|false
+    public static function getHostByAddr(string $ipAddress): string|false
     {
         return gethostbyaddr($ipAddress);
     }
