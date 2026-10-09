@@ -28,8 +28,8 @@ final class HashTest extends TestCase
     {
         return [
             'hash' => [hash('sha256', 'payload'), Hash::hash('sha256', 'payload')],
-            'hash_hmac' => [hash_hmac('sha256', 'payload', 'secret'), Hash::hashHmac('sha256', 'payload', 'secret')],
-            'hash_equals_true' => [hash_equals('abc', 'abc'), Hash::hashEquals('abc', 'abc')],
+            'hash_hmac' => [hash_hmac('sha256', 'payload', 'secret'), Hash::hmac('sha256', 'payload', 'secret')],
+            'hash_equals_true' => [hash_equals('abc', 'abc'), Hash::equals('abc', 'abc')],
             'md5' => [md5('payload'), Hash::md5('payload')],
             'sha1' => [sha1('payload'), Hash::sha1('payload')],
         ];

@@ -39,14 +39,14 @@ final class MathTest extends TestCase
             'pow' => [pow(2, 8), Math::pow(2, 8)],
             'sqrt' => [sqrt(81), Math::sqrt(81)],
             'fmod' => [fmod(5.7, 1.3), Math::fmod(5.7, 1.3)],
-            'intdiv' => [intdiv(20, 3), Math::intdiv(20, 3)],
+            'intdiv' => [intdiv(20, 3), Math::intDiv(20, 3)],
         ];
     }
 
     public function testIntdivExceptionMatchesNativePhp(): void
     {
         $this->expectException(\DivisionByZeroError::class);
-        Math::intdiv(1, 0);
+        Math::intDiv(1, 0);
     }
 
     public function testNumberChainMatchesNativeMathPipeline(): void
@@ -68,6 +68,6 @@ final class MathTest extends TestCase
         self::assertSame(max(10, 2, 7), Math::of(10)->max(2, 7)->get());
         self::assertSame(min(10, 2, 7), Math::of(10)->min(2, 7)->get());
         self::assertSame(fmod(5.7, 1.3), Math::of(5.7)->fmod(1.3)->get());
-        self::assertSame(intdiv(20, 3), Math::of(20)->intdiv(3)->get());
+        self::assertSame(intdiv(20, 3), Math::of(20)->intDiv(3)->get());
     }
 }

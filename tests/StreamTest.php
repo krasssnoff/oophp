@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class StreamTest extends TestCase
 {
-    public function testStreamDomainRemainsStaticOnly(): void
+    public function testStreamDomainExposesFluentEntryPoint(): void
     {
         self::assertTrue(method_exists(Stream::class, 'of'));
     }
@@ -34,7 +34,7 @@ final class StreamTest extends TestCase
 
             rewind($native);
             rewind($wrapped);
-            self::assertSame(stream_get_contents($native), Stream::streamGetContents($wrapped));
+            self::assertSame(stream_get_contents($native), Stream::getContents($wrapped));
 
             rewind($native);
             rewind($wrapped);

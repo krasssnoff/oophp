@@ -35,9 +35,9 @@ final class DateTest extends TestCase
 
         return [
             'date' => [date('Y-m-d', $timestamp), Date::date('Y-m-d', $timestamp)],
-            'gmdate' => [gmdate('Y-m-d H:i:s', $timestamp), Date::gmdate('Y-m-d H:i:s', $timestamp)],
-            'strtotime' => [strtotime('+2 days', $timestamp), Date::strtotime('+2 days', $timestamp)],
-            'mktime' => [mktime(12, 30, 15, 5, 10, 2024), Date::mktime(12, 30, 15, 5, 10, 2024)],
+            'gmdate' => [gmdate('Y-m-d H:i:s', $timestamp), Date::gmDate('Y-m-d H:i:s', $timestamp)],
+            'strtotime' => [strtotime('+2 days', $timestamp), Date::strToTime('+2 days', $timestamp)],
+            'mktime' => [mktime(12, 30, 15, 5, 10, 2024), Date::mkTime(12, 30, 15, 5, 10, 2024)],
         ];
     }
 
@@ -86,10 +86,10 @@ final class DateTest extends TestCase
 
     public function testMicrotimeAndHrtimeShapesMatchNativePhp(): void
     {
-        self::assertIsFloat(Date::microtime(true));
+        self::assertIsFloat(Date::microTime(true));
 
         $nativeHrtime = hrtime();
-        $wrappedHrtime = Date::hrtime();
+        $wrappedHrtime = Date::hrTime();
 
         self::assertIsArray($wrappedHrtime);
         self::assertCount(count($nativeHrtime), $wrappedHrtime);

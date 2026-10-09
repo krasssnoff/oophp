@@ -11,12 +11,12 @@ final class Hash
         return hash($algo, $data, $binary, $options);
     }
 
-    public static function hashHmac(string $algo, string $data, string $key, bool $binary = false): string
+    public static function hmac(string $algo, string $data, string $key, bool $binary = false): string
     {
         return hash_hmac($algo, $data, $key, $binary);
     }
 
-    public static function hashEquals(string $knownString, string $userString): bool
+    public static function equals(string $knownString, string $userString): bool
     {
         return hash_equals($knownString, $userString);
     }

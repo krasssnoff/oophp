@@ -19,12 +19,12 @@ final class Url
         return parse_url($url, $component);
     }
 
-    public static function rawencode(string $string): string
+    public static function rawEncode(string $string): string
     {
         return rawurlencode($string);
     }
 
-    public static function rawdecode(string $string): string
+    public static function rawDecode(string $string): string
     {
         return rawurldecode($string);
     }

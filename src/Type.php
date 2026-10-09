@@ -51,7 +51,7 @@ final class Type
         return is_string($value);
     }
 
-    public static function gettype(mixed $value): string
+    public static function getType(mixed $value): string
     {
         return gettype($value);
     }

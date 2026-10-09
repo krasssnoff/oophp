@@ -11,12 +11,12 @@ final readonly class UrlChain extends StringChain
         return self::wrap(parse_url($this->value, $component));
     }
 
-    public function rawencode(): self
+    public function rawEncode(): self
     {
         return self::wrap(rawurlencode($this->value));
     }
 
-    public function rawdecode(): self
+    public function rawDecode(): self
     {
         return self::wrap(rawurldecode($this->value));
     }

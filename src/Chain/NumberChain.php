@@ -62,7 +62,7 @@ final readonly class NumberChain extends MixedChain
         return new self(fmod((float) $this->value, $num2));
     }
 
-    public function intdiv(int $num2): self
+    public function intDiv(int $num2): self
     {
         return new self(intdiv((int) $this->value, $num2));
     }

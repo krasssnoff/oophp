@@ -68,7 +68,7 @@ final class ProcTest extends TestCase
 
         $wrappedCode = 0;
         ob_start();
-        $actual = Proc::passthru($command, $wrappedCode);
+        $actual = Proc::passThru($command, $wrappedCode);
         $wrappedOutput = ob_get_clean();
 
         self::assertSame($expected, $actual);
@@ -89,11 +89,11 @@ final class ProcTest extends TestCase
         self::assertIsResource($nativeProcess);
 
         $wrappedPipes = [];
-        $wrappedProcess = Proc::procOpen($command, $descriptors, $wrappedPipes);
+        $wrappedProcess = Proc::open($command, $descriptors, $wrappedPipes);
         self::assertIsResource($wrappedProcess);
 
         $nativeStatus = proc_get_status($nativeProcess);
-        $wrappedStatus = Proc::procGetStatus($wrappedProcess);
+        $wrappedStatus = Proc::getStatus($wrappedProcess);
         self::assertIsArray($nativeStatus);
         self::assertIsArray($wrappedStatus);
         self::assertSame($nativeStatus['running'], $wrappedStatus['running']);
@@ -107,7 +107,7 @@ final class ProcTest extends TestCase
         fclose($wrappedPipes[2]);
 
         $nativeCode = proc_close($nativeProcess);
-        $wrappedCode = Proc::procClose($wrappedProcess);
+        $wrappedCode = Proc::close($wrappedProcess);
 
         self::assertSame($nativeStdout, $wrappedStdout);
         self::assertSame($nativeCode, $wrappedCode);

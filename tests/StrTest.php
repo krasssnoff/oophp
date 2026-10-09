@@ -23,7 +23,7 @@ final class StrTest extends TestCase
         $input = '  Foo,Bar  ';
 
         $expected = explode(',', strtolower(trim($input)));
-        $actual = Str::of($input)->trim()->tolower()->explode(',')->get();
+        $actual = Str::of($input)->trim()->toLower()->explode(',')->get();
 
         self::assertSame($expected, $actual);
     }
@@ -31,6 +31,25 @@ final class StrTest extends TestCase
     public function testContainsReturnsNativeResult(): void
     {
         self::assertSame(str_contains('package', 'ack'), Str::contains('package', 'ack'));
+    }
+
+    #[DataProvider('staticProvider')]
+    public function testStaticMethodsMatchNativePhp(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function staticProvider(): array
+    {
+        return [
+            'tolower' => [strtolower('TeSt'), Str::toLower('TeSt')],
+            'toupper' => [strtoupper('TeSt'), Str::toUpper('TeSt')],
+            'len' => [strlen('TeSt'), Str::len('TeSt')],
+            'rev' => [strrev('desserts'), Str::rev('desserts')],
+        ];
     }
 
     #[DataProvider('fluentProvider')]

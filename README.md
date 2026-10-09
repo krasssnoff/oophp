@@ -45,6 +45,7 @@ and operations on a value compose as fluent chains.
 
 Wrappers keep native semantics 1:1: same arguments, same return values, same errors.
 Unlike Laravel Collections or `symfony/string`, OOPHP adds no behavior of its own, so knowledge of the PHP manual applies unchanged.
+The only exception is a short, closed list of helpers (mostly `Date` and the file/stream workflow chains), listed in [docs.md](docs.md#helpers).
 
 Native PHP composition can become hard to scan:
 
@@ -63,7 +64,7 @@ With OOPHP, the same flow stays linear:
 ```php
 $position = Str::of('  alpha,beta,gamma  ')
     ->trim()
-    ->tolower()
+    ->toLower()
     ->explode(',')
     ->values()
     ->search('beta')();
@@ -104,7 +105,7 @@ $sorted = Arr::of([3, 1, 2])
 
 $parts = Str::of('  Foo,Bar  ')
     ->trim()
-    ->tolower()
+    ->toLower()
     ->explode(',')
     ->get();
 
@@ -113,7 +114,7 @@ $values = Arr::values(['x' => 10, 'y' => 20]);
 $contains = Str::contains('package', 'ack');
 
 $chars = MbStr::of('ПрИвЕт')
-    ->tolower('UTF-8')
+    ->toLower('UTF-8')
     ->split(2, 'UTF-8')
     ->get();
 
@@ -135,7 +136,7 @@ $host = Url::of('https://example.com/path?q=1#frag')
 
 $encoded = Enc::base64Encode('hello');
 
-$matched = Regex::pregMatch('/\w+/', 'alpha');
+$matched = Regex::match('/\w+/', 'alpha');
 
 $filename = Fs::basename('/var/www/app/archive.tar.gz');
 
@@ -143,7 +144,7 @@ $written = Fs::filePutContents('/tmp/example.txt', 'payload');
 
 $handle = Stream::fopen('/tmp/example.txt', 'r');
 
-$tomorrow = Date::strtotime('+1 day');
+$tomorrow = Date::strToTime('+1 day');
 $windowEnd = Date::of('2024-01-10 14:30:00', 'UTC')
     ->modify('+2 days')
     ->endOfDay()
@@ -154,7 +155,7 @@ $digest = Hash::hash('sha256', 'payload');
 
 $isNumeric = Type::isNumeric('42');
 
-$localhostIp = Net::gethostbyname('localhost');
+$localhostIp = Net::getHostByName('localhost');
 
 $execOutput = Proc::shellExec(PHP_BINARY . ' -r "echo 42;"');
 
@@ -163,10 +164,9 @@ $memoryLimit = Sys::iniGet('memory_limit');
 
 ## Naming
 
-- `snake_case` becomes `camelCase`: `array_key_exists` → `Arr::keyExists`, `hash_hmac` → `Hash::hashHmac`, `preg_match` → `Regex::pregMatch`.
-- One-word PHP functions keep their name as is: `sort` → `Arr::sort`, `intdiv` → `Math::intdiv`, `basename` → `Fs::basename`, `gettype` → `Type::gettype`.
-- A prefix that repeats the domain name is dropped so it does not appear twice: `array_*` in `Arr`, `str_*` / `str*` in `Str` (`str_contains` → `Str::contains`, `strtolower` → `Str::tolower`), and likewise `mb_*` in `MbStr`, `json_*` in `Json`, `url` in `Url` (`rawurlencode` → `Url::rawencode`).
-- Helpers without a single native counterpart (`Date::startOfDay`, `Url::query`, `MbStr::contains`, …) and the workflow chains `DateChain`, `FsPathChain`, `StreamHandleChain` use descriptive names.
+A method is the native function name without the domain prefix, in `camelCase`:
+`array_key_exists` → `Arr::keyExists`, `hash_hmac` → `Hash::hmac`, `preg_match` → `Regex::match`, `gethostbyname` → `Net::getHostByName`.
+No renames and no aliases: one native function has one method name. Full rules: [docs.md](docs.md#naming-rules).
 
 ## Chains
 
@@ -212,11 +212,8 @@ How many of PHP’s *internal* (native) functions appear as direct calls anywher
 
 ## API reference
 
-The current API surface should be read from the source files and tests.
-
-- Source files define the actual wrappers and chain methods.
-- Tests define the supported behavior and native PHP conformance.
-- A final consolidated method list can be added later, once the package surface is stable.
+[docs.md](docs.md) maps every native function to its static and chain method, lists the helpers
+and shows what is not wrapped yet. Regenerate the map with `php scripts/api-map.php`.
 
 ## License
 

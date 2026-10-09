@@ -320,14 +320,14 @@ final class Arr
         return $array;
     }
 
-    public static function natsort(array $array): array
+    public static function natSort(array $array): array
     {
         natsort($array);
 
         return $array;
     }
 
-    public static function natcasesort(array $array): array
+    public static function natCaseSort(array $array): array
     {
         natcasesort($array);
 
@@ -362,7 +362,7 @@ final class Arr
         return $array;
     }
 
-    public static function multisort(array $array, mixed ...$rest): array
+    public static function multiSort(array $array, mixed ...$rest): array
     {
         array_multisort($array, ...$rest);
 

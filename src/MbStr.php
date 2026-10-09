@@ -13,12 +13,12 @@ final class MbStr
         return new MbStringChain($value);
     }
 
-    public static function tolower(string $string, ?string $encoding = null): string
+    public static function toLower(string $string, ?string $encoding = null): string
     {
         return mb_strtolower($string, $encoding);
     }
 
-    public static function toupper(string $string, ?string $encoding = null): string
+    public static function toUpper(string $string, ?string $encoding = null): string
     {
         return mb_strtoupper($string, $encoding);
     }

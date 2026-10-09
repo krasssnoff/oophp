@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 final class FsTest extends TestCase
 {
-    public function testFsDomainRemainsStaticOnly(): void
+    public function testFsDomainExposesFluentEntryPoint(): void
     {
         self::assertTrue(method_exists(Fs::class, 'of'));
     }
@@ -52,7 +52,7 @@ final class FsTest extends TestCase
             self::assertSame($nativeGlob, $wrappedGlob);
 
             $nativeScandir = scandir($nativeRoot);
-            $wrappedScandir = Fs::scandir($wrappedRoot);
+            $wrappedScandir = Fs::scanDir($wrappedRoot);
             self::assertSame($nativeScandir, $wrappedScandir);
 
             self::assertSame(unlink($nativeRenamed), Fs::unlink($wrappedRenamed));
@@ -89,8 +89,8 @@ final class FsTest extends TestCase
             'basename_with_suffix' => [basename($samplePath, '.gz'), Fs::basename($samplePath, '.gz')],
             'dirname' => [dirname($samplePath), Fs::dirname($samplePath)],
             'dirname_levels' => [dirname($samplePath, 2), Fs::dirname($samplePath, 2)],
-            'pathinfo_all' => [pathinfo($samplePath), Fs::pathinfo($samplePath)],
-            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Fs::pathinfo($samplePath, PATHINFO_EXTENSION)],
+            'pathinfo_all' => [pathinfo($samplePath), Fs::pathInfo($samplePath)],
+            'pathinfo_extension' => [pathinfo($samplePath, PATHINFO_EXTENSION), Fs::pathInfo($samplePath, PATHINFO_EXTENSION)],
             'realpath_existing' => [realpath($existingPath), Fs::realpath($existingPath)],
         ];
     }

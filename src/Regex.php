@@ -9,7 +9,7 @@ final class Regex
     /**
      * @param int-mask-of<PREG_OFFSET_CAPTURE|PREG_UNMATCHED_AS_NULL> $flags
      */
-    public static function pregMatch(
+    public static function match(
         string $pattern,
         string $subject,
         array &$matches = [],
@@ -19,7 +19,7 @@ final class Regex
         return preg_match($pattern, $subject, $matches, $flags, $offset);
     }
 
-    public static function pregMatchAll(
+    public static function matchAll(
         string $pattern,
         string $subject,
         array &$matches = [],
@@ -29,7 +29,7 @@ final class Regex
         return preg_match_all($pattern, $subject, $matches, $flags, $offset);
     }
 
-    public static function pregReplace(
+    public static function replace(
         array|string $pattern,
         array|string $replacement,
         array|string $subject,
@@ -39,7 +39,7 @@ final class Regex
         return preg_replace($pattern, $replacement, $subject, $limit, $count);
     }
 
-    public static function pregReplaceCallback(
+    public static function replaceCallback(
         array|string $pattern,
         callable $callback,
         array|string $subject,
@@ -50,27 +50,27 @@ final class Regex
         return preg_replace_callback($pattern, $callback, $subject, $limit, $count, $flags);
     }
 
-    public static function pregSplit(string $pattern, string $subject, int $limit = -1, int $flags = 0): array|false
+    public static function split(string $pattern, string $subject, int $limit = -1, int $flags = 0): array|false
     {
         return preg_split($pattern, $subject, $limit, $flags);
     }
 
-    public static function pregGrep(string $pattern, array $array, int $flags = 0): array|false
+    public static function grep(string $pattern, array $array, int $flags = 0): array|false
     {
         return preg_grep($pattern, $array, $flags);
     }
 
-    public static function pregQuote(string $str, ?string $delimiter = null): string
+    public static function quote(string $str, ?string $delimiter = null): string
     {
         return preg_quote($str, $delimiter);
     }
 
-    public static function pregLastError(): int
+    public static function lastError(): int
     {
         return preg_last_error();
     }
 
-    public static function pregLastErrorMessage(): string
+    public static function lastErrorMsg(): string
     {
         return preg_last_error_msg();
     }

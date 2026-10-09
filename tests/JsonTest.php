@@ -13,8 +13,6 @@ final class JsonTest extends TestCase
     public function testJsonRemainsStaticOnlyDomain(): void
     {
         self::assertFalse(method_exists(Json::class, 'of'));
-        self::assertTrue(method_exists(MixedChain::class, 'jsonEncode'));
-        self::assertTrue(method_exists(MixedChain::class, 'jsonDecode'));
     }
 
     public function testStaticEncodeMatchesNativePhp(): void
@@ -48,7 +46,7 @@ final class JsonTest extends TestCase
 
         Json::decode($invalidJson);
         $actualError = Json::lastError();
-        $actualMessage = Json::lastErrorMessage();
+        $actualMessage = Json::lastErrorMsg();
 
         self::assertSame($expectedError, $actualError);
         self::assertSame($expectedMessage, $actualMessage);

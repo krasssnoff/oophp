@@ -61,7 +61,7 @@ final class Math
         return fmod($num1, $num2);
     }
 
-    public static function intdiv(int $num1, int $num2): int
+    public static function intDiv(int $num1, int $num2): int
     {
         return intdiv($num1, $num2);
     }

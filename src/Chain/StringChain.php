@@ -19,12 +19,12 @@ readonly class StringChain extends MixedChain
         return self::wrap(str_replace($search, $replace, $this->value));
     }
 
-    public function tolower(): static
+    public function toLower(): static
     {
         return self::wrap(strtolower($this->value));
     }
 
-    public function toupper(): static
+    public function toUpper(): static
     {
         return self::wrap(strtoupper($this->value));
     }

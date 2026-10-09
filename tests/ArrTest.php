@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Arr;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class ArrTest extends TestCase
@@ -14,6 +15,47 @@ final class ArrTest extends TestCase
         $input = ['first' => 'a', 'second' => 'b'];
 
         self::assertSame(array_values($input), Arr::values($input));
+    }
+
+    #[DataProvider('staticProvider')]
+    public function testStaticMethodsMatchNativePhp(mixed $expected, mixed $actual): void
+    {
+        self::assertSame($expected, $actual);
+    }
+
+    /**
+     * @return array<string, array{0:mixed,1:mixed}>
+     */
+    public static function staticProvider(): array
+    {
+        $source = ['x' => 10, 'y' => 20];
+
+        return [
+            'keys' => [array_keys($source), Arr::keys($source)],
+            'search_strict_false' => [array_search('20', [10, 20], false), Arr::search('20', [10, 20], false)],
+            'search_strict_true' => [array_search('20', [10, 20], true), Arr::search('20', [10, 20], true)],
+            'reverse_preserve' => [array_reverse($source, true), Arr::reverse($source, true)],
+            'unique' => [array_unique(['x', 'x', 'y'], SORT_STRING), Arr::unique(['x', 'x', 'y'])],
+            'chunk' => [array_chunk($source, 1, true), Arr::chunk($source, 1, true)],
+            'flip' => [array_flip(['x' => 'alpha', 'y' => 'beta']), Arr::flip(['x' => 'alpha', 'y' => 'beta'])],
+            'pad' => [array_pad([1, 2], 4, 0), Arr::pad([1, 2], 4, 0)],
+            'combine' => [array_combine(['id', 'name'], [10, 'Ann']), Arr::combine(['id', 'name'], [10, 'Ann'])],
+            'diff' => [array_diff(['a', 'b', 'c'], ['b']), Arr::diff(['a', 'b', 'c'], ['b'])],
+            'intersect' => [array_intersect(['a', 'b', 'c'], ['b', 'd']), Arr::intersect(['a', 'b', 'c'], ['b', 'd'])],
+            'replace' => [array_replace(['x' => 1, 'y' => 2], ['y' => 20]), Arr::replace(['x' => 1, 'y' => 2], ['y' => 20])],
+            'in_array_strict_false' => [in_array('2', [1, 2], false), Arr::inArray('2', [1, 2], false)],
+            'is_list_true' => [array_is_list([10, 20, 30]), Arr::isList([10, 20, 30])],
+            'change_key_case_upper' => [array_change_key_case(['first' => 1], CASE_UPPER), Arr::changeKeyCase(['first' => 1], CASE_UPPER)],
+            'fill_keys' => [array_fill_keys(['id', 'name'], 0), Arr::fillKeys(['id', 'name'], 0)],
+            'key_last' => [array_key_last(['b' => 2, 'a' => 1]), Arr::keyLast(['b' => 2, 'a' => 1])],
+            'diff_assoc' => [array_diff_assoc(['a' => 1, 'b' => 2], ['a' => 1]), Arr::diffAssoc(['a' => 1, 'b' => 2], ['a' => 1])],
+            'diff_key' => [array_diff_key(['a' => 1, 'b' => 2], ['a' => 9]), Arr::diffKey(['a' => 1, 'b' => 2], ['a' => 9])],
+            'intersect_assoc' => [array_intersect_assoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3]), Arr::intersectAssoc(['a' => 1, 'b' => 2], ['b' => 2, 'c' => 3])],
+            'intersect_key' => [array_intersect_key(['a' => 1, 'b' => 2], ['b' => 9]), Arr::intersectKey(['a' => 1, 'b' => 2], ['b' => 9])],
+            'sum' => [array_sum([1, 2, 3]), Arr::sum([1, 2, 3])],
+            'product' => [array_product([1.5, 2, 3]), Arr::product([1.5, 2, 3])],
+            'key_exists' => [array_key_exists('a', ['a' => 1]), Arr::keyExists('a', ['a' => 1])],
+        ];
     }
 
     public function testFluentSearchMatchesNativePhp(): void
@@ -32,16 +74,6 @@ final class ArrTest extends TestCase
 
         $expected = array_filter($input, static fn (int $value): bool => $value % 2 === 0);
         $actual = Arr::of($input)->filter(static fn (int $value): bool => $value % 2 === 0)->get();
-
-        self::assertSame($expected, $actual);
-    }
-
-    public function testInvokeCanBeUsedInsteadOfGet(): void
-    {
-        $input = ['first' => 'a', 'second' => 'b'];
-
-        $expected = array_search('b', array_values($input), false);
-        $actual = Arr::of($input)->values()->search('b')();
 
         self::assertSame($expected, $actual);
     }
@@ -181,7 +213,7 @@ final class ArrTest extends TestCase
         $base = ['x' => 1, 'y' => 2];
 
         $expected = array_replace($base, ['y' => 20]);
-        $actual = Arr::of($base)->replaceArray(['y' => 20])->get();
+        $actual = Arr::of($base)->replace(['y' => 20])->get();
 
         self::assertSame($expected, $actual);
     }
@@ -499,13 +531,13 @@ final class ArrTest extends TestCase
         $natural = ['img12', 'img10', 'img2', 'img1'];
         $expected = $natural;
         natsort($expected);
-        self::assertSame($expected, Arr::natsort($natural));
-        self::assertSame($expected, Arr::of($natural)->natsort()->get());
+        self::assertSame($expected, Arr::natSort($natural));
+        self::assertSame($expected, Arr::of($natural)->natSort()->get());
 
         $expected = ['A10', 'a2', 'A1'];
         natcasesort($expected);
-        self::assertSame($expected, Arr::natcasesort(['A10', 'a2', 'A1']));
-        self::assertSame($expected, Arr::of(['A10', 'a2', 'A1'])->natcasesort()->get());
+        self::assertSame($expected, Arr::natCaseSort(['A10', 'a2', 'A1']));
+        self::assertSame($expected, Arr::of(['A10', 'a2', 'A1'])->natCaseSort()->get());
 
         self::assertSame(['only'], Arr::shuffle(['only']));
         self::assertSame(['only'], Arr::of(['only'])->shuffle()->get());
@@ -527,8 +559,8 @@ final class ArrTest extends TestCase
 
         $expected = [3, 1, 2];
         array_multisort($expected, SORT_ASC, SORT_NUMERIC);
-        self::assertSame($expected, Arr::multisort([3, 1, 2], SORT_ASC, SORT_NUMERIC));
-        self::assertSame($expected, Arr::of([3, 1, 2])->multisort(SORT_ASC, SORT_NUMERIC)->get());
+        self::assertSame($expected, Arr::multiSort([3, 1, 2], SORT_ASC, SORT_NUMERIC));
+        self::assertSame($expected, Arr::of([3, 1, 2])->multiSort(SORT_ASC, SORT_NUMERIC)->get());
     }
 
     public function testFillRandAndFluentCallbackVariantsMatchNativePhp(): void

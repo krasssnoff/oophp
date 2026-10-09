@@ -38,7 +38,7 @@ final class TypeTest extends TestCase
             'is_object' => [is_object($object), Type::isObject($object)],
             'is_scalar' => [is_scalar('x'), Type::isScalar('x')],
             'is_string' => [is_string('x'), Type::isString('x')],
-            'gettype' => [gettype($object), Type::gettype($object)],
+            'gettype' => [gettype($object), Type::getType($object)],
             'get_debug_type' => [get_debug_type($object), Type::getDebugType($object)],
         ];
     }

@@ -28,7 +28,7 @@ final readonly class FsPathChain implements Chain
         return new self(dirname($this->path, $levels));
     }
 
-    public function pathinfo(int $flags = PATHINFO_ALL): StringChain|ArrayChain|MixedChain
+    public function pathInfo(int $flags = PATHINFO_ALL): StringChain|ArrayChain|MixedChain
     {
         return ValueChain::of(pathinfo($this->path, $flags));
     }

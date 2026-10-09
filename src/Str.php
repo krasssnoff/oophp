@@ -18,12 +18,12 @@ final class Str
         return str_replace($search, $replace, $subject);
     }
 
-    public static function tolower(string $string): string
+    public static function toLower(string $string): string
     {
         return strtolower($string);
     }
 
-    public static function toupper(string $string): string
+    public static function toUpper(string $string): string
     {
         return strtoupper($string);
     }

@@ -27,8 +27,8 @@ final class NetTest extends TestCase
     public static function staticProvider(): array
     {
         return [
-            'gethostbyname' => [gethostbyname('localhost'), Net::gethostbyname('localhost')],
-            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::gethostbyaddr('127.0.0.1')],
+            'gethostbyname' => [gethostbyname('localhost'), Net::getHostByName('localhost')],
+            'gethostbyaddr' => [gethostbyaddr('127.0.0.1'), Net::getHostByAddr('127.0.0.1')],
         ];
     }
 

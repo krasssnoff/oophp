@@ -18,7 +18,7 @@ final class MbStrTest extends TestCase
         $expected = mb_str_split(mb_strtolower(mb_substr($input, 1, 6, 'UTF-8'), 'UTF-8'), 1, 'UTF-8');
         $actual = MbStr::of($input)
             ->substr(1, 6, 'UTF-8')
-            ->tolower('UTF-8')
+            ->toLower('UTF-8')
             ->split(1, 'UTF-8')
             ->get();
 
@@ -44,8 +44,8 @@ final class MbStrTest extends TestCase
         }
 
         return [
-            'tolower' => [mb_strtolower('ПрИвЕт', 'UTF-8'), MbStr::tolower('ПрИвЕт', 'UTF-8')],
-            'toupper' => [mb_strtoupper('ПрИвЕт', 'UTF-8'), MbStr::toupper('ПрИвЕт', 'UTF-8')],
+            'tolower' => [mb_strtolower('ПрИвЕт', 'UTF-8'), MbStr::toLower('ПрИвЕт', 'UTF-8')],
+            'toupper' => [mb_strtoupper('ПрИвЕт', 'UTF-8'), MbStr::toUpper('ПрИвЕт', 'UTF-8')],
             'len' => [mb_strlen('Привет', 'UTF-8'), MbStr::len('Привет', 'UTF-8')],
             'pos' => [mb_strpos('До свидания', 'вид', 0, 'UTF-8'), MbStr::pos('До свидания', 'вид', 0, 'UTF-8')],
             'rpos' => [mb_strrpos('абв абв', 'абв', 0, 'UTF-8'), MbStr::rpos('абв абв', 'абв', 0, 'UTF-8')],

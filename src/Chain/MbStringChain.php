@@ -14,12 +14,12 @@ readonly class MbStringChain extends MixedChain
         parent::__construct($value);
     }
 
-    public function tolower(?string $encoding = null): MbStringChain
+    public function toLower(?string $encoding = null): MbStringChain
     {
         return self::wrapMb(mb_strtolower($this->value, $encoding));
     }
 
-    public function toupper(?string $encoding = null): MbStringChain
+    public function toUpper(?string $encoding = null): MbStringChain
     {
         return self::wrapMb(mb_strtoupper($this->value, $encoding));
     }

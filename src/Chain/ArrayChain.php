@@ -99,7 +99,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_intersect($this->value, ...$arrays));
     }
 
-    public function replaceArray(array ...$replacements): ArrayChain
+    public function replace(array ...$replacements): ArrayChain
     {
         return self::wrap(array_replace($this->value, ...$replacements));
     }
@@ -341,7 +341,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap($sorted);
     }
 
-    public function natsort(): ArrayChain
+    public function natSort(): ArrayChain
     {
         $sorted = $this->value;
         natsort($sorted);
@@ -349,7 +349,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap($sorted);
     }
 
-    public function natcasesort(): ArrayChain
+    public function natCaseSort(): ArrayChain
     {
         $sorted = $this->value;
         natcasesort($sorted);
@@ -389,7 +389,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap($sorted);
     }
 
-    public function multisort(mixed ...$rest): ArrayChain
+    public function multiSort(mixed ...$rest): ArrayChain
     {
         $sorted = $this->value;
         array_multisort($sorted, ...$rest);

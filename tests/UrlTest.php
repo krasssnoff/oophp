@@ -42,8 +42,8 @@ final class UrlTest extends TestCase
                 http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
                 Url::query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986)->get(),
             ],
-            'rawencode' => [rawurlencode('a b/c'), Url::rawencode('a b/c')],
-            'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawdecode('a%20b%2Fc')],
+            'rawencode' => [rawurlencode('a b/c'), Url::rawEncode('a b/c')],
+            'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawDecode('a%20b%2Fc')],
             'encode' => [urlencode('a b/c'), Url::encode('a b/c')],
             'decode' => [urldecode('a+b%2Fc'), Url::decode('a+b%2Fc')],
         ];
@@ -55,19 +55,19 @@ final class UrlTest extends TestCase
 
         self::assertSame(parse_url($url), Url::of($url)->parse()->get());
         self::assertSame(parse_url($url, PHP_URL_HOST), Url::of($url)->parse(PHP_URL_HOST)->get());
-        self::assertSame(rawurlencode('a b/c'), Url::of('a b/c')->rawencode()->get());
-        self::assertSame(rawurldecode('a%20b%2Fc'), Url::of('a%20b%2Fc')->rawdecode()->get());
+        self::assertSame(rawurlencode('a b/c'), Url::of('a b/c')->rawEncode()->get());
+        self::assertSame(rawurldecode('a%20b%2Fc'), Url::of('a%20b%2Fc')->rawDecode()->get());
         self::assertSame(urlencode('a b/c'), Url::of('a b/c')->encode()->get());
         self::assertSame(urldecode('a+b%2Fc'), Url::of('a+b%2Fc')->decode()->get());
     }
 
     public function testUrlChainKeepsTypeAfterStringSteps(): void
     {
-        $chain = Url::of('  HTTPS://EXAMPLE.COM/path  ')->trim()->tolower();
+        $chain = Url::of('  HTTPS://EXAMPLE.COM/path  ')->trim()->toLower();
 
         self::assertInstanceOf(UrlChain::class, $chain);
         self::assertSame('example.com', $chain->parse(PHP_URL_HOST)->get());
-        self::assertInstanceOf(UrlChain::class, Url::of('a b')->encode()->rawdecode());
+        self::assertInstanceOf(UrlChain::class, Url::of('a b')->encode()->rawDecode());
     }
 
     public function testUrlQueryReturnsStringChain(): void

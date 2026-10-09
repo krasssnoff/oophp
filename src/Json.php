@@ -29,7 +29,7 @@ final class Json
         return json_last_error();
     }
 
-    public static function lastErrorMessage(): string
+    public static function lastErrorMsg(): string
     {
         return json_last_error_msg();
     }

@@ -23,7 +23,7 @@ final class Fs
         return dirname($path, $levels);
     }
 
-    public static function pathinfo(string $path, int $flags = PATHINFO_ALL): string|array
+    public static function pathInfo(string $path, int $flags = PATHINFO_ALL): string|array
     {
         return pathinfo($path, $flags);
     }
@@ -65,7 +65,7 @@ final class Fs
     /**
      * @param SCANDIR_SORT_ASCENDING|SCANDIR_SORT_DESCENDING|SCANDIR_SORT_NONE $sortingOrder
      */
-    public static function scandir(string $directory, int $sortingOrder = SCANDIR_SORT_ASCENDING, mixed $context = null): array|false
+    public static function scanDir(string $directory, int $sortingOrder = SCANDIR_SORT_ASCENDING, mixed $context = null): array|false
     {
         return scandir($directory, $sortingOrder, $context);
     }

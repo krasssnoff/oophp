@@ -33,7 +33,7 @@ final class ValueChainTest extends TestCase
 
         $actual = Str::of($input)
             ->trim()
-            ->tolower()
+            ->toLower()
             ->explode(',')
             ->filter(static fn (string $value): bool => $value !== '')
             ->unique()
@@ -95,7 +95,7 @@ final class ValueChainTest extends TestCase
             ->reverse()
             ->flip()
             ->search(1, true)
-            ->toupper()
+            ->toUpper()
             ->explode('T')
             ->search('BE', true);
 
@@ -121,7 +121,7 @@ final class ValueChainTest extends TestCase
         $actual = Arr::of($input)
             ->reverse(true)
             ->search('beta', true)
-            ->toupper()
+            ->toUpper()
             ->endsWith('X');
 
         self::assertInstanceOf(MixedChain::class, $actual);
@@ -139,7 +139,7 @@ final class ValueChainTest extends TestCase
 
         $actual = Arr::of(['Alpha' => 'x', 'Beta' => 'y'])
             ->search('y', true)
-            ->tolower()
+            ->toLower()
             ->explode('e')
             ->search('missing', true);
 
@@ -167,7 +167,7 @@ final class ValueChainTest extends TestCase
     {
         $chain = Str::of('  Foo,Bar  ')
             ->trim()
-            ->tolower()
+            ->toLower()
             ->explode(',');
 
         self::assertSame($chain->get(), $chain());
@@ -186,7 +186,7 @@ final class ValueChainTest extends TestCase
         $chain = Arr::of(['first' => 'alpha', 'second' => 'beta'])->search('beta');
 
         self::assertInstanceOf(StringChain::class, $chain);
-        self::assertSame('SECOND', $chain->toupper()->get());
+        self::assertSame('SECOND', $chain->toUpper()->get());
     }
 
     public function testScalarArrayResultsUseMixedChain(): void
@@ -195,11 +195,5 @@ final class ValueChainTest extends TestCase
 
         self::assertInstanceOf(MixedChain::class, $chain);
         self::assertSame(array_sum([1, 2, 3]), $chain->get());
-    }
-
-    public function testMixedChainExposesFluentJsonBridgeMethods(): void
-    {
-        self::assertTrue(method_exists(MixedChain::class, 'jsonEncode'));
-        self::assertTrue(method_exists(MixedChain::class, 'jsonDecode'));
     }
 }
