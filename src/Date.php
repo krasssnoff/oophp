@@ -9,27 +9,33 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Oophp\Chain\DateChain;
+use Oophp\Internal\DateInput;
+use ValueError;
 
 final class Date
 {
+    private function __construct()
+    {
+    }
+
     public static function of(DateTimeInterface|string|int|null $value = 'now', DateTimeZone|string|null $timezone = null): DateChain
     {
-        return new DateChain(oophp_date_normalize_datetime($value, $timezone));
+        return new DateChain(DateInput::dateTime($value, $timezone));
     }
 
     public static function now(DateTimeZone|string|null $timezone = null): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime('now', $timezone);
+        return DateInput::dateTime('now', $timezone);
     }
 
     public static function parse(string $datetime = 'now', DateTimeZone|string|null $timezone = null): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime($datetime, $timezone);
+        return DateInput::dateTime($datetime, $timezone);
     }
 
     public static function fromTimestamp(int $timestamp, DateTimeZone|string|null $timezone = null): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime($timestamp, $timezone);
+        return DateInput::dateTime($timestamp, $timezone);
     }
 
     public static function create(
@@ -42,42 +48,42 @@ final class Date
         int $microsecond = 0,
         DateTimeZone|string|null $timezone = null,
     ): DateTimeImmutable {
-        return oophp_date_normalize_datetime('now', $timezone)->setDate($year, $month, $day)->setTime($hour, $minute, $second, $microsecond);
+        return DateInput::dateTime('now', $timezone)->setDate($year, $month, $day)->setTime($hour, $minute, $second, $microsecond);
     }
 
     public static function createFromFormat(string $format, string $datetime, DateTimeZone|string|null $timezone = null): DateTimeImmutable|false
     {
-        return DateTimeImmutable::createFromFormat($format, $datetime, oophp_date_normalize_timezone($timezone));
+        return DateTimeImmutable::createFromFormat($format, $datetime, DateInput::timezone($timezone));
     }
 
     public static function timezone(DateTimeInterface|string|int|null $value, DateTimeZone|string $timezone): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime($value)->setTimezone(oophp_date_normalize_timezone($timezone));
+        return DateInput::dateTime($value)->setTimezone(DateInput::timezone($timezone));
     }
 
     public static function format(DateTimeInterface|string|int|null $value, string $format): string
     {
-        return oophp_date_normalize_datetime($value)->format($format);
+        return DateInput::dateTime($value)->format($format);
     }
 
     public static function timestamp(DateTimeInterface|string|int|null $value): int
     {
-        return oophp_date_normalize_datetime($value)->getTimestamp();
+        return DateInput::dateTime($value)->getTimestamp();
     }
 
     public static function diff(DateTimeInterface|string|int|null $from, DateTimeInterface|string|int|null $to, bool $absolute = false): DateInterval
     {
-        return oophp_date_normalize_datetime($from)->diff(oophp_date_normalize_datetime($to), $absolute);
+        return DateInput::dateTime($from)->diff(DateInput::dateTime($to), $absolute);
     }
 
     public static function startOfDay(DateTimeInterface|string|int|null $value): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime($value)->setTime(0, 0, 0, 0);
+        return self::of($value)->startOfDay()->get();
     }
 
     public static function endOfDay(DateTimeInterface|string|int|null $value): DateTimeImmutable
     {
-        return oophp_date_normalize_datetime($value)->setTime(23, 59, 59, 999999);
+        return self::of($value)->endOfDay()->get();
     }
 
     /**
@@ -89,15 +95,21 @@ final class Date
         DateInterval|string $step = 'P1D',
         bool $includeEnd = true,
     ): array {
-        $current = oophp_date_normalize_datetime($start);
-        $endDate = oophp_date_normalize_datetime($end);
-        $interval = $step instanceof DateInterval ? $step : new DateInterval($step);
+        $current = DateInput::dateTime($start);
+        $endDate = DateInput::dateTime($end);
+        $interval = DateInput::interval($step);
         $isForward = $current <= $endDate;
         $items = [];
 
         while ($isForward ? $current < $endDate : $current > $endDate) {
             $items[] = $current;
-            $current = $isForward ? $current->add($interval) : $current->sub($interval);
+            $next = $isForward ? $current->add($interval) : $current->sub($interval);
+
+            if ($isForward ? $next <= $current : $next >= $current) {
+                throw new ValueError('Oophp\\Date::range(): Argument #3 ($step) must move from $start towards $end');
+            }
+
+            $current = $next;
         }
 
         if ($includeEnd && $current == $endDate) {
@@ -137,38 +149,4 @@ final class Date
     {
         return hrtime($asNumber);
     }
-}
-
-function oophp_date_normalize_datetime(DateTimeInterface|string|int|null $value, DateTimeZone|string|null $timezone = null): DateTimeImmutable
-{
-    if ($value instanceof DateTimeImmutable) {
-        return $timezone === null ? $value : $value->setTimezone(oophp_date_normalize_timezone($timezone));
-    }
-
-    if ($value instanceof DateTimeInterface) {
-        $immutable = DateTimeImmutable::createFromInterface($value);
-
-        return $timezone === null ? $immutable : $immutable->setTimezone(oophp_date_normalize_timezone($timezone));
-    }
-
-    if (is_int($value)) {
-        $immutable = new DateTimeImmutable('@' . $value);
-
-        return $immutable->setTimezone(oophp_date_normalize_timezone($timezone));
-    }
-
-    return new DateTimeImmutable($value ?? 'now', oophp_date_normalize_timezone($timezone));
-}
-
-function oophp_date_normalize_timezone(DateTimeZone|string|null $timezone): DateTimeZone
-{
-    if ($timezone instanceof DateTimeZone) {
-        return $timezone;
-    }
-
-    if (is_string($timezone)) {
-        return new DateTimeZone($timezone);
-    }
-
-    return new DateTimeZone(date_default_timezone_get());
 }

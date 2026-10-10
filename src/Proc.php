@@ -6,7 +6,11 @@ namespace Oophp;
 
 final class Proc
 {
-    public static function exec(string $command, array &$output = [], int &$resultCode = 0): string|false
+    private function __construct()
+    {
+    }
+
+    public static function exec(string $command, mixed &$output = null, mixed &$resultCode = null): string|false
     {
         return exec($command, $output, $resultCode);
     }
@@ -16,12 +20,12 @@ final class Proc
         return shell_exec($command);
     }
 
-    public static function system(string $command, int &$resultCode = 0): string|false
+    public static function system(string $command, mixed &$resultCode = null): string|false
     {
         return system($command, $resultCode);
     }
 
-    public static function passThru(string $command, int &$resultCode = 0): null|false
+    public static function passThru(string $command, mixed &$resultCode = null): null|false
     {
         return passthru($command, $resultCode);
     }
@@ -29,7 +33,7 @@ final class Proc
     public static function open(
         string|array $command,
         array $descriptorSpec,
-        array &$pipes,
+        mixed &$pipes,
         ?string $cwd = null,
         ?array $envVars = null,
         ?array $options = null,

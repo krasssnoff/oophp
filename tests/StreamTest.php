@@ -73,16 +73,16 @@ final class StreamTest extends TestCase
             self::assertIsResource($wrapped);
 
             $chain = Stream::of($wrapped);
-            self::assertSame(fwrite($native, "alpha\nbeta"), $chain->write("alpha\nbeta")->get());
+            self::assertSame(fwrite($native, "alpha\nbeta"), $chain->fwrite("alpha\nbeta")->get());
 
             rewind($native);
             rewind($wrapped);
-            self::assertSame(stream_get_contents($native), $chain->contents()->get());
+            self::assertSame(stream_get_contents($native), $chain->getContents()->get());
 
             rewind($native);
             rewind($wrapped);
-            self::assertSame(fread($native, 5), $chain->read(5)->get());
-            self::assertSame(fclose($native), $chain->close()->get());
+            self::assertSame(fread($native, 5), $chain->fread(5)->get());
+            self::assertSame(fclose($native), $chain->fclose()->get());
             $native = null;
             $wrapped = null;
         } finally {

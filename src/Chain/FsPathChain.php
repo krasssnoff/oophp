@@ -38,17 +38,17 @@ final readonly class FsPathChain implements Chain
         return ValueChain::of(realpath($this->path));
     }
 
-    public function exists(): MixedChain
+    public function fileExists(): MixedChain
     {
         return ValueChain::of(file_exists($this->path));
     }
 
-    public function read(bool $useIncludePath = false, mixed $context = null, int $offset = 0, ?int $length = null): StringChain|MixedChain
+    public function fileGetContents(bool $useIncludePath = false, mixed $context = null, int $offset = 0, ?int $length = null): StringChain|MixedChain
     {
         return ValueChain::of(file_get_contents($this->path, $useIncludePath, $context, $offset, $length));
     }
 
-    public function write(mixed $data, int $flags = 0, mixed $context = null): MixedChain
+    public function filePutContents(mixed $data, int $flags = 0, mixed $context = null): NumberChain|MixedChain
     {
         return ValueChain::of(file_put_contents($this->path, $data, $flags, $context));
     }
@@ -71,12 +71,12 @@ final readonly class FsPathChain implements Chain
         return new self($to);
     }
 
-    public function delete(mixed $context = null): MixedChain
+    public function unlink(mixed $context = null): MixedChain
     {
         return ValueChain::of(unlink($this->path, $context));
     }
 
-    public function stream(string $mode, bool $useIncludePath = false, mixed $context = null): StreamHandleChain|MixedChain
+    public function fopen(string $mode, bool $useIncludePath = false, mixed $context = null): StreamHandleChain|MixedChain
     {
         $resource = fopen($this->path, $mode, $useIncludePath, $context);
         if ($resource === false) {

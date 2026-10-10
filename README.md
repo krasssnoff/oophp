@@ -45,7 +45,7 @@ and operations on a value compose as fluent chains.
 
 Wrappers keep native semantics 1:1: same arguments, same return values, same errors.
 Unlike Laravel Collections or `symfony/string`, OOPHP adds no behavior of its own, so knowledge of the PHP manual applies unchanged.
-The only exception is a short, closed list of helpers (mostly `Date` and the file/stream workflow chains), listed in [docs.md](docs.md#helpers).
+The only exception is a short, closed list of helpers (mostly `Date`), listed in [docs.md](docs.md#helpers).
 
 Native PHP composition can become hard to scan:
 
@@ -129,7 +129,7 @@ $distance = Math::of(-2.55)
     ->sqrt()
     ->get();
 
-$query = Url::query(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986)->get();
+$query = Url::httpBuildQuery(['q' => 'hello world'], '', '&', PHP_QUERY_RFC3986);
 $host = Url::of('https://example.com/path?q=1#frag')
     ->parse(PHP_URL_HOST)
     ->get();
@@ -166,16 +166,16 @@ $memoryLimit = Sys::iniGet('memory_limit');
 
 A method is the native function name without the domain prefix, in `camelCase`:
 `array_key_exists` → `Arr::keyExists`, `hash_hmac` → `Hash::hmac`, `preg_match` → `Regex::match`, `gethostbyname` → `Net::getHostByName`.
-No renames and no aliases: one native function has one method name. Full rules: [docs.md](docs.md#naming-rules).
+Full rules: [docs.md](docs.md#naming-rules).
 
 ## Chains
 
 - `Domain::of(...)` starts a chain; `->get()` or `()` returns the raw PHP value.
-- Chains are immutable: every step returns a new chain.
-- The chain type follows the value: an array continues as `ArrayChain`, a string as `StringChain` (string chains such as `MbStringChain` and `UrlChain` keep their own type), a number inside `Math` as `NumberChain`, anything else as `MixedChain`. `ValueChain::of(mixed ...)` picks the chain by the value.
+- Chains are immutable: every step returns a new chain. `FsPathChain` and `StreamHandleChain` hold a path and an open stream: the file and the stream change, so their I/O methods return a result chain and the path or handle chain stays reusable.
+- The chain type follows the value: an array continues as `ArrayChain`, a string as `StringChain` (string chains such as `MbStringChain` and `UrlChain` keep their own type), a number as `NumberChain`, anything else as `MixedChain`. `ValueChain::of(mixed ...)` picks the chain by the value.
 - Native by-reference functions (`sort`, `shuffle`, `array_push`, `array_walk`, …) work on a copy, and the chain continues with the modified array instead of `true`. `pop()` and `shift()` continue with the removed element.
 - Errors are passed through unchanged: a native `false` / `null` is returned as is (in a chain it becomes `MixedChain`), and exceptions thrown by PHP propagate.
-- `ArrayChain`, `StringChain`, `MbStringChain`, `UrlChain` and `NumberChain` can hand off through JSON with `jsonEncode()` / `jsonDecode()`.
+- Every value chain can hand off through JSON with `jsonEncode()`; string chains decode with `jsonDecode()`.
 
 ## Domains
 
@@ -209,6 +209,7 @@ No renames and no aliases: one native function has one method name. Full rules: 
 How many of PHP’s *internal* (native) functions appear as direct calls anywhere under `src/`, as a share of *all* internal functions in the current PHP build (the exact total depends on version and enabled extensions). Recompute: `php scripts/native-function-footprint.php`.
 
 `[==                  ] 9.2%` — 192 of 2086 internal functions (PHP 8.3 in this repo’s dev environment).
+This counts every internal call in `src/`, helpers included, so it is higher than the number of wrapped functions in docs.md.
 
 ## API reference
 

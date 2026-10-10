@@ -8,6 +8,10 @@ use Oophp\Chain\NumberChain;
 
 final class Math
 {
+    private function __construct()
+    {
+    }
+
     public static function of(int|float $value): NumberChain
     {
         return new NumberChain($value);

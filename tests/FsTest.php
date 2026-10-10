@@ -114,26 +114,26 @@ final class FsTest extends TestCase
             self::assertSame(str_replace('\\', '/', $source), $chain->get());
             self::assertSame(basename($source), $chain->basename()->get());
 
-            self::assertSame(file_put_contents($source, "alpha\nbeta"), $chain->write("alpha\nbeta")->get());
-            self::assertSame(file_exists($source), $chain->exists()->get());
-            self::assertSame(file_get_contents($source), $chain->read()->get());
+            self::assertSame(file_put_contents($source, "alpha\nbeta"), $chain->filePutContents("alpha\nbeta")->get());
+            self::assertSame(file_exists($source), $chain->fileExists()->get());
+            self::assertSame(file_get_contents($source), $chain->fileGetContents()->get());
 
             $copied = $chain->copyTo($copy);
             self::assertSame($copy, $copied->get());
-            self::assertSame(file_exists($copy), $copied->exists()->get());
+            self::assertSame(file_exists($copy), $copied->fileExists()->get());
 
             $renamedChain = $copied->renameTo($renamed);
             self::assertSame($renamed, $renamedChain->get());
 
-            $stream = $renamedChain->stream('r');
+            $stream = $renamedChain->fopen('r');
             $native = fopen($renamed, 'r');
             self::assertIsResource($native);
-            self::assertSame(stream_get_contents($native), $stream->contents()->get());
+            self::assertSame(stream_get_contents($native), $stream->getContents()->get());
             fclose($native);
-            self::assertTrue($stream->close()->get());
+            self::assertTrue($stream->fclose()->get());
 
-            self::assertTrue($chain->delete()->get());
-            self::assertTrue($renamedChain->delete()->get());
+            self::assertTrue($chain->unlink()->get());
+            self::assertTrue($renamedChain->unlink()->get());
         } finally {
             @unlink($source);
             @unlink($copy);

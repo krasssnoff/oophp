@@ -6,6 +6,10 @@ namespace Oophp;
 
 final class Enc
 {
+    private function __construct()
+    {
+    }
+
     public static function base64Encode(string $string): string
     {
         return base64_encode($string);

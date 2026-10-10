@@ -6,6 +6,10 @@ namespace Oophp;
 
 final class Type
 {
+    private function __construct()
+    {
+    }
+
     public static function isArray(mixed $value): bool
     {
         return is_array($value);

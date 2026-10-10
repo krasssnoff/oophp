@@ -6,12 +6,16 @@ namespace Oophp;
 
 final class Json
 {
+    private function __construct()
+    {
+    }
+
     public static function encode(mixed $value, int $flags = 0, int $depth = 512): string|false
     {
         return json_encode($value, $flags, $depth);
     }
 
-    public static function decode(string $json, ?bool $associative = true, int $depth = 512, int $flags = 0): mixed
+    public static function decode(string $json, ?bool $associative = null, int $depth = 512, int $flags = 0): mixed
     {
         return json_decode($json, $associative, $depth, $flags);
     }

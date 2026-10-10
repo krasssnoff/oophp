@@ -6,13 +6,17 @@ namespace Oophp;
 
 final class Regex
 {
+    private function __construct()
+    {
+    }
+
     /**
      * @param int-mask-of<PREG_OFFSET_CAPTURE|PREG_UNMATCHED_AS_NULL> $flags
      */
     public static function match(
         string $pattern,
         string $subject,
-        array &$matches = [],
+        mixed &$matches = null,
         int $flags = 0,
         int $offset = 0,
     ): int|false {
@@ -22,8 +26,8 @@ final class Regex
     public static function matchAll(
         string $pattern,
         string $subject,
-        array &$matches = [],
-        int $flags = PREG_PATTERN_ORDER,
+        mixed &$matches = null,
+        int $flags = 0,
         int $offset = 0,
     ): int|false {
         return preg_match_all($pattern, $subject, $matches, $flags, $offset);
@@ -34,7 +38,7 @@ final class Regex
         array|string $replacement,
         array|string $subject,
         int $limit = -1,
-        ?int &$count = null,
+        mixed &$count = null,
     ): string|array|null {
         return preg_replace($pattern, $replacement, $subject, $limit, $count);
     }
@@ -44,7 +48,7 @@ final class Regex
         callable $callback,
         array|string $subject,
         int $limit = -1,
-        ?int &$count = null,
+        mixed &$count = null,
         int $flags = 0,
     ): string|array|null {
         return preg_replace_callback($pattern, $callback, $subject, $limit, $count, $flags);

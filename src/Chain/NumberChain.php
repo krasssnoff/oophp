@@ -37,14 +37,14 @@ final readonly class NumberChain extends MixedChain
         return new self(round($this->value, $precision, $mode));
     }
 
-    public function max(mixed ...$values): NumberChain|ArrayChain|StringChain|MixedChain
+    public function max(mixed ...$values): ArrayChain|StringChain|NumberChain|MixedChain
     {
-        return self::wrapNumber(max($this->value, ...$values));
+        return self::wrap(max($this->value, ...$values));
     }
 
-    public function min(mixed ...$values): NumberChain|ArrayChain|StringChain|MixedChain
+    public function min(mixed ...$values): ArrayChain|StringChain|NumberChain|MixedChain
     {
-        return self::wrapNumber(min($this->value, ...$values));
+        return self::wrap(min($this->value, ...$values));
     }
 
     public function pow(int|float $exponent): self
@@ -59,23 +59,11 @@ final readonly class NumberChain extends MixedChain
 
     public function fmod(float $num2): self
     {
-        return new self(fmod((float) $this->value, $num2));
+        return new self(fmod($this->value, $num2));
     }
 
     public function intDiv(int $num2): self
     {
-        return new self(intdiv((int) $this->value, $num2));
-    }
-
-    /**
-     * @return ($value is int|float ? NumberChain : ($value is array ? ArrayChain : ($value is string ? StringChain : MixedChain)))
-     */
-    private static function wrapNumber(mixed $value): NumberChain|ArrayChain|StringChain|MixedChain
-    {
-        if (is_int($value) || is_float($value)) {
-            return new self($value);
-        }
-
-        return self::wrap($value);
+        return new self(intdiv($this->value, $num2));
     }
 }

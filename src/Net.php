@@ -6,21 +6,25 @@ namespace Oophp;
 
 final class Net
 {
+    private function __construct()
+    {
+    }
+
     public static function getHostByName(string $hostname): string
     {
         return gethostbyname($hostname);
     }
 
-    public static function getHostByAddr(string $ipAddress): string|false
+    public static function getHostByAddr(string $ip): string|false
     {
-        return gethostbyaddr($ipAddress);
+        return gethostbyaddr($ip);
     }
 
     public static function dnsGetRecord(
         string $hostname,
         int $type = DNS_ANY,
-        ?array &$authoritativeNameServers = null,
-        ?array &$additionalRecords = null,
+        mixed &$authoritativeNameServers = null,
+        mixed &$additionalRecords = null,
         bool $raw = false,
     ): array|false {
         return dns_get_record($hostname, $type, $authoritativeNameServers, $additionalRecords, $raw);

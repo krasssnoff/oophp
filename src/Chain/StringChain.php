@@ -14,9 +14,9 @@ readonly class StringChain extends MixedChain
         parent::__construct($value);
     }
 
-    public function replace(array|string $search, array|string $replace): static
+    public function replace(array|string $search, array|string $replace, mixed &$count = null): static
     {
-        return self::wrap(str_replace($search, $replace, $this->value));
+        return self::wrap(str_replace($search, $replace, $this->value, $count));
     }
 
     public function toLower(): static
@@ -49,27 +49,27 @@ readonly class StringChain extends MixedChain
         return self::wrap(str_ends_with($this->value, $needle));
     }
 
-    public function len(): MixedChain
+    public function len(): NumberChain
     {
         return self::wrap(strlen($this->value));
     }
 
-    public function pos(string $needle, int $offset = 0): MixedChain
+    public function pos(string $needle, int $offset = 0): NumberChain|MixedChain
     {
         return self::wrap(strpos($this->value, $needle, $offset));
     }
 
-    public function ipos(string $needle, int $offset = 0): MixedChain
+    public function ipos(string $needle, int $offset = 0): NumberChain|MixedChain
     {
         return self::wrap(stripos($this->value, $needle, $offset));
     }
 
-    public function rpos(string $needle, int $offset = 0): MixedChain
+    public function rpos(string $needle, int $offset = 0): NumberChain|MixedChain
     {
         return self::wrap(strrpos($this->value, $needle, $offset));
     }
 
-    public function ripos(string $needle, int $offset = 0): MixedChain
+    public function ripos(string $needle, int $offset = 0): NumberChain|MixedChain
     {
         return self::wrap(strripos($this->value, $needle, $offset));
     }
@@ -89,7 +89,7 @@ readonly class StringChain extends MixedChain
         return self::wrap(substr($this->value, $offset, $length));
     }
 
-    public function substrCount(string $needle, int $offset = 0, ?int $length = null): MixedChain
+    public function substrCount(string $needle, int $offset = 0, ?int $length = null): NumberChain
     {
         return self::wrap(substr_count($this->value, $needle, $offset, $length));
     }
@@ -108,7 +108,7 @@ readonly class StringChain extends MixedChain
         array|string $pattern,
         array|string $replacement,
         int $limit = -1,
-        ?int &$count = null,
+        mixed &$count = null,
     ): static|MixedChain {
         return self::wrap(preg_replace($pattern, $replacement, $this->value, $limit, $count));
     }
@@ -118,10 +118,15 @@ readonly class StringChain extends MixedChain
         return self::wrap(preg_split($pattern, $this->value, $limit, $flags));
     }
 
+    public function jsonDecode(?bool $associative = null, int $depth = 512, int $flags = 0): ArrayChain|StringChain|NumberChain|MixedChain
+    {
+        return self::wrap(json_decode($this->value, $associative, $depth, $flags));
+    }
+
     /**
-     * @return ($value is string ? static : ($value is array ? ArrayChain : MixedChain))
+     * @return ($value is string ? static : ($value is array ? ArrayChain : ($value is int|float ? NumberChain : MixedChain)))
      */
-    protected static function wrap(mixed $value): ArrayChain|StringChain|MixedChain
+    protected static function wrap(mixed $value): ArrayChain|StringChain|NumberChain|MixedChain
     {
         if (is_string($value)) {
             return new static($value);

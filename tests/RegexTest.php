@@ -83,6 +83,21 @@ final class RegexTest extends TestCase
         self::assertSame($expectedMatches, $actualMatches);
     }
 
+    public function testOutputParametersAcceptFreshVariables(): void
+    {
+        self::assertSame(preg_match('/(a)/', 'abc', $expectedMatches), Regex::match('/(a)/', 'abc', $actualMatches));
+        self::assertSame($expectedMatches, $actualMatches);
+
+        self::assertSame(preg_match_all('/a/', 'aa', $expectedAll), Regex::matchAll('/a/', 'aa', $actualAll));
+        self::assertSame($expectedAll, $actualAll);
+
+        self::assertSame(preg_replace('/a/', 'o', 'aa', -1, $expectedCount), Regex::replace('/a/', 'o', 'aa', -1, $actualCount));
+        self::assertSame($expectedCount, $actualCount);
+
+        Str::of('aa')->pregReplace('/a/', 'o', -1, $chainCount);
+        self::assertSame($expectedCount, $chainCount);
+    }
+
     public function testStringChainPregReplaceMatchesNativePhp(): void
     {
         $expected = preg_replace('/\s+/', '-', 'hello world');

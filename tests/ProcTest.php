@@ -31,6 +31,28 @@ final class ProcTest extends TestCase
         self::assertSame($nativeCode, $wrappedCode);
     }
 
+    public function testOutputParametersAcceptFreshVariables(): void
+    {
+        $command = $this->phpEchoCommand('fresh');
+
+        self::assertSame(exec($command, $nativeOutput, $nativeCode), Proc::exec($command, $wrappedOutput, $wrappedCode));
+        self::assertSame($nativeOutput, $wrappedOutput);
+        self::assertSame($nativeCode, $wrappedCode);
+
+        ob_start();
+        Proc::system($command, $systemCode);
+        Proc::passThru($command, $passThruCode);
+        ob_end_clean();
+        self::assertSame(0, $systemCode);
+        self::assertSame(0, $passThruCode);
+
+        $process = Proc::open($command, [1 => ['pipe', 'w']], $pipes);
+        self::assertIsResource($process);
+        self::assertSame('fresh', stream_get_contents($pipes[1]));
+        fclose($pipes[1]);
+        Proc::close($process);
+    }
+
     public function testShellExecConformance(): void
     {
         $command = $this->phpEchoCommand('shell-ok');

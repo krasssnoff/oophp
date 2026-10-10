@@ -84,6 +84,33 @@ final class DateTest extends TestCase
         self::assertSame('2024-01-01', $backward[2]->format('Y-m-d'));
     }
 
+    #[DataProvider('stuckStepProvider')]
+    public function testRangeRejectsStepThatDoesNotMoveTowardsEnd(DateInterval|string $step): void
+    {
+        $this->expectException(\ValueError::class);
+
+        Date::range('2024-01-01 00:00:00', '2024-01-03 00:00:00', $step);
+    }
+
+    /**
+     * @return array<string, array{DateInterval|string}>
+     */
+    public static function stuckStepProvider(): array
+    {
+        $inverted = new DateInterval('P1D');
+        $inverted->invert = 1;
+
+        return [
+            'zero' => ['PT0S'],
+            'inverted' => [$inverted],
+        ];
+    }
+
+    public function testRangeOfEqualBoundsIgnoresStep(): void
+    {
+        self::assertCount(1, Date::range('2024-01-01', '2024-01-01', 'PT0S'));
+    }
+
     public function testMicrotimeAndHrtimeShapesMatchNativePhp(): void
     {
         self::assertIsFloat(Date::microTime(true));

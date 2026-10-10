@@ -7,7 +7,7 @@ namespace Oophp\Chain;
 /**
  * @extends MixedChain<array<mixed>>
  */
-readonly class ArrayChain extends MixedChain
+final readonly class ArrayChain extends MixedChain
 {
     public function __construct(array $value)
     {
@@ -19,12 +19,12 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_values($this->value));
     }
 
-    public function keys(): ArrayChain
+    public function keys(mixed ...$rest): ArrayChain
     {
-        return self::wrap(array_keys($this->value));
+        return self::wrap(array_keys($this->value, ...$rest));
     }
 
-    public function search(mixed $needle, bool $strict = false): StringChain|MixedChain
+    public function search(mixed $needle, bool $strict = false): StringChain|NumberChain|MixedChain
     {
         return self::wrap(array_search($needle, $this->value, $strict));
     }
@@ -129,12 +129,12 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_fill_keys($this->value, $value));
     }
 
-    public function keyFirst(): StringChain|MixedChain
+    public function keyFirst(): StringChain|NumberChain|MixedChain
     {
         return self::wrap(array_key_first($this->value));
     }
 
-    public function keyLast(): StringChain|MixedChain
+    public function keyLast(): StringChain|NumberChain|MixedChain
     {
         return self::wrap(array_key_last($this->value));
     }
@@ -184,27 +184,27 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_replace_recursive($this->value, ...$replacements));
     }
 
-    public function sum(): MixedChain
+    public function sum(): NumberChain
     {
         return self::wrap(array_sum($this->value));
     }
 
-    public function product(): MixedChain
+    public function product(): NumberChain
     {
         return self::wrap(array_product($this->value));
     }
 
-    public function keyExists(int|string $key): MixedChain
+    public function keyExists(mixed $key): MixedChain
     {
         return self::wrap(array_key_exists($key, $this->value));
     }
 
-    public function reduce(callable $callback, mixed $initial = null): MixedChain
+    public function reduce(callable $callback, mixed $initial = null): ArrayChain|StringChain|NumberChain|MixedChain
     {
         return self::wrap(array_reduce($this->value, $callback, $initial));
     }
 
-    public function rand(int $num = 1): ArrayChain|StringChain|MixedChain
+    public function rand(int $num = 1): ArrayChain|StringChain|NumberChain
     {
         return self::wrap(array_rand($this->value, $num));
     }
@@ -239,7 +239,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap(array_uintersect_uassoc($this->value, ...$rest));
     }
 
-    public function pop(): ArrayChain|StringChain|MixedChain
+    public function pop(): ArrayChain|StringChain|NumberChain|MixedChain
     {
         $array = $this->value;
 
@@ -254,7 +254,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap($array);
     }
 
-    public function shift(): ArrayChain|StringChain|MixedChain
+    public function shift(): ArrayChain|StringChain|NumberChain|MixedChain
     {
         $array = $this->value;
 
@@ -269,7 +269,7 @@ readonly class ArrayChain extends MixedChain
         return self::wrap($array);
     }
 
-    public function splice(int $offset, ?int $length = null, array $replacement = []): ArrayChain
+    public function splice(int $offset, ?int $length = null, mixed $replacement = []): ArrayChain
     {
         $array = $this->value;
         array_splice($array, $offset, $length, $replacement);

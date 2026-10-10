@@ -8,14 +8,18 @@ use Oophp\Chain\StringChain;
 
 final class Str
 {
+    private function __construct()
+    {
+    }
+
     public static function of(string $value): StringChain
     {
         return new StringChain($value);
     }
 
-    public static function replace(array|string $search, array|string $replace, string|array $subject): string|array
+    public static function replace(array|string $search, array|string $replace, string|array $subject, mixed &$count = null): string|array
     {
-        return str_replace($search, $replace, $subject);
+        return str_replace($search, $replace, $subject, $count);
     }
 
     public static function toLower(string $string): string

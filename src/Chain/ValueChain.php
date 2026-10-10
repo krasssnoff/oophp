@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Oophp\Chain;
 
 use Oophp\Contracts\Chain;
-use Oophp\Chain\ArrayChain;
-use Oophp\Chain\MixedChain;
-use Oophp\Chain\StringChain;
 
 /**
  * @template-covariant T
@@ -22,7 +19,10 @@ abstract readonly class ValueChain implements Chain
     ) {
     }
 
-    public static function of(mixed $value): ArrayChain|StringChain|MixedChain
+    /**
+     * @return ($value is array ? ArrayChain : ($value is string ? StringChain : ($value is int|float ? NumberChain : MixedChain)))
+     */
+    public static function of(mixed $value): ArrayChain|StringChain|NumberChain|MixedChain
     {
         return self::wrap($value);
     }
@@ -44,9 +44,9 @@ abstract readonly class ValueChain implements Chain
     }
 
     /**
-     * @return ($value is array ? ArrayChain : ($value is string ? StringChain : MixedChain))
+     * @return ($value is array ? ArrayChain : ($value is string ? StringChain : ($value is int|float ? NumberChain : MixedChain)))
      */
-    protected static function wrap(mixed $value): ArrayChain|StringChain|MixedChain
+    protected static function wrap(mixed $value): ArrayChain|StringChain|NumberChain|MixedChain
     {
         if (is_array($value)) {
             return new ArrayChain($value);
@@ -54,6 +54,10 @@ abstract readonly class ValueChain implements Chain
 
         if (is_string($value)) {
             return new StringChain($value);
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return new NumberChain($value);
         }
 
         return new MixedChain($value);

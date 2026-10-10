@@ -8,6 +8,10 @@ use Oophp\Chain\ArrayChain;
 
 final class Arr
 {
+    private function __construct()
+    {
+    }
+
     public static function of(array $value): ArrayChain
     {
         return new ArrayChain($value);
@@ -18,9 +22,9 @@ final class Arr
         return array_values($array);
     }
 
-    public static function keys(array $array): array
+    public static function keys(array $array, mixed ...$rest): array
     {
-        return array_keys($array);
+        return array_keys($array, ...$rest);
     }
 
     public static function search(mixed $needle, array $haystack, bool $strict = false): int|string|false
@@ -43,9 +47,9 @@ final class Arr
         return array_reverse($array, $preserveKeys);
     }
 
-    public static function merge(array $array, array ...$arrays): array
+    public static function merge(array ...$arrays): array
     {
-        return array_merge($array, ...$arrays);
+        return array_merge(...$arrays);
     }
 
     public static function slice(array $array, int $offset, ?int $length = null, bool $preserveKeys = false): array
@@ -78,9 +82,9 @@ final class Arr
         return array_combine($keys, $values);
     }
 
-    public static function mergeRecursive(array $array, array ...$arrays): array
+    public static function mergeRecursive(array ...$arrays): array
     {
-        return array_merge_recursive($array, ...$arrays);
+        return array_merge_recursive(...$arrays);
     }
 
     public static function column(array $array, int|string|null $columnKey, int|string|null $indexKey = null): array
@@ -198,7 +202,7 @@ final class Arr
         return array_product($array);
     }
 
-    public static function keyExists(int|string $key, array $array): bool
+    public static function keyExists(mixed $key, array $array): bool
     {
         return array_key_exists($key, $array);
     }
@@ -263,114 +267,88 @@ final class Arr
         return array_unshift($array, ...$values);
     }
 
-    public static function splice(array &$array, int $offset, ?int $length = null, array $replacement = []): array
+    public static function splice(array &$array, int $offset, ?int $length = null, mixed $replacement = []): array
     {
         return array_splice($array, $offset, $length, $replacement);
     }
 
-    public static function walk(array &$array, callable $callback, mixed $arg = null): bool
+    public static function walk(array|object &$array, callable $callback, mixed $arg = null): true
     {
         return array_walk($array, $callback, $arg);
     }
 
-    public static function walkRecursive(array &$array, callable $callback, mixed $arg = null): bool
+    public static function walkRecursive(array|object &$array, callable $callback, mixed $arg = null): true
     {
         return array_walk_recursive($array, $callback, $arg);
     }
 
-    public static function sort(array $array, int $flags = SORT_REGULAR): array
+    public static function sort(array &$array, int $flags = SORT_REGULAR): true
     {
-        sort($array, $flags);
-
-        return $array;
+        return sort($array, $flags);
     }
 
-    public static function rsort(array $array, int $flags = SORT_REGULAR): array
+    public static function rsort(array &$array, int $flags = SORT_REGULAR): true
     {
-        rsort($array, $flags);
-
-        return $array;
+        return rsort($array, $flags);
     }
 
-    public static function asort(array $array, int $flags = SORT_REGULAR): array
+    public static function asort(array &$array, int $flags = SORT_REGULAR): true
     {
-        asort($array, $flags);
-
-        return $array;
+        return asort($array, $flags);
     }
 
-    public static function arsort(array $array, int $flags = SORT_REGULAR): array
+    public static function arsort(array &$array, int $flags = SORT_REGULAR): true
     {
-        arsort($array, $flags);
-
-        return $array;
+        return arsort($array, $flags);
     }
 
-    public static function ksort(array $array, int $flags = SORT_REGULAR): array
+    public static function ksort(array &$array, int $flags = SORT_REGULAR): true
     {
-        ksort($array, $flags);
-
-        return $array;
+        return ksort($array, $flags);
     }
 
-    public static function krsort(array $array, int $flags = SORT_REGULAR): array
+    public static function krsort(array &$array, int $flags = SORT_REGULAR): true
     {
-        krsort($array, $flags);
-
-        return $array;
+        return krsort($array, $flags);
     }
 
-    public static function natSort(array $array): array
+    public static function natSort(array &$array): true
     {
-        natsort($array);
-
-        return $array;
+        return natsort($array);
     }
 
-    public static function natCaseSort(array $array): array
+    public static function natCaseSort(array &$array): true
     {
-        natcasesort($array);
-
-        return $array;
+        return natcasesort($array);
     }
 
-    public static function shuffle(array $array): array
+    public static function shuffle(array &$array): true
     {
-        shuffle($array);
-
-        return $array;
+        return shuffle($array);
     }
 
-    public static function usort(array $array, callable $callback): array
+    public static function usort(array &$array, callable $callback): true
     {
-        usort($array, $callback);
-
-        return $array;
+        return usort($array, $callback);
     }
 
-    public static function uasort(array $array, callable $callback): array
+    public static function uasort(array &$array, callable $callback): true
     {
-        uasort($array, $callback);
-
-        return $array;
+        return uasort($array, $callback);
     }
 
-    public static function uksort(array $array, callable $callback): array
+    public static function uksort(array &$array, callable $callback): true
     {
-        uksort($array, $callback);
-
-        return $array;
+        return uksort($array, $callback);
     }
 
-    public static function multiSort(array $array, mixed ...$rest): array
+    public static function multiSort(array &$array, mixed ...$rest): bool
     {
-        array_multisort($array, ...$rest);
-
-        return $array;
+        return array_multisort($array, ...$rest);
     }
 
-    public static function implode(string $separator, array $array): string
+    public static function implode(array|string $separator, array ...$array): string
     {
-        return implode($separator, $array);
+        return implode($separator, ...$array);
     }
 }

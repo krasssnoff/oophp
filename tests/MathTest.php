@@ -49,6 +49,13 @@ final class MathTest extends TestCase
         Math::intDiv(1, 0);
     }
 
+    public function testNumberChainIntDivKeepsNativeTypeError(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        Math::of(7.9)->intDiv(2);
+    }
+
     public function testNumberChainMatchesNativeMathPipeline(): void
     {
         $expected = sqrt(pow(round(abs(-2.55), 1, PHP_ROUND_HALF_UP), 2));

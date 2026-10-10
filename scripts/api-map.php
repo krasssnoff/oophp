@@ -46,7 +46,14 @@ $families = [
     'Url' => ['`*url*` (ext/standard)', array_filter($standard, static fn (string $f): bool => str_contains($f, 'url'))],
     'Stream' => ['`stream_*`', array_filter($internal, static fn (string $f): bool => str_starts_with($f, 'stream_'))],
     'Proc' => ['`proc_*`', array_filter($internal, static fn (string $f): bool => str_starts_with($f, 'proc_'))],
-    'Date' => ['ext/date', $extension('date')],
+    // Procedural aliases of DateTime*, DateTimeZone and DateInterval methods are covered by Date helpers and DateChain.
+    'Date' => ['ext/date without `DateTime*` method aliases', array_filter(
+        $extension('date'),
+        static fn (string $f): bool => preg_match(
+            '/^(date_(add|create.*|date_set|diff|format|get_last_errors|interval_.+|isodate_set|modify|offset_get|sub|time_set|timestamp_.+|timezone_.+)|timezone_(?!name_from_abbr$|version_get$).+)$/',
+            $f,
+        ) !== 1,
+    )],
 ];
 
 $methods = ApiMap::methods();
@@ -91,7 +98,7 @@ $out[] = '';
 $out[] = '## Helpers';
 $out[] = '';
 $out[] = 'Methods with behavior of their own: they do not map 1:1 to a native function and are exempt from the naming rule.';
-$out[] = 'The list is closed. A new helper is added deliberately, in `ApiMap::HELPERS` and here.';
+$out[] = 'The list is closed. A new helper is added deliberately to `ApiMap::HELPERS`, then this map is regenerated.';
 $out[] = '';
 $out[] = '| Class | Helpers |';
 $out[] = '| --- | --- |';

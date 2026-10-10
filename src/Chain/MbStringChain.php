@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Oophp\Chain;
 
+use Oophp\MbStr;
+
 /**
  * @extends MixedChain<string>
  */
-readonly class MbStringChain extends MixedChain
+final readonly class MbStringChain extends MixedChain
 {
     public function __construct(string $value)
     {
@@ -16,75 +18,68 @@ readonly class MbStringChain extends MixedChain
 
     public function toLower(?string $encoding = null): MbStringChain
     {
-        return self::wrapMb(mb_strtolower($this->value, $encoding));
+        return self::wrap(mb_strtolower($this->value, $encoding));
     }
 
     public function toUpper(?string $encoding = null): MbStringChain
     {
-        return self::wrapMb(mb_strtoupper($this->value, $encoding));
+        return self::wrap(mb_strtoupper($this->value, $encoding));
     }
 
-    public function len(?string $encoding = null): MixedChain
+    public function len(?string $encoding = null): NumberChain
     {
-        return self::wrapMb(mb_strlen($this->value, $encoding));
+        return self::wrap(mb_strlen($this->value, $encoding));
     }
 
-    public function pos(string $needle, int $offset = 0, ?string $encoding = null): MixedChain
+    public function pos(string $needle, int $offset = 0, ?string $encoding = null): NumberChain|MixedChain
     {
-        return self::wrapMb(mb_strpos($this->value, $needle, $offset, $encoding));
+        return self::wrap(mb_strpos($this->value, $needle, $offset, $encoding));
     }
 
-    public function rpos(string $needle, int $offset = 0, ?string $encoding = null): MixedChain
+    public function rpos(string $needle, int $offset = 0, ?string $encoding = null): NumberChain|MixedChain
     {
-        return self::wrapMb(mb_strrpos($this->value, $needle, $offset, $encoding));
+        return self::wrap(mb_strrpos($this->value, $needle, $offset, $encoding));
     }
 
     public function substr(int $start, ?int $length = null, ?string $encoding = null): MbStringChain
     {
-        return self::wrapMb(mb_substr($this->value, $start, $length, $encoding));
+        return self::wrap(mb_substr($this->value, $start, $length, $encoding));
     }
 
     public function split(int $length = 1, ?string $encoding = null): ArrayChain
     {
-        return self::wrapMb(mb_str_split($this->value, $length, $encoding));
+        return self::wrap(mb_str_split($this->value, $length, $encoding));
     }
 
     public function contains(string $needle, ?string $encoding = null): MixedChain
     {
-        return self::wrapMb(mb_strpos($this->value, $needle, 0, $encoding) !== false);
+        return self::wrap(MbStr::contains($this->value, $needle, $encoding));
     }
 
     public function startsWith(string $needle, ?string $encoding = null): MixedChain
     {
-        if ($needle === '') {
-            return self::wrapMb(true);
-        }
-
-        return self::wrapMb(mb_substr($this->value, 0, mb_strlen($needle, $encoding), $encoding) === $needle);
+        return self::wrap(MbStr::startsWith($this->value, $needle, $encoding));
     }
 
     public function endsWith(string $needle, ?string $encoding = null): MixedChain
     {
-        if ($needle === '') {
-            return self::wrapMb(true);
-        }
+        return self::wrap(MbStr::endsWith($this->value, $needle, $encoding));
+    }
 
-        return self::wrapMb(mb_substr($this->value, -mb_strlen($needle, $encoding), null, $encoding) === $needle);
+    public function jsonDecode(?bool $associative = null, int $depth = 512, int $flags = 0): ArrayChain|MbStringChain|NumberChain|MixedChain
+    {
+        return self::wrap(json_decode($this->value, $associative, $depth, $flags));
     }
 
     /**
-     * @return ($value is array ? ArrayChain : ($value is string ? MbStringChain : MixedChain))
+     * @return ($value is string ? MbStringChain : ($value is array ? ArrayChain : ($value is int|float ? NumberChain : MixedChain)))
      */
-    protected static function wrapMb(mixed $value): ArrayChain|MbStringChain|MixedChain
+    protected static function wrap(mixed $value): ArrayChain|StringChain|NumberChain|MixedChain
     {
-        if (is_array($value)) {
-            return new ArrayChain($value);
-        }
-
         if (is_string($value)) {
-            return new MbStringChain($value);
+            return new self($value);
         }
 
-        return new MixedChain($value);
+        return parent::wrap($value);
     }
 }

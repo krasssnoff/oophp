@@ -8,6 +8,10 @@ use Oophp\Chain\MbStringChain;
 
 final class MbStr
 {
+    private function __construct()
+    {
+    }
+
     public static function of(string $value): MbStringChain
     {
         return new MbStringChain($value);

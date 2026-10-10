@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Oophp\Tests;
 
 use Oophp\Arr;
+use Oophp\Chain\ArrayChain;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -371,7 +372,7 @@ final class ArrTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testReduceSortRsortImplodeAndJoinMatchNativePhp(): void
+    public function testReduceSortRsortAndImplodeMatchNativePhp(): void
     {
         $input = [3, 1, 2];
 
@@ -380,17 +381,20 @@ final class ArrTest extends TestCase
             Arr::reduce($input, static fn (int $carry, int $item): int => $carry + $item, 0),
         );
 
-        $expectedSort = $input;
-        sort($expectedSort, SORT_NUMERIC);
-        self::assertSame($expectedSort, Arr::sort($input, SORT_NUMERIC));
-        self::assertSame($expectedSort, Arr::of($input)->sort(SORT_NUMERIC)->get());
+        $native = $input;
+        $wrapped = $input;
+        self::assertSame(sort($native, SORT_NUMERIC), Arr::sort($wrapped, SORT_NUMERIC));
+        self::assertSame($native, $wrapped);
+        self::assertSame($native, Arr::of($input)->sort(SORT_NUMERIC)->get());
 
-        $expectedRsort = $input;
-        rsort($expectedRsort, SORT_NUMERIC);
-        self::assertSame($expectedRsort, Arr::rsort($input, SORT_NUMERIC));
-        self::assertSame($expectedRsort, Arr::of($input)->rsort(SORT_NUMERIC)->get());
+        $native = $input;
+        $wrapped = $input;
+        self::assertSame(rsort($native, SORT_NUMERIC), Arr::rsort($wrapped, SORT_NUMERIC));
+        self::assertSame($native, $wrapped);
+        self::assertSame($native, Arr::of($input)->rsort(SORT_NUMERIC)->get());
 
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::implode('-', ['a', 'b', 'c']));
+        self::assertSame(implode(['a', 'b', 'c']), Arr::implode(['a', 'b', 'c']));
         self::assertSame(implode('-', ['a', 'b', 'c']), Arr::of(['a', 'b', 'c'])->implode('-')->get());
     }
 
@@ -503,64 +507,70 @@ final class ArrTest extends TestCase
         self::assertSame(['id' => 1], Arr::of([['id' => 1], ['id' => 2]])->shift()->get());
     }
 
-    public function testAdditionalSortingVariantsMatchNativePhp(): void
+    /**
+     * @return array<string, array{array<mixed>, \Closure, \Closure, \Closure}>
+     */
+    public static function sortProvider(): array
     {
-        $input = ['b' => 2, 'a' => 1, 'c' => 3];
+        $assoc = ['b' => 2, 'a' => 1, 'c' => 3];
         $descending = static fn (mixed $left, mixed $right): int => $right <=> $left;
 
+        return [
+            'asort' => [$assoc, static fn (array &$a): bool => asort($a, SORT_NUMERIC), static fn (array &$a): bool => Arr::asort($a, SORT_NUMERIC), static fn (array $a): ArrayChain => Arr::of($a)->asort(SORT_NUMERIC)],
+            'arsort' => [$assoc, static fn (array &$a): bool => arsort($a, SORT_NUMERIC), static fn (array &$a): bool => Arr::arsort($a, SORT_NUMERIC), static fn (array $a): ArrayChain => Arr::of($a)->arsort(SORT_NUMERIC)],
+            'ksort' => [$assoc, static fn (array &$a): bool => ksort($a, SORT_STRING), static fn (array &$a): bool => Arr::ksort($a, SORT_STRING), static fn (array $a): ArrayChain => Arr::of($a)->ksort(SORT_STRING)],
+            'krsort' => [$assoc, static fn (array &$a): bool => krsort($a, SORT_STRING), static fn (array &$a): bool => Arr::krsort($a, SORT_STRING), static fn (array $a): ArrayChain => Arr::of($a)->krsort(SORT_STRING)],
+            'natsort' => [['img12', 'img10', 'img2', 'img1'], static fn (array &$a): bool => natsort($a), static fn (array &$a): bool => Arr::natSort($a), static fn (array $a): ArrayChain => Arr::of($a)->natSort()],
+            'natcasesort' => [['A10', 'a2', 'A1'], static fn (array &$a): bool => natcasesort($a), static fn (array &$a): bool => Arr::natCaseSort($a), static fn (array $a): ArrayChain => Arr::of($a)->natCaseSort()],
+            'shuffle' => [['only'], static fn (array &$a): bool => shuffle($a), static fn (array &$a): bool => Arr::shuffle($a), static fn (array $a): ArrayChain => Arr::of($a)->shuffle()],
+            'uasort' => [$assoc, static fn (array &$a): bool => uasort($a, $descending), static fn (array &$a): bool => Arr::uasort($a, $descending), static fn (array $a): ArrayChain => Arr::of($a)->uasort($descending)],
+            'uksort' => [$assoc, static fn (array &$a): bool => uksort($a, $descending), static fn (array &$a): bool => Arr::uksort($a, $descending), static fn (array $a): ArrayChain => Arr::of($a)->uksort($descending)],
+            'usort' => [[3, 1, 2], static fn (array &$a): bool => usort($a, $descending), static fn (array &$a): bool => Arr::usort($a, $descending), static fn (array $a): ArrayChain => Arr::of($a)->usort($descending)],
+            'array_multisort' => [[3, 1, 2], static fn (array &$a): bool => array_multisort($a, SORT_ASC, SORT_NUMERIC), static fn (array &$a): bool => Arr::multiSort($a, SORT_ASC, SORT_NUMERIC), static fn (array $a): ArrayChain => Arr::of($a)->multiSort(SORT_ASC, SORT_NUMERIC)],
+        ];
+    }
+
+    #[DataProvider('sortProvider')]
+    public function testSortsMutateByReferenceLikeNativePhp(array $input, \Closure $native, \Closure $wrapped, \Closure $chain): void
+    {
         $expected = $input;
-        asort($expected, SORT_NUMERIC);
-        self::assertSame($expected, Arr::asort($input, SORT_NUMERIC));
-        self::assertSame($expected, Arr::of($input)->asort(SORT_NUMERIC)->get());
+        $actual = $input;
 
-        $expected = $input;
-        arsort($expected, SORT_NUMERIC);
-        self::assertSame($expected, Arr::arsort($input, SORT_NUMERIC));
-        self::assertSame($expected, Arr::of($input)->arsort(SORT_NUMERIC)->get());
+        self::assertSame($native($expected), $wrapped($actual));
+        self::assertSame($expected, $actual);
+        self::assertSame($expected, $chain($input)->get());
+    }
 
-        $expected = $input;
-        ksort($expected, SORT_STRING);
-        self::assertSame($expected, Arr::ksort($input, SORT_STRING));
-        self::assertSame($expected, Arr::of($input)->ksort(SORT_STRING)->get());
+    public function testMultiSortSortsOnlyTheFirstArray(): void
+    {
+        $data = [3, 1, 2];
+        $other = ['c', 'a', 'b'];
 
-        $expected = $input;
-        krsort($expected, SORT_STRING);
-        self::assertSame($expected, Arr::krsort($input, SORT_STRING));
-        self::assertSame($expected, Arr::of($input)->krsort(SORT_STRING)->get());
+        self::assertTrue(Arr::multiSort($data, $other));
+        self::assertSame([1, 2, 3], $data);
+        self::assertSame(['c', 'a', 'b'], $other);
+    }
 
-        $natural = ['img12', 'img10', 'img2', 'img1'];
-        $expected = $natural;
-        natsort($expected);
-        self::assertSame($expected, Arr::natSort($natural));
-        self::assertSame($expected, Arr::of($natural)->natSort()->get());
+    public function testKeysFilterValueMatchesNativePhp(): void
+    {
+        $input = ['a' => 1, 'b' => '1', 'c' => 2];
 
-        $expected = ['A10', 'a2', 'A1'];
-        natcasesort($expected);
-        self::assertSame($expected, Arr::natCaseSort(['A10', 'a2', 'A1']));
-        self::assertSame($expected, Arr::of(['A10', 'a2', 'A1'])->natCaseSort()->get());
+        self::assertSame(array_keys($input, 1), Arr::keys($input, 1));
+        self::assertSame(array_keys($input, 1, true), Arr::keys($input, 1, true));
+        self::assertSame(array_keys($input, null), Arr::keys($input, null));
+        self::assertSame(array_keys($input, 1, true), Arr::of($input)->keys(1, true)->get());
+    }
 
-        self::assertSame(['only'], Arr::shuffle(['only']));
-        self::assertSame(['only'], Arr::of(['only'])->shuffle()->get());
+    public function testNativeArgumentShapesMatchNativePhp(): void
+    {
+        self::assertSame(array_merge(), Arr::merge());
+        self::assertSame(array_merge_recursive(), Arr::mergeRecursive());
+        self::assertSame(array_key_exists(1.0, [1 => 'x']), Arr::keyExists(1.0, [1 => 'x']));
 
-        $expected = $input;
-        uasort($expected, $descending);
-        self::assertSame($expected, Arr::uasort($input, $descending));
-        self::assertSame($expected, Arr::of($input)->uasort($descending)->get());
-
-        $expected = $input;
-        uksort($expected, $descending);
-        self::assertSame($expected, Arr::uksort($input, $descending));
-        self::assertSame($expected, Arr::of($input)->uksort($descending)->get());
-
-        $expected = [3, 1, 2];
-        usort($expected, $descending);
-        self::assertSame($expected, Arr::usort([3, 1, 2], $descending));
-        self::assertSame($expected, Arr::of([3, 1, 2])->usort($descending)->get());
-
-        $expected = [3, 1, 2];
-        array_multisort($expected, SORT_ASC, SORT_NUMERIC);
-        self::assertSame($expected, Arr::multiSort([3, 1, 2], SORT_ASC, SORT_NUMERIC));
-        self::assertSame($expected, Arr::of([3, 1, 2])->multiSort(SORT_ASC, SORT_NUMERIC)->get());
+        $native = [1, 2, 3];
+        $wrapped = [1, 2, 3];
+        self::assertSame(array_splice($native, 1, 1, 'x'), Arr::splice($wrapped, 1, 1, 'x'));
+        self::assertSame($native, $wrapped);
     }
 
     public function testFillRandAndFluentCallbackVariantsMatchNativePhp(): void

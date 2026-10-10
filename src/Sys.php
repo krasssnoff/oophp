@@ -6,6 +6,10 @@ namespace Oophp;
 
 final class Sys
 {
+    private function __construct()
+    {
+    }
+
     public static function iniGet(string $option): string|false
     {
         return ini_get($option);

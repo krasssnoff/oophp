@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Oophp\Tests;
 
-use Oophp\Chain\StringChain;
 use Oophp\Chain\UrlChain;
 use Oophp\Url;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,9 +37,9 @@ final class UrlTest extends TestCase
                 parse_url('https://example.com/path?q=1#frag', PHP_URL_HOST),
                 Url::parse('https://example.com/path?q=1#frag', PHP_URL_HOST),
             ],
-            'query_chain_entry' => [
+            'http_build_query' => [
                 http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
-                Url::query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986)->get(),
+                Url::httpBuildQuery(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986),
             ],
             'rawencode' => [rawurlencode('a b/c'), Url::rawEncode('a b/c')],
             'rawdecode' => [rawurldecode('a%20b%2Fc'), Url::rawDecode('a%20b%2Fc')],
@@ -68,13 +67,5 @@ final class UrlTest extends TestCase
         self::assertInstanceOf(UrlChain::class, $chain);
         self::assertSame('example.com', $chain->parse(PHP_URL_HOST)->get());
         self::assertInstanceOf(UrlChain::class, Url::of('a b')->encode()->rawDecode());
-    }
-
-    public function testUrlQueryReturnsStringChain(): void
-    {
-        $chain = Url::query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986);
-
-        self::assertInstanceOf(StringChain::class, $chain);
-        self::assertSame(http_build_query(['a b' => 'x y'], '', '&', PHP_QUERY_RFC3986), $chain->get());
     }
 }

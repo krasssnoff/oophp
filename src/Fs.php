@@ -8,6 +8,10 @@ use Oophp\Chain\FsPathChain;
 
 final class Fs
 {
+    private function __construct()
+    {
+    }
+
     public static function of(string $path): FsPathChain
     {
         return new FsPathChain($path);

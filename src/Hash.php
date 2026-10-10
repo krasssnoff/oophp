@@ -6,6 +6,10 @@ namespace Oophp;
 
 final class Hash
 {
+    private function __construct()
+    {
+    }
+
     public static function hash(string $algo, string $data, bool $binary = false, array $options = []): string
     {
         return hash($algo, $data, $binary, $options);

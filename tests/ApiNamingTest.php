@@ -73,7 +73,7 @@ final class ApiNamingTest extends TestCase
         $mismatches = [];
 
         foreach ($methods as $entry) {
-            if ($entry['domain'] === $entry['class'] || $entry['helper'] || \count($entry['natives']) !== 1) {
+            if ($entry['domain'] === null || $entry['domain'] === $entry['class'] || $entry['helper'] || \count($entry['natives']) !== 1) {
                 continue;
             }
 
@@ -84,6 +84,15 @@ final class ApiNamingTest extends TestCase
         }
 
         self::assertSame([], $mismatches);
+    }
+
+    public function testStrKeepsPrefixWhereDroppingItBreaksTheName(): void
+    {
+        self::assertSame('stripTags', ApiMap::baseName('strip_tags', 'Str'));
+        self::assertSame('stripslashes', ApiMap::baseName('stripslashes', 'Str'));
+        self::assertSame('strchr', ApiMap::baseName('strchr', 'Str'));
+        self::assertSame('ipos', ApiMap::baseName('stripos', 'Str'));
+        self::assertSame('replace', ApiMap::baseName('str_replace', 'Str'));
     }
 
     public function testDeclaredHelpersExist(): void

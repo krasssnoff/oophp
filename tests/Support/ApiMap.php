@@ -16,10 +16,11 @@ final class ApiMap
 {
     /**
      * Prefix of the native name that repeats the domain and is dropped from the method name.
+     * `Str` keeps `str` in `strip*` (but not `stripos`) and `strchr`: `strip_tags` → `stripTags`, not `ipTags`.
      */
     public const DOMAIN_PREFIXES = [
         'Arr' => '/^array_/',
-        'Str' => '/^str_?/',
+        'Str' => '/^str(?!ip(?!os)|chr)_?/',
         'MbStr' => '/^mb_(str_?)?/',
         'Json' => '/^json_/',
         'Url' => '/url/',
@@ -52,14 +53,12 @@ final class ApiMap
             'format', 'timestamp', 'diff', 'startOfDay', 'endOfDay', 'range',
         ],
         'MbStr' => ['contains', 'startsWith', 'endsWith'],
-        'Url' => ['query'],
         'DateChain' => [
             'timezone', 'modify', 'setDate', 'setTime', 'startOfDay', 'endOfDay',
             'add', 'sub', 'format', 'timestamp', 'diff', 'isBefore', 'isAfter',
         ],
-        'FsPathChain' => ['normalize', 'exists', 'read', 'write', 'copyTo', 'renameTo', 'delete', 'stream'],
+        'FsPathChain' => ['normalize', 'copyTo', 'renameTo'],
         'MbStringChain' => ['contains', 'startsWith', 'endsWith'],
-        'StreamHandleChain' => ['read', 'write', 'contents', 'close'],
     ];
 
     /**
@@ -133,7 +132,7 @@ final class ApiMap
      */
     public static function baseName(string $native, ?string $domain): string
     {
-        $pattern = self::DOMAIN_PREFIXES[$domain] ?? null;
+        $pattern = $domain === null ? null : self::DOMAIN_PREFIXES[$domain] ?? null;
         $stripped = $pattern === null ? $native : (string) preg_replace($pattern, '', $native, 1);
 
         return lcfirst(str_replace(' ', '', ucwords(trim(str_replace('_', ' ', $stripped)))));

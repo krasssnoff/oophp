@@ -8,6 +8,10 @@ use Oophp\Chain\StreamHandleChain;
 
 final class Stream
 {
+    private function __construct()
+    {
+    }
+
     public static function of(mixed $stream): StreamHandleChain
     {
         return new StreamHandleChain($stream);

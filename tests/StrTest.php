@@ -18,6 +18,18 @@ final class StrTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testReplaceCountMatchesNativePhp(): void
+    {
+        $expected = str_replace('a', 'o', 'banana', $expectedCount);
+        $actual = Str::replace('a', 'o', 'banana', $actualCount);
+        $chain = Str::of('banana')->replace('a', 'o', $chainCount);
+
+        self::assertSame($expected, $actual);
+        self::assertSame($expectedCount, $actualCount);
+        self::assertSame($expected, $chain->get());
+        self::assertSame($expectedCount, $chainCount);
+    }
+
     public function testFluentStringPipelineMatchesNativePhp(): void
     {
         $input = '  Foo,Bar  ';

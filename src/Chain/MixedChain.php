@@ -14,9 +14,4 @@ readonly class MixedChain extends ValueChain
     {
         return self::wrap(json_encode($this->value, $flags, $depth));
     }
-
-    public function jsonDecode(bool $associative = true, int $depth = 512, int $flags = 0): ArrayChain|StringChain|MixedChain
-    {
-        return self::wrap(json_decode((string) $this->value, $associative, $depth, $flags));
-    }
 }

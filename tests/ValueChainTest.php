@@ -8,6 +8,7 @@ use Oophp\Arr;
 use Oophp\Str;
 use Oophp\Chain\ArrayChain;
 use Oophp\Chain\MixedChain;
+use Oophp\Chain\NumberChain;
 use Oophp\Chain\StringChain;
 use PHPUnit\Framework\TestCase;
 
@@ -68,14 +69,14 @@ final class ValueChainTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testScalarTerminalResultStaysInMixedChainAfterLongChain(): void
+    public function testNumericTerminalResultContinuesAsNumberChainAfterLongChain(): void
     {
         $chain = Arr::of([1, 2, 3, 4])
             ->filter(static fn (int $value): bool => $value > 1)
             ->pad(5, 0)
             ->sum();
 
-        self::assertInstanceOf(MixedChain::class, $chain);
+        self::assertInstanceOf(NumberChain::class, $chain);
         self::assertSame(array_sum(array_pad(array_filter([1, 2, 3, 4], static fn (int $value): bool => $value > 1), 5, 0)), $chain->get());
     }
 
@@ -189,11 +190,20 @@ final class ValueChainTest extends TestCase
         self::assertSame('SECOND', $chain->toUpper()->get());
     }
 
-    public function testScalarArrayResultsUseMixedChain(): void
+    public function testNumericResultsContinueAsNumberChain(): void
     {
         $chain = Arr::of([1, 2, 3])->sum();
 
-        self::assertInstanceOf(MixedChain::class, $chain);
-        self::assertSame(array_sum([1, 2, 3]), $chain->get());
+        self::assertInstanceOf(NumberChain::class, $chain);
+        self::assertSame(sqrt(array_sum([1, 2, 3])), $chain->sqrt()->get());
+        self::assertSame(pow(strlen('abc'), 2), Str::of('abc')->len()->pow(2)->get());
+    }
+
+    public function testBooleanResultsStayInMixedChain(): void
+    {
+        $chain = Str::of('abc')->contains('b');
+
+        self::assertSame(MixedChain::class, $chain::class);
+        self::assertTrue($chain->get());
     }
 }

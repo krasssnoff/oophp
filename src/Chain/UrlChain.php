@@ -6,7 +6,7 @@ namespace Oophp\Chain;
 
 final readonly class UrlChain extends StringChain
 {
-    public function parse(int $component = -1): ArrayChain|self|MixedChain
+    public function parse(int $component = -1): ArrayChain|self|NumberChain|MixedChain
     {
         return self::wrap(parse_url($this->value, $component));
     }

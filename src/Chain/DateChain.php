@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Oophp\Contracts\Chain;
+use Oophp\Internal\DateInput;
 
 final readonly class DateChain implements Chain
 {
@@ -19,7 +20,7 @@ final readonly class DateChain implements Chain
 
     public function timezone(DateTimeZone|string $timezone): self
     {
-        return new self($this->value->setTimezone(self::normalizeTimezone($timezone)));
+        return new self($this->value->setTimezone(DateInput::timezone($timezone)));
     }
 
     public function modify(string $modifier): self
@@ -49,12 +50,12 @@ final readonly class DateChain implements Chain
 
     public function add(DateInterval|string $interval): self
     {
-        return new self($this->value->add(self::normalizeInterval($interval)));
+        return new self($this->value->add(DateInput::interval($interval)));
     }
 
     public function sub(DateInterval|string $interval): self
     {
-        return new self($this->value->sub(self::normalizeInterval($interval)));
+        return new self($this->value->sub(DateInput::interval($interval)));
     }
 
     public function format(string $format): StringChain|MixedChain
@@ -62,24 +63,24 @@ final readonly class DateChain implements Chain
         return ValueChain::of($this->value->format($format));
     }
 
-    public function timestamp(): MixedChain
+    public function timestamp(): NumberChain
     {
         return ValueChain::of($this->value->getTimestamp());
     }
 
     public function diff(DateTimeInterface|string|int $target, bool $absolute = false): MixedChain
     {
-        return ValueChain::of($this->value->diff(self::normalizeDateTime($target), $absolute));
+        return ValueChain::of($this->value->diff(DateInput::dateTime($target), $absolute));
     }
 
     public function isBefore(DateTimeInterface|string|int $target): MixedChain
     {
-        return ValueChain::of($this->value < self::normalizeDateTime($target));
+        return ValueChain::of($this->value < DateInput::dateTime($target));
     }
 
     public function isAfter(DateTimeInterface|string|int $target): MixedChain
     {
-        return ValueChain::of($this->value > self::normalizeDateTime($target));
+        return ValueChain::of($this->value > DateInput::dateTime($target));
     }
 
     public function get(): DateTimeImmutable
@@ -90,40 +91,5 @@ final readonly class DateChain implements Chain
     public function __invoke(): DateTimeImmutable
     {
         return $this->get();
-    }
-
-    private static function normalizeDateTime(DateTimeInterface|string|int $value): DateTimeImmutable
-    {
-        if ($value instanceof DateTimeImmutable) {
-            return $value;
-        }
-
-        if ($value instanceof DateTimeInterface) {
-            return DateTimeImmutable::createFromInterface($value);
-        }
-
-        if (is_int($value)) {
-            return (new DateTimeImmutable('@' . $value))->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        }
-
-        return new DateTimeImmutable($value);
-    }
-
-    private static function normalizeTimezone(DateTimeZone|string $timezone): DateTimeZone
-    {
-        if ($timezone instanceof DateTimeZone) {
-            return $timezone;
-        }
-
-        return new DateTimeZone($timezone);
-    }
-
-    private static function normalizeInterval(DateInterval|string $interval): DateInterval
-    {
-        if ($interval instanceof DateInterval) {
-            return $interval;
-        }
-
-        return new DateInterval($interval);
     }
 }

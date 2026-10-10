@@ -8,6 +8,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Oophp\Chain\DateChain;
 use Oophp\Chain\MixedChain;
+use Oophp\Chain\NumberChain;
 use Oophp\Chain\StringChain;
 use Oophp\Date;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ final class DateChainTest extends TestCase
 
         self::assertInstanceOf(StringChain::class, $formatted);
         self::assertSame('2024-01-10', $formatted->get());
-        self::assertInstanceOf(MixedChain::class, $timestamp);
+        self::assertInstanceOf(NumberChain::class, $timestamp);
         self::assertSame($chain->get()->getTimestamp(), $timestamp->get());
     }
 
